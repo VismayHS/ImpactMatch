@@ -19,7 +19,8 @@ const NGOManagement = () => {
     try {
       setLoading(true);
       const response = await axios.get(`${API_BASE_URL}/api/users`);
-      const ngoUsers = response.data.filter(u => u.role === 'ngo');
+      // Filter for organisations (not 'ngo' - the role is 'organisation')
+      const ngoUsers = response.data.filter(u => u.role === 'organisation');
       setNgos(ngoUsers);
     } catch (error) {
       console.error('Error loading NGOs:', error);
