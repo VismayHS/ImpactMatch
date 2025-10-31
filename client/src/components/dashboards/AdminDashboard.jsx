@@ -13,15 +13,13 @@ import {
   ShieldCheck 
 } from 'lucide-react';
 import { toast } from 'react-toastify';
-
-// Placeholder components
-const AdminOverview = () => <div className="p-6"><h2 className="text-2xl font-bold">Admin Overview</h2></div>;
-const NGOManagement = () => <div className="p-6"><h2 className="text-2xl font-bold">NGO Management</h2></div>;
-const UserManagement = () => <div className="p-6"><h2 className="text-2xl font-bold">User Management</h2></div>;
-const CauseManagement = () => <div className="p-6"><h2 className="text-2xl font-bold">Cause Management</h2></div>;
-const BlockchainTracker = () => <div className="p-6"><h2 className="text-2xl font-bold">Blockchain Tracker</h2></div>;
-const AnomalyDetection = () => <div className="p-6"><h2 className="text-2xl font-bold">AI Anomaly Detection</h2></div>;
-const ExportReports = () => <div className="p-6"><h2 className="text-2xl font-bold">Export Reports</h2></div>;
+import AdminOverview from './admin/AdminOverview';
+import NGOManagement from './admin/NGOManagement';
+import UserManagement from './admin/UserManagement';
+import CauseManagement from './admin/CauseManagement';
+import BlockchainTracker from './admin/BlockchainTracker';
+import AnomalyDetection from './admin/AnomalyDetection';
+import ExportReports from './admin/ExportReports';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();

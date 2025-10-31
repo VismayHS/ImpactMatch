@@ -13,13 +13,13 @@ import {
 } from 'lucide-react';
 import { toast } from 'react-toastify';
 
-// Placeholder components
-const UserDiscover = () => <div className="p-6"><h2 className="text-2xl font-bold">Discover Causes</h2></div>;
-const MyCauses = () => <div className="p-6"><h2 className="text-2xl font-bold">My Causes</h2></div>;
-const ImpactScore = () => <div className="p-6"><h2 className="text-2xl font-bold">Impact Score</h2></div>;
-const UserAnalytics = () => <div className="p-6"><h2 className="text-2xl font-bold">Analytics</h2></div>;
-const BlockchainProofs = () => <div className="p-6"><h2 className="text-2xl font-bold">Blockchain Proofs</h2></div>;
-const ShareImpact = () => <div className="p-6"><h2 className="text-2xl font-bold">Share Impact</h2></div>;
+// Import complete User components
+import UserDiscover from './user/UserDiscover';
+import MyCauses from './user/MyCauses';
+import ImpactScore from './user/ImpactScore';
+import UserAnalytics from './user/UserAnalytics';
+import BlockchainProofs from './user/BlockchainProofs';
+import ShareImpact from './user/ShareImpact';
 
 const UserDashboard = () => {
   const navigate = useNavigate();
