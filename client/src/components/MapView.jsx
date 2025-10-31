@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, CircleMarker } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import axios from 'axios';
@@ -182,19 +182,8 @@ export default function MapView({ user }) {
           className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 mb-6 flex flex-wrap items-center justify-center gap-6 border border-emerald-100"
         >
           <div className="flex items-center gap-3">
-            <div className="relative">
-              <div className="w-6 h-6 rounded-full bg-emerald-500 animate-pulse shadow-lg"></div>
-              <div className="absolute inset-0 w-6 h-6 rounded-full bg-emerald-400 animate-ping opacity-50"></div>
-            </div>
-            <span className="text-base font-bold text-gray-800">Verified Causes</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="w-6 h-6 rounded-full bg-blue-500 shadow-lg"></div>
-            <span className="text-base font-bold text-gray-800">Active Causes</span>
-          </div>
-          <div className="flex items-center gap-3">
             <ModernIcon name="location" size="sm" gradient="teal" animated={false} glow={false} />
-            <span className="text-base font-bold text-gray-800">Your Impact Zones</span>
+            <span className="text-base font-bold text-gray-800">All Causes - {mapData.length} Locations</span>
           </div>
         </motion.div>
 
@@ -245,26 +234,16 @@ export default function MapView({ user }) {
               {mapData.map((cause) => {
                 if (!cause.lat || !cause.lng) return null;
                 
-                const isVerified = cause.verified;
-                
-                return isVerified ? (
-                  <CircleMarker
+                return (
+                  <Marker
                     key={cause.id}
-                    center={[cause.lat, cause.lng]}
-                    radius={15}
-                    pathOptions={{
-                      color: '#10b981',
-                      fillColor: '#10b981',
-                      fillOpacity: 0.7,
-                      weight: 3,
-                    }}
-                    className="marker-pulse"
+                    position={[cause.lat, cause.lng]}
                   >
                     <Popup>
                       <div className="p-3 min-w-[250px]">
                         <div className="flex items-start gap-2 mb-3">
                           <ModernIcon 
-                            name={cause.category === 'Environment' ? 'local-discovery' : cause.category === 'Education' ? 'ai-matching' : cause.category === 'Social Welfare' ? 'dashboard' : 'transparent-tracking'}
+                            name={cause.category === 'Environment' ? 'local-discovery' : cause.category === 'Education' ? 'ai-matching' : 'transparent-tracking'}
                             size="lg"
                             gradient={cause.category === 'Environment' ? 'teal' : cause.category === 'Education' ? 'blue' : 'violet'}
                             animated={false}
@@ -274,41 +253,7 @@ export default function MapView({ user }) {
                             <h3 className="font-black text-lg text-gray-900 mb-1">
                               {cause.name}
                             </h3>
-                            <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full mb-2">
-                              {cause.category || 'Social Impact'}
-                            </span>
-                          </div>
-                        </div>
-                        <p className="text-sm text-gray-700 mb-3 leading-relaxed">
-                          {cause.description}
-                        </p>
-                        <div className="flex items-center gap-2 px-3 py-2 bg-emerald-500 text-white text-sm font-bold rounded-lg">
-                          <ModernIcon name="transparent-tracking" size="xs" gradient="teal" animated={false} glow={false} />
-                          <span>Verified Impact Zone</span>
-                        </div>
-                      </div>
-                    </Popup>
-                  </CircleMarker>
-                ) : (
-                  <Marker
-                    key={cause.id}
-                    position={[cause.lat, cause.lng]}
-                  >
-                    <Popup>
-                      <div className="p-3 min-w-[250px]">
-                        <div className="flex items-start gap-2 mb-3">
-                          <ModernIcon 
-                            name={cause.category === 'Animal Welfare' ? 'impact-scoring' : cause.category === 'Education' ? 'ai-matching' : 'transparent-tracking'}
-                            size="lg"
-                            gradient={cause.category === 'Animal Welfare' ? 'tealBlue' : cause.category === 'Education' ? 'blue' : 'violet'}
-                            animated={false}
-                            glow={false}
-                          />
-                          <div>
-                            <h3 className="font-black text-lg text-gray-900 mb-1">
-                              {cause.name}
-                            </h3>
-                            <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded-full mb-2">
+                            <span className="inline-block px-3 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-full mb-2">
                               {cause.category || 'Community'}
                             </span>
                           </div>
@@ -316,8 +261,9 @@ export default function MapView({ user }) {
                         <p className="text-sm text-gray-700 mb-3 leading-relaxed">
                           {cause.description}
                         </p>
-                        <div className="px-3 py-2 bg-blue-500 text-white text-sm font-bold rounded-lg">
-                          Active Cause
+                        <div className="flex items-center gap-2 px-3 py-2 bg-teal-500 text-white text-sm font-bold rounded-lg">
+                          <ModernIcon name="transparent-tracking" size="xs" gradient="teal" animated={false} glow={false} />
+                          <span>{cause.city}</span>
                         </div>
                       </div>
                     </Popup>
@@ -333,25 +279,19 @@ export default function MapView({ user }) {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6"
+          className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6"
         >
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-8 text-center border border-emerald-100">
-            <div className="text-5xl font-black bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-2">
-              {mapData.filter(c => c.verified).length}
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-8 text-center border border-teal-100">
+            <div className="text-5xl font-black bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent mb-2">
+              {mapData.length}
             </div>
-            <div className="text-base font-bold text-gray-700">Verified Locations</div>
-          </div>
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-8 text-center border border-blue-100">
-            <div className="text-5xl font-black text-blue-600 mb-2">
-              {mapData.filter(c => !c.verified).length}
-            </div>
-            <div className="text-base font-bold text-gray-700">Active Causes</div>
+            <div className="text-base font-bold text-gray-700">Total Causes</div>
           </div>
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-8 text-center border border-purple-100">
             <div className="text-5xl font-black text-purple-600 mb-2">
-              {mapData.length}
+              {new Set(mapData.map(c => c.city)).size}
             </div>
-            <div className="text-base font-bold text-gray-700">Total Impact Zones</div>
+            <div className="text-base font-bold text-gray-700">Cities Covered</div>
           </div>
         </motion.div>
       </div>
