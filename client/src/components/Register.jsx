@@ -78,9 +78,9 @@ const Register = () => {
         password: loginForm.password,
       });
 
-      if (response.data.userId) {
+      if (response.data.userId && response.data.user) {
         localStorage.setItem('userId', response.data.userId);
-        localStorage.setItem('userName', response.data.user.name);
+        localStorage.setItem('userName', response.data.user.name || 'User');
         localStorage.setItem('userRole', response.data.user.role || 'user');
         toast.success('Login successful!');
         
@@ -90,6 +90,8 @@ const Register = () => {
           navigate(redirectPath, { replace: true });
           window.location.reload();
         }, 500);
+      } else {
+        toast.error('Invalid response from server. Please try again.');
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -164,9 +166,9 @@ const Register = () => {
 
       const response = await axios.post(`${API_BASE_URL}/api/users/register`, registrationData);
 
-      if (response.data.userId) {
+      if (response.data.userId && response.data.user) {
         localStorage.setItem('userId', response.data.userId);
-        localStorage.setItem('userName', response.data.user.name);
+        localStorage.setItem('userName', response.data.user.name || registrationData.name);
         localStorage.setItem('userRole', registrationData.role);
         
         // If NGO, upload certificate
@@ -203,6 +205,8 @@ const Register = () => {
           navigate(redirectPath, { replace: true });
           window.location.reload();
         }, 1000);
+      } else {
+        toast.error('Registration completed but received invalid response. Please try logging in.');
       }
     } catch (error) {
       console.error('Registration error:', error);
