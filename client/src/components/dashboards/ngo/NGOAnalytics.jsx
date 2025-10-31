@@ -3,10 +3,8 @@ import { motion } from 'framer-motion';
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { TrendingUp, PieChart as PieIcon, Map as MapIcon } from 'lucide-react';
-import axios from 'axios';
+import api, { API_BASE_URL } from '../../../utils/axiosConfig';
 import 'leaflet/dist/leaflet.css';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5173';
 
 const COLORS = ['#14B8A6', '#2563EB', '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#EF4444'];
 
@@ -26,12 +24,12 @@ const NGOAnalytics = () => {
       const ngoId = user?._id || user?.id;
 
       // Fetch causes
-      const causesRes = await axios.get(`${API_BASE_URL}/api/causes?ngoId=${ngoId}`);
+      const causesRes = await api.get(`/api/causes?ngoId=${ngoId}`);
       const ngoCauses = causesRes.data.causes || [];
       setCauses(ngoCauses);
 
       // Fetch matches
-      const matchesRes = await axios.get(`${API_BASE_URL}/api/matches`);
+      const matchesRes = await api.get('/api/matches');
       const allMatches = matchesRes.data.matches || [];
       
       const causeIds = ngoCauses.map(c => c._id);

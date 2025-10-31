@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Share2, Download, Twitter, Facebook, Linkedin, Instagram, Link as LinkIcon, Sparkles } from 'lucide-react';
-import axios from 'axios';
+import api, { API_BASE_URL } from '../../../utils/axiosConfig';
 import { toast } from 'react-toastify';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5173';
 
 const ShareImpact = () => {
   const [stats, setStats] = useState({
@@ -29,11 +27,11 @@ const ShareImpact = () => {
       const userId = userData?.id || userData?._id;
 
       // Get user's matches
-      const matchesResponse = await axios.get(`${API_BASE_URL}/api/matches`);
+      const matchesResponse = await api.get('/api/matches');
       const userMatches = matchesResponse.data.filter(m => m.userId === userId);
 
       // Get verifications
-      const verificationsResponse = await axios.get(`${API_BASE_URL}/api/verifications`);
+      const verificationsResponse = await api.get('/api/verifications');
       const userVerifications = verificationsResponse.data.filter(v => v.userId === userId);
 
       const causesJoined = userMatches.length;

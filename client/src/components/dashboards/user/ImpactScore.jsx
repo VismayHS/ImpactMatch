@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Star, Award, TrendingUp, Zap, Heart, Target } from 'lucide-react';
-import axios from 'axios';
+import api, { API_BASE_URL } from '../../../utils/axiosConfig';
 import confetti from 'canvas-confetti';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5173';
 
 const BADGES = [
   { id: 'newcomer', name: 'Newcomer', icon: Star, color: 'from-gray-400 to-gray-600', requirement: 1, description: 'Join your first cause' },
@@ -39,11 +37,11 @@ const ImpactScore = () => {
       const userId = userData?.id || userData?._id;
 
       // Get user's matches (causes joined)
-      const matchesResponse = await axios.get(`${API_BASE_URL}/api/matches`);
+      const matchesResponse = await api.get('/api/matches');
       const userMatches = matchesResponse.data.filter(m => m.userId === userId);
 
       // Get verifications
-      const verificationsResponse = await axios.get(`${API_BASE_URL}/api/verifications`);
+      const verificationsResponse = await api.get('/api/verifications');
       const userVerifications = verificationsResponse.data.filter(v => v.userId === userId);
 
       // Calculate impact score

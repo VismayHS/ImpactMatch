@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, Download, Calendar, TrendingUp, Users, Heart, CheckCircle } from 'lucide-react';
-import axios from 'axios';
+import api, { API_BASE_URL } from '../../../utils/axiosConfig';
 import { toast } from 'react-toastify';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5173';
 
 const ExportReports = () => {
   const [loading, setLoading] = useState(false);
@@ -30,20 +28,21 @@ const ExportReports = () => {
   const loadStats = async () => {
     try {
       const [usersRes, causesRes, matchesRes, verificationsRes] = await Promise.all([
-        axios.get(`${API_BASE_URL}/api/users`),
-        axios.get(`${API_BASE_URL}/api/causes`),
-        axios.get(`${API_BASE_URL}/api/matches`),
-        axios.get(`${API_BASE_URL}/api/verifications`)
+        api.get('/api/admin/users'),
+        api.get('/api/causes'),
+        api.get('/api/matches'),
+        api.get('/api/verifications')
       ]);
 
+      const allUsers = usersRes.data.users || usersRes.data || [];
       setStats({
-        totalUsers: usersRes.data.filter(u => u.role === 'user').length,
-        totalNGOs: usersRes.data.filter(u => u.role === 'organisation').length,
+        totalUsers: allUsers.filter(u => u.role === 'user').length,
+        totalNGOs: allUsers.filter(u => u.role === 'organisation' || u.role === 'ngo').length,
         totalCauses: causesRes.data.length,
         activeCauses: causesRes.data.filter(c => c.status === 'active').length,
         totalMatches: matchesRes.data.length,
         totalVerifications: verificationsRes.data.length,
-        usersData: usersRes.data,
+        usersData: allUsers,
         causesData: causesRes.data,
         matchesData: matchesRes.data,
         verificationsData: verificationsRes.data

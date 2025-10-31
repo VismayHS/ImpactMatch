@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Users, Ban, UserCheck, Mail, MapPin, Calendar } from 'lucide-react';
-import axios from 'axios';
+import api, { API_BASE_URL } from '../../../utils/axiosConfig';
 import { toast } from 'react-toastify';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5173';
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -18,8 +16,10 @@ const UserManagement = () => {
   const loadUsers = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_BASE_URL}/api/users`);
-      const regularUsers = response.data.filter(u => u.role === 'user' || u.role === 'organisation');
+      const response = await api.get('/api/admin/users');
+      // Handle response format - admin/users returns { users: [...] }
+      const allUsers = response.data.users || response.data || [];
+      const regularUsers = allUsers.filter(u => u.role === 'user' || u.role === 'organisation');
       setUsers(regularUsers);
     } catch (error) {
       console.error('Error loading users:', error);
@@ -33,7 +33,7 @@ const UserManagement = () => {
     if (!window.confirm('Suspend this user?')) return;
     
     try {
-      await axios.put(`${API_BASE_URL}/api/users/${userId}`, {
+      await api.put(`/api/users/${userId}`, {
         suspended: true
       });
       toast.success('User suspended');

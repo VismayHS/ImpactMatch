@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Flag, CheckCircle, XCircle, MapPin, Building2 } from 'lucide-react';
-import axios from 'axios';
+import api, { API_BASE_URL } from '../../../utils/axiosConfig';
 import { toast } from 'react-toastify';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5173';
 
 const CauseManagement = () => {
   const [causes, setCauses] = useState([]);
@@ -18,7 +16,7 @@ const CauseManagement = () => {
   const loadCauses = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_BASE_URL}/api/causes`);
+      const response = await api.get('/api/causes');
       setCauses(response.data);
     } catch (error) {
       console.error('Error loading causes:', error);
@@ -32,7 +30,7 @@ const CauseManagement = () => {
     if (!window.confirm('Flag this cause for review?')) return;
     
     try {
-      await axios.put(`${API_BASE_URL}/api/causes/${causeId}`, {
+      await api.put(`/api/causes/${causeId}`, {
         status: 'flagged'
       });
       toast.success('Cause flagged');
@@ -46,7 +44,7 @@ const CauseManagement = () => {
     if (!window.confirm('Remove this cause permanently?')) return;
     
     try {
-      await axios.delete(`${API_BASE_URL}/api/causes/${causeId}`);
+      await api.delete(`/api/causes/${causeId}`);
       toast.success('Cause removed');
       loadCauses();
     } catch (error) {

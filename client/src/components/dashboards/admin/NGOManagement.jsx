@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Building2, CheckCircle, XCircle, FileText, Mail, MapPin, Calendar, ExternalLink } from 'lucide-react';
-import axios from 'axios';
+import api, { API_BASE_URL } from '../../../utils/axiosConfig';
 import { toast } from 'react-toastify';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5173';
 
 const NGOManagement = () => {
   const [ngos, setNgos] = useState([]);
@@ -18,9 +16,11 @@ const NGOManagement = () => {
   const loadNGOs = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_BASE_URL}/api/users`);
-      // Filter for organisations (not 'ngo' - the role is 'organisation')
-      const ngoUsers = response.data.filter(u => u.role === 'organisation');
+      const response = await api.get('/api/admin/users');
+      // Handle response format - admin/users returns { users: [...] }
+      const allUsers = response.data.users || response.data || [];
+      // Filter for NGOs - Check BOTH 'ngo' and 'organisation' roles
+      const ngoUsers = allUsers.filter(u => u.role === 'ngo' || u.role === 'organisation');
       setNgos(ngoUsers);
     } catch (error) {
       console.error('Error loading NGOs:', error);
@@ -32,7 +32,7 @@ const NGOManagement = () => {
 
   const handleApprove = async (ngoId) => {
     try {
-      await axios.put(`${API_BASE_URL}/api/users/${ngoId}`, {
+      await api.put(`/api/users/${ngoId}`, {
         verified: true
       });
       toast.success('NGO approved successfully!');
@@ -47,7 +47,7 @@ const NGOManagement = () => {
     if (!window.confirm('Are you sure you want to reject this NGO?')) return;
     
     try {
-      await axios.delete(`${API_BASE_URL}/api/users/${ngoId}`);
+      await api.delete(`/api/users/${ngoId}`);
       toast.success('NGO rejected and removed');
       loadNGOs();
     } catch (error) {

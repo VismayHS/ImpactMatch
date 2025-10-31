@@ -157,9 +157,14 @@ router.post('/register', async (req, res) => {
 });
 
 // GET /api/users/:id
-// Get user profile
-router.get('/:id', async (req, res) => {
+// Get user profile (Protected - requires auth)
+router.get('/:id', authMiddleware, async (req, res) => {
   try {
+    // Check if user is accessing their own profile OR is admin
+    if (req.user._id.toString() !== req.params.id && req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
     const user = await User.findById(req.params.id).populate('joinedCauses');
 
     if (!user) {
@@ -187,10 +192,15 @@ router.get('/:id', async (req, res) => {
 });
 
 // PUT /api/users/:id
-// Update user profile
-router.put('/:id', async (req, res) => {
+// Update user profile (Protected - requires auth)
+router.put('/:id', authMiddleware, async (req, res) => {
   try {
-    const { interests, availability, city, name, email, officeAddress } = req.body;
+    // Check if user is updating their own profile OR is admin
+    if (req.user._id.toString() !== req.params.id && req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const { interests, availability, city, name, email, officeAddress, verified, suspended } = req.body;
 
     const updateData = {};
     if (interests) updateData.interests = Array.isArray(interests) ? interests.join(', ') : interests;
@@ -199,6 +209,12 @@ router.put('/:id', async (req, res) => {
     if (name) updateData.name = name;
     if (email) updateData.email = email;
     if (officeAddress) updateData.officeAddress = officeAddress;
+
+    // Only admins can update verified and suspended status
+    if (req.user.role === 'admin') {
+      if (verified !== undefined) updateData.verified = verified;
+      if (suspended !== undefined) updateData.suspended = suspended;
+    }
 
     const user = await User.findByIdAndUpdate(req.params.id, updateData, { new: true });
 

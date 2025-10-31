@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import TinderCard from 'react-tinder-card';
-import axios from 'axios';
+import api, { API_BASE_URL } from '../utils/axiosConfig';
 import { toast } from 'react-toastify';
 import { ModernIcon } from './IconSystem';
 
@@ -44,7 +44,7 @@ export default function SwipePage({ user }) {
   const fetchCauses = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5173/api/causes');
+      const response = await api.get('/api/causes');
       
       if (response.data && response.data.causes && response.data.causes.length > 0) {
         // Take first 20 causes for swipe deck
@@ -106,7 +106,7 @@ export default function SwipePage({ user }) {
       }
 
       try {
-        await axios.post('http://localhost:5173/api/match', {
+        await api.post('/api/match', {
           userId: user._id || user.id,
           causeId: cause._id,
           action: 'like',

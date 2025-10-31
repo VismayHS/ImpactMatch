@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, Users, Search, Filter, Loader } from 'lucide-react';
-import axios from 'axios';
+import api, { API_BASE_URL } from '../../../utils/axiosConfig';
 import { toast } from 'react-toastify';
 import crypto from 'crypto-js';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5173';
 
 const VolunteerVerification = () => {
   const [loading, setLoading] = useState(true);
@@ -30,26 +28,26 @@ const VolunteerVerification = () => {
       const ngoId = user?._id || user?.id;
 
       // Fetch causes by this NGO
-      const causesRes = await axios.get(`${API_BASE_URL}/api/causes?ngoId=${ngoId}`);
+      const causesRes = await api.get(`/api/causes?ngoId=${ngoId}`);
       const causes = causesRes.data.causes || [];
       const causeIds = causes.map(c => c._id);
 
       // Fetch all matches
-      const matchesRes = await axios.get(`${API_BASE_URL}/api/matches`);
+      const matchesRes = await api.get('/api/matches');
       const allMatches = matchesRes.data.matches || [];
 
       // Filter matches for this NGO's causes
       const ngoMatches = allMatches.filter(m => causeIds.includes(m.causeId));
 
       // Fetch verifications to check status
-      const verificationsRes = await axios.get(`${API_BASE_URL}/api/verifications`);
+      const verificationsRes = await api.get('/api/verifications');
       const verifications = verificationsRes.data.verifications || [];
 
       // Fetch user details for each match
       const volunteersData = await Promise.all(
         ngoMatches.map(async (match) => {
           try {
-            const userRes = await axios.get(`${API_BASE_URL}/api/users/${match.userId}`);
+            const userRes = await api.get(`/api/users/${match.userId}`);
             const cause = causes.find(c => c._id === match.causeId);
             const verification = verifications.find(v => 
               v.userId === match.userId && v.causeId === match.causeId
@@ -113,7 +111,7 @@ const VolunteerVerification = () => {
       const txHash = generateBlockchainHash(volunteer.userId, volunteer.causeId);
 
       // Save verification
-      await axios.post(`${API_BASE_URL}/api/verify`, {
+      await api.post('/api/verify', {
         userId: volunteer.userId,
         causeId: volunteer.causeId,
         ngoId: JSON.parse(localStorage.getItem('user'))._id,
@@ -152,7 +150,7 @@ const VolunteerVerification = () => {
         if (volunteer && volunteer.status === 'pending') {
           const txHash = generateBlockchainHash(volunteer.userId, volunteer.causeId);
 
-          await axios.post(`${API_BASE_URL}/api/verify`, {
+          await api.post('/api/verify', {
             userId: volunteer.userId,
             causeId: volunteer.causeId,
             ngoId,

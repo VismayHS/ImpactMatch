@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Save, Upload, User, Mail, MapPin, FileText, AlertCircle } from 'lucide-react';
-import axios from 'axios';
+import api, { API_BASE_URL } from '../../../utils/axiosConfig';
 import { toast } from 'react-toastify';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5173';
 
 const NGOSettings = () => {
   const [loading, setLoading] = useState(false);
@@ -50,7 +48,7 @@ const NGOSettings = () => {
 
     try {
       const userId = user._id || user.id;
-      const response = await axios.put(`${API_BASE_URL}/api/users/${userId}`, {
+      const response = await api.put(`/api/users/${userId}`, {
         name: formData.name,
         email: formData.email,
         city: formData.city,
@@ -86,7 +84,7 @@ const NGOSettings = () => {
       formDataToSend.append('userId', userId);
       formDataToSend.append('registrationNumber', `RE-${Date.now()}`);
 
-      await axios.post(`${API_BASE_URL}/api/users/upload-certificate`, formDataToSend, {
+      await api.post('/api/users/upload-certificate', formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

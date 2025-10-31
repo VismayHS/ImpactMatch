@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Calendar, TrendingUp, Target, Award } from 'lucide-react';
-import axios from 'axios';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5173';
+import api, { API_BASE_URL } from '../../../utils/axiosConfig';
 
 const CATEGORY_COLORS = [
   '#8B5CF6', // Purple
@@ -38,14 +36,14 @@ const UserAnalytics = () => {
       const userId = user?.id || user?._id;
 
       // Get user's matches
-      const matchesResponse = await axios.get(`${API_BASE_URL}/api/matches`);
+      const matchesResponse = await api.get('/api/matches');
       const userMatches = matchesResponse.data.filter(m => m.userId === userId);
 
       // Get all causes
-      const causesResponse = await axios.get(`${API_BASE_URL}/api/causes`);
+      const causesResponse = await api.get('/api/causes');
       
       // Get verifications
-      const verificationsResponse = await axios.get(`${API_BASE_URL}/api/verifications`);
+      const verificationsResponse = await api.get('/api/verifications');
       const userVerifications = verificationsResponse.data.filter(v => v.userId === userId);
 
       // Enrich matches with cause details

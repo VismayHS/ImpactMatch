@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { History, Download, Search, ExternalLink, CheckCircle } from 'lucide-react';
-import axios from 'axios';
+import api, { API_BASE_URL } from '../../../utils/axiosConfig';
 import { toast } from 'react-toastify';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5173';
 
 const VerificationHistory = () => {
   const [loading, setLoading] = useState(true);
@@ -26,12 +24,12 @@ const VerificationHistory = () => {
       const ngoId = user?._id || user?.id;
 
       // Fetch causes by this NGO
-      const causesRes = await axios.get(`${API_BASE_URL}/api/causes?ngoId=${ngoId}`);
+      const causesRes = await api.get(`/api/causes?ngoId=${ngoId}`);
       const causes = causesRes.data.causes || [];
       const causeIds = causes.map(c => c._id);
 
       // Fetch all verifications
-      const verificationsRes = await axios.get(`${API_BASE_URL}/api/verifications`);
+      const verificationsRes = await api.get('/api/verifications');
       const allVerifications = verificationsRes.data.verifications || [];
 
       // Filter verifications for this NGO's causes
@@ -41,7 +39,7 @@ const VerificationHistory = () => {
       const enrichedVerifications = await Promise.all(
         ngoVerifications.map(async (verification) => {
           try {
-            const userRes = await axios.get(`${API_BASE_URL}/api/users/${verification.userId}`);
+            const userRes = await api.get(`/api/users/${verification.userId}`);
             const cause = causes.find(c => c._id === verification.causeId);
 
             return {

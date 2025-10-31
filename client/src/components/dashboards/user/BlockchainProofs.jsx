@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Copy, ExternalLink, CheckCircle, Download, Search } from 'lucide-react';
-import axios from 'axios';
+import api, { API_BASE_URL } from '../../../utils/axiosConfig';
 import { toast } from 'react-toastify';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5173';
 
 const BlockchainProofs = () => {
   const [verifications, setVerifications] = useState([]);
@@ -22,11 +20,11 @@ const BlockchainProofs = () => {
       const userId = user?.id || user?._id;
 
       // Get user's verifications
-      const verificationsResponse = await axios.get(`${API_BASE_URL}/api/verifications`);
+      const verificationsResponse = await api.get('/api/verifications');
       const userVerifications = verificationsResponse.data.filter(v => v.userId === userId);
 
       // Get all causes to enrich data
-      const causesResponse = await axios.get(`${API_BASE_URL}/api/causes`);
+      const causesResponse = await api.get('/api/causes');
 
       // Enrich verifications with cause details
       const enrichedVerifications = userVerifications.map(verification => {

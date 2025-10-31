@@ -79,16 +79,27 @@ const Register = () => {
       });
 
       if (response.data.userId && response.data.user) {
+        const user = response.data.user;
         localStorage.setItem('userId', response.data.userId);
-        localStorage.setItem('userName', response.data.user.name || 'User');
-        localStorage.setItem('userRole', response.data.user.role || 'user');
-        toast.success('Login successful!');
+        localStorage.setItem('userName', user.name || 'User');
+        localStorage.setItem('userRole', user.role || 'user');
+        localStorage.setItem('user', JSON.stringify(user)); // ✅ Store full user object
+        localStorage.setItem('token', response.data.token || 'demo-token'); // ✅ Store token
         
-        // Redirect based on role
-        const redirectPath = response.data.user.role === 'ngo' ? '/dashboard' : from;
+        toast.success(`Welcome back, ${user.name}!`);
+        
+        // Role-based redirect
+        let redirectPath = from;
+        if (user.role === 'admin') {
+          redirectPath = '/admin-dashboard';
+        } else if (user.role === 'ngo') {
+          redirectPath = '/ngo-dashboard';
+        } else if (user.role === 'user' || user.role === 'organisation') {
+          redirectPath = '/user-dashboard';
+        }
+        
         setTimeout(() => {
           navigate(redirectPath, { replace: true });
-          window.location.reload();
         }, 500);
       } else {
         toast.error('Invalid response from server. Please try again.');
@@ -167,9 +178,12 @@ const Register = () => {
       const response = await axios.post(`${API_BASE_URL}/api/users/register`, registrationData);
 
       if (response.data.userId && response.data.user) {
+        // Store all user data in localStorage
         localStorage.setItem('userId', response.data.userId);
         localStorage.setItem('userName', response.data.user.name || registrationData.name);
         localStorage.setItem('userRole', registrationData.role);
+        localStorage.setItem('user', JSON.stringify(response.data.user)); // ✅ Store full user object
+        localStorage.setItem('token', response.data.token || 'demo-token'); // ✅ Store token
         
         // If NGO, upload certificate
         if (activeTab === 'ngo' && ngoForm.certificate) {
@@ -199,10 +213,19 @@ const Register = () => {
           toast.info('Your NGO verification is pending. You will be notified once approved.');
         }
 
-        // Redirect to home page after successful registration
+        // Role-based redirect after successful registration
+        let redirectPath = '/';
+        if (registrationData.role === 'admin') {
+          redirectPath = '/admin-dashboard';
+        } else if (registrationData.role === 'ngo') {
+          redirectPath = '/ngo-dashboard';
+        } else if (registrationData.role === 'user' || registrationData.role === 'organisation') {
+          redirectPath = '/user-dashboard';
+        }
+        
         setTimeout(() => {
-          navigate('/', { replace: true });
-        }, 2000);
+          navigate(redirectPath, { replace: true });
+        }, 1500);
       } else {
         toast.error('Registration completed but received invalid response. Please try logging in.');
       }

@@ -3,10 +3,8 @@ import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Users, Target, CheckCircle, TrendingUp, AlertCircle } from 'lucide-react';
-import axios from 'axios';
+import api, { API_BASE_URL } from '../../../utils/axiosConfig';
 import 'leaflet/dist/leaflet.css';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5173';
 
 const StatCard = ({ icon: Icon, title, value, color, trend }) => (
   <motion.div
@@ -53,14 +51,14 @@ const NGOOverview = () => {
   const loadDashboardData = async (userData) => {
     try {
       // Fetch causes created by this NGO
-      const causesRes = await axios.get(`${API_BASE_URL}/api/causes`);
+      const causesRes = await api.get('/api/causes');
       const ngoId = userData?._id || userData?.id;
       const ngoCauses = causesRes.data.causes?.filter(c => c.ngoId === ngoId) || [];
       
       setCauses(ngoCauses);
 
       // Fetch matches (volunteers who joined)
-      const matchesRes = await axios.get(`${API_BASE_URL}/api/matches`);
+      const matchesRes = await api.get('/api/matches');
       const allMatches = matchesRes.data.matches || [];
       
       // Filter matches for this NGO's causes
@@ -68,7 +66,7 @@ const NGOOverview = () => {
       const ngoMatches = allMatches.filter(m => causeIds.includes(m.causeId));
 
       // Fetch verifications
-      const verificationsRes = await axios.get(`${API_BASE_URL}/api/verifications`);
+      const verificationsRes = await api.get('/api/verifications');
       const verifications = verificationsRes.data.verifications || [];
       const ngoVerifications = verifications.filter(v => causeIds.includes(v.causeId));
 

@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, Users, Shield, Activity, TrendingUp } from 'lucide-react';
-import axios from 'axios';
+import api, { API_BASE_URL } from '../../../utils/axiosConfig';
 import { toast } from 'react-toastify';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5173';
 
 const AnomalyDetection = () => {
   const [anomalies, setAnomalies] = useState([]);
@@ -19,17 +17,17 @@ const AnomalyDetection = () => {
     try {
       setLoading(true);
       const [usersRes, causesRes, matchesRes, verificationsRes] = await Promise.all([
-        axios.get(`${API_BASE_URL}/api/users`),
-        axios.get(`${API_BASE_URL}/api/causes`),
-        axios.get(`${API_BASE_URL}/api/matches`),
-        axios.get(`${API_BASE_URL}/api/verifications`)
+        api.get('/api/admin/users'),
+        api.get('/api/causes'),
+        api.get('/api/matches'),
+        api.get('/api/verifications')
       ]);
 
       const detected = [];
-      const users = usersRes.data;
-      const causes = causesRes.data;
-      const matches = matchesRes.data;
-      const verifications = verificationsRes.data;
+      const users = usersRes.data.users || usersRes.data || [];
+      const causes = causesRes.data || [];
+      const matches = matchesRes.data || [];
+      const verifications = verificationsRes.data || [];
 
       // Rule 1: User joined too many causes in short time (>5 in 1 hour)
       const recentMatches = matches.filter(m => new Date(m.joinDate) > new Date(Date.now() - 60 * 60 * 1000));

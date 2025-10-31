@@ -62,13 +62,29 @@ const Login = () => {
           city: 'Bangalore',
           interests: 'general',
           availability: 'weekends',
+          role: 'user',
         });
 
-        if (response.data.userId) {
+        if (response.data.userId && response.data.user) {
+          const user = response.data.user;
           localStorage.setItem('userId', response.data.userId);
-          localStorage.setItem('userName', response.data.user.name);
+          localStorage.setItem('userName', user.name);
+          localStorage.setItem('user', JSON.stringify(user)); // ✅ Store full user object
+          localStorage.setItem('token', response.data.token || 'demo-token'); // ✅ Store token
+          
           toast.success('Registration successful!');
-          navigate(from, { replace: true });
+          
+          // Role-based redirect (same as login)
+          let redirectPath = from;
+          if (user.role === 'admin') {
+            redirectPath = '/admin-dashboard';
+          } else if (user.role === 'ngo') {
+            redirectPath = '/ngo-dashboard';
+          } else if (user.role === 'user' || user.role === 'organisation') {
+            redirectPath = '/user-dashboard';
+          }
+          
+          navigate(redirectPath, { replace: true });
         }
       } catch (error) {
         toast.error(error.response?.data?.error || 'Registration failed');

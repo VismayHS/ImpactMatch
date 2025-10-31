@@ -46,6 +46,43 @@ router.get('/pending', async (req, res) => {
   }
 });
 
+// GET /api/verify (or /api/verifications)
+// Get all verifications (for analytics/dashboard)
+router.get('/', async (req, res) => {
+  try {
+    const { userId, verifierId, matchId } = req.query;
+    
+    let query = {};
+    if (matchId) query.matchId = matchId;
+    if (verifierId) query.verifierId = verifierId;
+    
+    const verifications = await Verification.find(query)
+      .populate({
+        path: 'matchId',
+        populate: [
+          { path: 'userId', select: 'name email city' },
+          { path: 'causeId', select: 'title category city ngoId' }
+        ]
+      })
+      .populate('verifierId', 'name email role')
+      .limit(100)
+      .lean();
+    
+    // Filter by userId if provided (user who was verified)
+    let filteredVerifications = verifications;
+    if (userId) {
+      filteredVerifications = verifications.filter(v => 
+        v.matchId && v.matchId.userId && v.matchId.userId._id.toString() === userId
+      );
+    }
+    
+    res.json({ verifications: filteredVerifications });
+  } catch (error) {
+    console.error('Fetch verifications error:', error);
+    res.status(500).json({ error: 'Failed to fetch verifications' });
+  }
+});
+
 // POST /api/verify
 // Verify a match and record on blockchain
 router.post('/', async (req, res) => {

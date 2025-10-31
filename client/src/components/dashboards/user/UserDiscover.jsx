@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, X, MapPin, Users, Calendar, Info } from 'lucide-react';
-import axios from 'axios';
+import api, { API_BASE_URL } from '../../../utils/axiosConfig';
 import { toast } from 'react-toastify';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5173';
 
 const UserDiscover = () => {
   const [causes, setCauses] = useState([]);
@@ -22,13 +20,13 @@ const UserDiscover = () => {
   const loadCauses = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_BASE_URL}/api/causes`, {
+      const response = await api.get('/api/causes', {
         params: { status: 'active' }
       });
       
       // Filter out causes the user has already joined
       const userId = JSON.parse(localStorage.getItem('user'))?.id || JSON.parse(localStorage.getItem('user'))?._id;
-      const matchesResponse = await axios.get(`${API_BASE_URL}/api/matches`);
+      const matchesResponse = await api.get('/api/matches');
       const userMatches = matchesResponse.data.filter(m => m.userId === userId);
       const joinedCauseIds = userMatches.map(m => m.causeId);
       
@@ -53,7 +51,7 @@ const UserDiscover = () => {
       const cause = causes[currentIndex];
       try {
         const userId = user?.id || user?._id;
-        await axios.post(`${API_BASE_URL}/api/matches`, {
+        await api.post('/api/matches', {
           userId,
           causeId: cause._id,
           status: 'joined'

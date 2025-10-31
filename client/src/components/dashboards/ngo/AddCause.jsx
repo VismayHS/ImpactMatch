@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PlusCircle, X, MapPin, Upload, AlertCircle } from 'lucide-react';
-import axios from 'axios';
+import api, { API_BASE_URL } from '../../../utils/axiosConfig';
 import { toast } from 'react-toastify';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5173';
 
 // Indian cities with coordinates
 const INDIAN_CITIES = [
@@ -100,7 +98,7 @@ const AddCause = () => {
         formDataToSend.append('image', formData.image);
       }
 
-      const response = await axios.post(`${API_BASE_URL}/api/causes`, formDataToSend, {
+      const response = await api.post('/api/causes', formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

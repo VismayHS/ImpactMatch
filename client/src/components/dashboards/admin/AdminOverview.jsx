@@ -3,10 +3,8 @@ import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Users, Building2, Heart, Shield, TrendingUp, AlertCircle } from 'lucide-react';
-import axios from 'axios';
+import api, { API_BASE_URL } from '../../../utils/axiosConfig';
 import 'leaflet/dist/leaflet.css';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5173';
 
 const AdminOverview = () => {
   const [loading, setLoading] = useState(true);
@@ -29,15 +27,16 @@ const AdminOverview = () => {
     try {
       setLoading(true);
 
-      // Fetch all data
+      // Fetch all data using authenticated API
       const [usersRes, causesRes, matchesRes, verificationsRes] = await Promise.all([
-        axios.get(`${API_BASE_URL}/api/users`),
-        axios.get(`${API_BASE_URL}/api/causes`),
-        axios.get(`${API_BASE_URL}/api/matches`),
-        axios.get(`${API_BASE_URL}/api/verifications`)
+        api.get('/api/admin/users'),
+        api.get('/api/causes'),
+        api.get('/api/matches'),
+        api.get('/api/verifications')
       ]);
 
-      const users = usersRes.data || [];
+      // Handle response format - admin/users returns { users: [...] }
+      const users = usersRes.data.users || usersRes.data || [];
       const causes = causesRes.data || [];
       const matches = matchesRes.data || [];
       const verifications = verificationsRes.data || [];

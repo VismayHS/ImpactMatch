@@ -37,7 +37,8 @@ function App() {
           return res.json();
         })
         .then(data => {
-          if (data.user) setUser(data.user);
+          // Backend returns flat user object, not { user: {...} }
+          if (data && data.id) setUser(data);
         })
         .catch(err => {
           console.error('Failed to load user:', err);

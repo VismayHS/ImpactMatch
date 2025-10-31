@@ -2,7 +2,7 @@ import { motion, useInView } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { ModernIcon, FeatureIcon } from './IconSystem';
-import axios from 'axios';
+import api, { API_BASE_URL } from '../utils/axiosConfig';
 
 const CausesFeed = () => {
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const CausesFeed = () => {
     const fetchCauses = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:5173/api/causes');
+        const response = await api.get('/api/causes');
         
         if (response.data && response.data.causes) {
           // Map backend data to frontend format with icons
