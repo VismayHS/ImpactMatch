@@ -175,21 +175,21 @@ const Register = () => {
         if (activeTab === 'ngo' && ngoForm.certificate) {
           const formData = new FormData();
           formData.append('certificate', ngoForm.certificate);
+          formData.append('userId', response.data.userId);
           formData.append('registrationNumber', 'AUTO-' + Date.now());
           
           try {
-            await axios.post(`${API_BASE_URL}/api/users/upload-certificate`, formData, {
+            const uploadResponse = await axios.post(`${API_BASE_URL}/api/users/upload-certificate`, formData, {
               headers: {
                 'Content-Type': 'multipart/form-data'
-              },
-              params: {
-                userId: response.data.userId
               }
             });
+            console.log('Certificate upload successful:', uploadResponse.data);
             toast.success('Certificate uploaded successfully!');
           } catch (err) {
             console.error('Certificate upload error:', err);
-            toast.warning('Registration successful, but certificate upload failed. Please upload it later.');
+            console.error('Error response:', err.response?.data);
+            toast.error('Certificate upload failed: ' + (err.response?.data?.error || err.message));
           }
         }
         
@@ -199,12 +199,10 @@ const Register = () => {
           toast.info('Your NGO verification is pending. You will be notified once approved.');
         }
 
-        // Redirect based on role
-        const redirectPath = activeTab === 'ngo' ? '/dashboard' : from;
+        // Redirect to home page after successful registration
         setTimeout(() => {
-          navigate(redirectPath, { replace: true });
-          window.location.reload();
-        }, 1000);
+          navigate('/', { replace: true });
+        }, 2000);
       } else {
         toast.error('Registration completed but received invalid response. Please try logging in.');
       }

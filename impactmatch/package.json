@@ -8,6 +8,7 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -16,7 +17,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.6.0",
     "multer": "^2.0.2",
-    "natural": "^6.2.3"
+    "natural": "^6.2.3",
+    "pdfkit": "^0.17.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

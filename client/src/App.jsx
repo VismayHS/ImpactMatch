@@ -13,10 +13,15 @@ import MapView from './components/MapView';
 import IconShowcase from './components/IconShowcase';
 import PrivateRoute from './components/PrivateRoute';
 import AdminLogin from './admin/AdminLogin';
-import AdminDashboard from './admin/AdminDashboard';
+import OldAdminDashboard from './admin/AdminDashboard';
 import UserManagement from './admin/UserManagement';
 import NGOVerification from './admin/NGOVerification';
 import ActivityLogs from './admin/ActivityLogs';
+
+// New Premium Dashboards
+import NGODashboard from './components/dashboards/NGODashboard';
+import UserDashboard from './components/dashboards/UserDashboard';
+import AdminDashboard from './components/dashboards/AdminDashboard';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -127,10 +132,15 @@ function App() {
 
           {/* Admin routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/dashboard" element={<OldAdminDashboard />} />
           <Route path="/admin/users" element={<UserManagement />} />
           <Route path="/admin/ngos" element={<NGOVerification />} />
           <Route path="/admin/logs" element={<ActivityLogs />} />
+
+          {/* New Premium Dashboards */}
+          <Route path="/ngo-dashboard/*" element={<NGODashboard />} />
+          <Route path="/user-dashboard/*" element={<UserDashboard />} />
+          <Route path="/admin-dashboard/*" element={<AdminDashboard />} />
         </Routes>
       </div>
     </Router>

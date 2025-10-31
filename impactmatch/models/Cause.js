@@ -25,6 +25,28 @@ const causeSchema = new mongoose.Schema({
     type: Number,
     required: false,
   },
+  ngoId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  volunteerLimit: {
+    type: Number,
+    default: 50,
+  },
+  volunteersJoined: {
+    type: Number,
+    default: 0,
+  },
+  image: {
+    type: String,
+    default: '',
+  },
+  status: {
+    type: String,
+    enum: ['active', 'completed', 'cancelled', 'pending_approval'],
+    default: 'active',
+  },
   createdAt: {
     type: Date,
     default: Date.now,

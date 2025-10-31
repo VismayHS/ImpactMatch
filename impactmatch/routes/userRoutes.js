@@ -190,12 +190,15 @@ router.get('/:id', async (req, res) => {
 // Update user profile
 router.put('/:id', async (req, res) => {
   try {
-    const { interests, availability, city } = req.body;
+    const { interests, availability, city, name, email, officeAddress } = req.body;
 
     const updateData = {};
     if (interests) updateData.interests = Array.isArray(interests) ? interests.join(', ') : interests;
     if (availability) updateData.availability = availability;
     if (city) updateData.city = city;
+    if (name) updateData.name = name;
+    if (email) updateData.email = email;
+    if (officeAddress) updateData.officeAddress = officeAddress;
 
     const user = await User.findByIdAndUpdate(req.params.id, updateData, { new: true });
 
@@ -208,7 +211,9 @@ router.put('/:id', async (req, res) => {
       user: {
         id: user._id,
         name: user.name,
+        email: user.email,
         city: user.city,
+        officeAddress: user.officeAddress,
         interests: user.interests,
         impactScore: user.impactScore,
         badges: user.badges,

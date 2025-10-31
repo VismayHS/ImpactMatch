@@ -27,11 +27,26 @@ const Login = () => {
           password: formData.password,
         });
 
-        if (response.data.userId) {
+        if (response.data.userId && response.data.user) {
+          const user = response.data.user;
           localStorage.setItem('userId', response.data.userId);
-          localStorage.setItem('userName', response.data.user.name);
-          toast.success('Login successful!');
-          navigate(from, { replace: true });
+          localStorage.setItem('userName', user.name);
+          localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('token', response.data.token || 'demo-token');
+          
+          toast.success(`Welcome back, ${user.name}!`);
+          
+          // Role-based redirect
+          let redirectPath = from;
+          if (user.role === 'admin') {
+            redirectPath = '/admin-dashboard';
+          } else if (user.role === 'ngo') {
+            redirectPath = '/ngo-dashboard';
+          } else if (user.role === 'user' || user.role === 'organisation') {
+            redirectPath = '/user-dashboard';
+          }
+          
+          navigate(redirectPath, { replace: true });
         }
       } catch (error) {
         // Fallback: Try to find user by email (demo only)

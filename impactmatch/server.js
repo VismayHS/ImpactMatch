@@ -7,6 +7,7 @@ const connectDB = require('./config/db');
 // Import routes
 const userRoutes = require('./routes/userRoutes');
 const matchRoutes = require('./routes/matchRoutes');
+const causeRoutes = require('./routes/causeRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const verifyRoutes = require('./routes/verifyRoutes');
 const chatRoutes = require('./routes/chatRoutes');
@@ -31,6 +32,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Public API Routes (no auth required)
 app.use('/api/match', matchRoutes); // Public: Browse causes
 app.use('/api/chat', chatRoutes); // Public: Chat suggestions
+app.use('/api/causes', causeRoutes); // Causes CRUD
 
 // Protected API Routes (require auth - to be implemented)
 app.use('/api/users', userRoutes);
@@ -45,14 +47,25 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'ImpactMatch API is running' });
 });
 
-// Public endpoint to get all causes (browse without login)
-app.get('/api/causes', async (req, res) => {
+// Matches endpoint
+app.get('/api/matches', async (req, res) => {
   try {
-    const Cause = require('./models/Cause');
-    const causes = await Cause.find().limit(50);
-    res.json({ causes });
+    const Match = require('./models/Match');
+    const matches = await Match.find().limit(100);
+    res.json({ matches });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch causes' });
+    res.status(500).json({ error: 'Failed to fetch matches' });
+  }
+});
+
+// Verifications endpoint
+app.get('/api/verifications', async (req, res) => {
+  try {
+    const Verification = require('./models/Verification');
+    const verifications = await Verification.find().limit(100);
+    res.json({ verifications });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch verifications' });
   }
 });
 
