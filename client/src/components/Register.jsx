@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
+import api from '../utils/axiosConfig';
 import { toast } from 'react-toastify';
-import { API_BASE_URL } from '../constants';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -73,23 +72,25 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/users/login`, {
+      const response = await api.post('/api/users/login', {
         email: loginForm.email,
         password: loginForm.password,
       });
 
       if (response.data.userId && response.data.user) {
         const user = response.data.user;
+        
+        // Store auth data (overwrite any old values)
         localStorage.setItem('userId', response.data.userId);
         localStorage.setItem('userName', user.name || 'User');
         localStorage.setItem('userRole', user.role || 'user');
-        localStorage.setItem('user', JSON.stringify(user)); // ✅ Store full user object
-        localStorage.setItem('token', response.data.token || 'demo-token'); // ✅ Store token
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('token', response.data.token);
         
         toast.success(`Welcome back, ${user.name}!`);
         
-        // Role-based redirect
-        let redirectPath = from;
+        // Role-based redirect (always use role-based routing)
+        let redirectPath = '/user-dashboard'; // Default for users
         if (user.role === 'admin') {
           redirectPath = '/admin-dashboard';
         } else if (user.role === 'ngo') {
@@ -175,15 +176,15 @@ const Register = () => {
         };
       }
 
-      const response = await axios.post(`${API_BASE_URL}/api/users/register`, registrationData);
+      const response = await api.post('/api/users/register', registrationData);
 
       if (response.data.userId && response.data.user) {
-        // Store all user data in localStorage
+        // Store auth data (overwrite any old values)
         localStorage.setItem('userId', response.data.userId);
         localStorage.setItem('userName', response.data.user.name || registrationData.name);
         localStorage.setItem('userRole', registrationData.role);
-        localStorage.setItem('user', JSON.stringify(response.data.user)); // ✅ Store full user object
-        localStorage.setItem('token', response.data.token || 'demo-token'); // ✅ Store token
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        localStorage.setItem('token', response.data.token);
         
         // If NGO, upload certificate
         if (activeTab === 'ngo' && ngoForm.certificate) {
@@ -193,7 +194,7 @@ const Register = () => {
           formData.append('registrationNumber', 'AUTO-' + Date.now());
           
           try {
-            const uploadResponse = await axios.post(`${API_BASE_URL}/api/users/upload-certificate`, formData, {
+            const uploadResponse = await api.post('/api/users/upload-certificate', formData, {
               headers: {
                 'Content-Type': 'multipart/form-data'
               }
@@ -213,8 +214,8 @@ const Register = () => {
           toast.info('Your NGO verification is pending. You will be notified once approved.');
         }
 
-        // Role-based redirect after successful registration
-        let redirectPath = '/';
+        // Role-based redirect after successful registration (always use role-based routing)
+        let redirectPath = '/user-dashboard'; // Default for users
         if (registrationData.role === 'admin') {
           redirectPath = '/admin-dashboard';
         } else if (registrationData.role === 'ngo') {
@@ -651,12 +652,21 @@ const Register = () => {
 
             {/* Toggle Login/Register */}
             <div className="mt-8 text-center">
-              <button
-                onClick={() => setIsLogin(!isLogin)}
-                className="text-emerald-600 hover:text-emerald-700 font-bold hover:underline transition-all"
-              >
-                {isLogin ? "Don't have an account? Register here" : 'Already have an account? Login here'}
-              </button>
+              {isLogin ? (
+                <button
+                  onClick={() => setIsLogin(false)}
+                  className="text-emerald-600 hover:text-emerald-700 font-bold hover:underline transition-all"
+                >
+                  Don't have an account? Register here
+                </button>
+              ) : (
+                <Link
+                  to="/login/user"
+                  className="text-emerald-600 hover:text-emerald-700 font-bold hover:underline transition-all"
+                >
+                  Already have an account? Login here
+                </Link>
+              )}
             </div>
           </div>
         </div>

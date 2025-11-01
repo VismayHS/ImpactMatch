@@ -89,8 +89,8 @@ router.post('/', async (req, res) => {
 // Get all causes for map display
 router.get('/causes', async (req, res) => {
   try {
-    // Fetch all causes from database
-    const causes = await Cause.find({}).limit(100).lean();
+    // Fetch all causes from database (no limit)
+    const causes = await Cause.find({}).lean();
     
     res.json(causes);
   } catch (error) {

@@ -1,0 +1,8 @@
+node_modules/
+cache/
+artifacts/
+deployments/*.json
+*.log
+
+# Keep deployment directory but ignore JSON files
+!deployments/.gitkeep

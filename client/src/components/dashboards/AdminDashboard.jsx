@@ -15,11 +15,7 @@ import {
 import { toast } from 'react-toastify';
 import AdminOverview from './admin/AdminOverview';
 import NGOManagement from './admin/NGOManagement';
-import UserManagement from './admin/UserManagement';
-import CauseManagement from './admin/CauseManagement';
 import BlockchainTracker from './admin/BlockchainTracker';
-import AnomalyDetection from './admin/AnomalyDetection';
-import ExportReports from './admin/ExportReports';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -30,7 +26,7 @@ const AdminDashboard = () => {
     const token = localStorage.getItem('token');
     
     if (!userData || !token) {
-      navigate('/login');
+      navigate('/login/admin');
       return;
     }
 
@@ -49,6 +45,9 @@ const AdminDashboard = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userName');
     toast.success('Logged out successfully!');
     navigate('/');
   };
@@ -56,11 +55,7 @@ const AdminDashboard = () => {
   const menuItems = [
     { path: '', icon: LayoutDashboard, label: 'Overview' },
     { path: 'ngo-management', icon: Building2, label: 'NGO Management' },
-    { path: 'user-management', icon: Users, label: 'User Management' },
-    { path: 'cause-management', icon: Heart, label: 'Cause Management' },
-    { path: 'blockchain', icon: Shield, label: 'Blockchain Tracker' },
-    { path: 'anomaly', icon: AlertTriangle, label: 'AI Anomaly Detection' },
-    { path: 'reports', icon: FileText, label: 'Export Reports' },
+    { path: 'blockchain', icon: Shield, label: 'Verification Tracker' },
   ];
 
   if (!user) return null;
@@ -100,7 +95,7 @@ const AdminDashboard = () => {
             {menuItems.map((item) => (
               <Link
                 key={item.path}
-                to={`/admin-dashboard/${item.path}`}
+                to={item.path}
                 className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-600 hover:text-white transition-all duration-300 group"
               >
                 <item.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
@@ -129,11 +124,7 @@ const AdminDashboard = () => {
             <Routes>
               <Route index element={<AdminOverview />} />
               <Route path="ngo-management" element={<NGOManagement />} />
-              <Route path="user-management" element={<UserManagement />} />
-              <Route path="cause-management" element={<CauseManagement />} />
               <Route path="blockchain" element={<BlockchainTracker />} />
-              <Route path="anomaly" element={<AnomalyDetection />} />
-              <Route path="reports" element={<ExportReports />} />
             </Routes>
           </motion.div>
         </main>

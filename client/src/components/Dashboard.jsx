@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { getDashboard } from '../api/matchAPI';
@@ -7,9 +8,12 @@ import BadgeDisplay from './BadgeDisplay';
 import { formatDate } from '../utils/formatters';
 import { toast } from 'react-toastify';
 
+// Admin Dashboard Component
+import AdminDashboard  from './dashboards/AdminDashboard';
+
 const COLORS = ['#16A34A', '#34D399', '#6B7280', '#F59E0B', '#EF4444', '#8B5CF6'];
 
-export default function Dashboard({ user, setUser }) {
+function RegularDashboard({ user, setUser }) {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedMatch, setSelectedMatch] = useState(null);
@@ -283,4 +287,17 @@ export default function Dashboard({ user, setUser }) {
       )}
     </div>
   );
+}
+
+// Main Dashboard component with routing
+export default function Dashboard({ user, setUser }) {
+  const userRole = localStorage.getItem('userRole');
+  
+  // If admin, show full admin dashboard (it has its own nested Routes)
+  if (userRole === 'admin') {
+    return <AdminDashboard />;
+  }
+  
+  // Regular user/NGO dashboard
+  return <RegularDashboard user={user} setUser={setUser} />;
 }

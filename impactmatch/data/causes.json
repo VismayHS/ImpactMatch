@@ -1,66 +1,66 @@
 [
   {
     "id": 1,
-    "name": "Tree Plantation Drive - Kolkata",
+    "name": "Tree Plantation Drive - Lucknow",
     "description": "Plant native trees and restore green cover in urban areas.",
     "category": "environment",
-    "city": "Kolkata",
-    "lat": 22.5754,
-    "lng": 88.3708
+    "city": "Lucknow",
+    "lat": 26.8619,
+    "lng": 80.9236
   },
   {
     "id": 2,
-    "name": "Beach Cleanup Initiative - Hyderabad",
+    "name": "Beach Cleanup Initiative - Jaipur",
     "description": "Remove plastic waste from beaches and coastal areas.",
     "category": "environment",
-    "city": "Hyderabad",
-    "lat": 17.4348,
-    "lng": 78.5264
+    "city": "Jaipur",
+    "lat": 26.9176,
+    "lng": 75.8283
   },
   {
     "id": 3,
-    "name": "Organic Farming Workshop - Delhi",
+    "name": "Organic Farming Workshop - Hyderabad",
     "description": "Learn sustainable farming techniques and promote organic produce.",
     "category": "environment",
-    "city": "Delhi",
-    "lat": 28.6648,
-    "lng": 77.0593
+    "city": "Hyderabad",
+    "lat": 17.3963,
+    "lng": 78.4956
   },
   {
     "id": 4,
-    "name": "Solar Energy Awareness - Lucknow",
+    "name": "Solar Energy Awareness - Pune",
     "description": "Educate communities about renewable energy and solar power.",
     "category": "environment",
-    "city": "Lucknow",
-    "lat": 26.8104,
-    "lng": 80.944
+    "city": "Pune",
+    "lat": 18.5678,
+    "lng": 73.8652
   },
   {
     "id": 5,
-    "name": "Water Conservation Project - Chennai",
+    "name": "Water Conservation Project - Delhi",
     "description": "Implement rainwater harvesting and reduce water wastage.",
     "category": "environment",
-    "city": "Chennai",
-    "lat": 13.0603,
-    "lng": 80.2357
+    "city": "Delhi",
+    "lat": 28.6905,
+    "lng": 77.1389
   },
   {
     "id": 6,
-    "name": "Waste Segregation Campaign - Bangalore",
+    "name": "Waste Segregation Campaign - Lucknow",
     "description": "Teach households proper waste management and recycling.",
     "category": "environment",
-    "city": "Bangalore",
-    "lat": 13.0065,
-    "lng": 77.5508
+    "city": "Lucknow",
+    "lat": 26.8378,
+    "lng": 80.9445
   },
   {
     "id": 7,
-    "name": "Urban Gardening Program - Chennai",
+    "name": "Urban Gardening Program - Kolkata",
     "description": "Create rooftop and vertical gardens in city spaces.",
     "category": "environment",
-    "city": "Chennai",
-    "lat": 13.044,
-    "lng": 80.2558
+    "city": "Kolkata",
+    "lat": 22.5947,
+    "lng": 88.3502
   },
   {
     "id": 8,
@@ -68,17 +68,17 @@
     "description": "Clean polluted rivers and restore aquatic ecosystems.",
     "category": "environment",
     "city": "Delhi",
-    "lat": 28.6926,
-    "lng": 77.0838
+    "lat": 28.7042,
+    "lng": 77.1061
   },
   {
     "id": 9,
-    "name": "Composting Workshop - Chennai",
+    "name": "Composting Workshop - Mumbai",
     "description": "Convert kitchen waste into nutrient-rich compost.",
     "category": "environment",
-    "city": "Chennai",
-    "lat": 13.1029,
-    "lng": 80.2325
+    "city": "Mumbai",
+    "lat": 19.1167,
+    "lng": 72.8654
   },
   {
     "id": 10,
@@ -86,53 +86,53 @@
     "description": "Eliminate single-use plastics from local communities.",
     "category": "environment",
     "city": "Pune",
-    "lat": 18.5492,
-    "lng": 73.8513
+    "lat": 18.5406,
+    "lng": 73.8177
   },
   {
     "id": 11,
-    "name": "Tree Plantation Drive - Bangalore",
+    "name": "Tree Plantation Drive - Lucknow",
     "description": "Plant native trees and restore green cover in urban areas.",
     "category": "environment",
-    "city": "Bangalore",
-    "lat": 12.9816,
-    "lng": 77.5845
+    "city": "Lucknow",
+    "lat": 26.806,
+    "lng": 80.9487
   },
   {
     "id": 12,
-    "name": "Beach Cleanup Initiative - Lucknow",
+    "name": "Beach Cleanup Initiative - Jaipur",
     "description": "Remove plastic waste from beaches and coastal areas.",
     "category": "environment",
-    "city": "Lucknow",
-    "lat": 26.8386,
-    "lng": 80.9913
+    "city": "Jaipur",
+    "lat": 26.8717,
+    "lng": 75.7578
   },
   {
     "id": 13,
-    "name": "Organic Farming Workshop - Hyderabad",
+    "name": "Organic Farming Workshop - Lucknow",
     "description": "Learn sustainable farming techniques and promote organic produce.",
     "category": "environment",
-    "city": "Hyderabad",
-    "lat": 17.4328,
-    "lng": 78.5283
+    "city": "Lucknow",
+    "lat": 26.8523,
+    "lng": 80.8964
   },
   {
     "id": 14,
-    "name": "Solar Energy Awareness - Chennai",
+    "name": "Solar Energy Awareness - Hyderabad",
     "description": "Educate communities about renewable energy and solar power.",
     "category": "environment",
-    "city": "Chennai",
-    "lat": 13.0518,
-    "lng": 80.2404
+    "city": "Hyderabad",
+    "lat": 17.355,
+    "lng": 78.4913
   },
   {
     "id": 15,
-    "name": "Water Conservation Project - Lucknow",
+    "name": "Water Conservation Project - Surat",
     "description": "Implement rainwater harvesting and reduce water wastage.",
     "category": "environment",
-    "city": "Lucknow",
-    "lat": 26.8462,
-    "lng": 80.9526
+    "city": "Surat",
+    "lat": 21.2155,
+    "lng": 72.8305
   },
   {
     "id": 16,
@@ -140,17 +140,17 @@
     "description": "Teach households proper waste management and recycling.",
     "category": "environment",
     "city": "Jaipur",
-    "lat": 26.8917,
-    "lng": 75.7459
+    "lat": 26.8694,
+    "lng": 75.8058
   },
   {
     "id": 17,
-    "name": "Urban Gardening Program - Pune",
+    "name": "Urban Gardening Program - Mumbai",
     "description": "Create rooftop and vertical gardens in city spaces.",
     "category": "environment",
-    "city": "Pune",
-    "lat": 18.5413,
-    "lng": 73.8561
+    "city": "Mumbai",
+    "lat": 19.047,
+    "lng": 72.8404
   },
   {
     "id": 18,
@@ -158,89 +158,89 @@
     "description": "Clean polluted rivers and restore aquatic ecosystems.",
     "category": "environment",
     "city": "Pune",
-    "lat": 18.4908,
-    "lng": 73.8386
+    "lat": 18.4762,
+    "lng": 73.8299
   },
   {
     "id": 19,
-    "name": "Composting Workshop - Surat",
+    "name": "Composting Workshop - Kolkata",
     "description": "Convert kitchen waste into nutrient-rich compost.",
     "category": "environment",
-    "city": "Surat",
-    "lat": 21.204,
-    "lng": 72.8175
+    "city": "Kolkata",
+    "lat": 22.5982,
+    "lng": 88.3573
   },
   {
     "id": 20,
-    "name": "Plastic-Free Streets - Chennai",
+    "name": "Plastic-Free Streets - Delhi",
     "description": "Eliminate single-use plastics from local communities.",
     "category": "environment",
-    "city": "Chennai",
-    "lat": 13.055,
-    "lng": 80.2536
+    "city": "Delhi",
+    "lat": 28.6833,
+    "lng": 77.1349
   },
   {
     "id": 21,
-    "name": "Free Health Checkup Camp - Lucknow",
+    "name": "Free Health Checkup Camp - Surat",
     "description": "Provide basic health screenings for underprivileged communities.",
     "category": "health",
-    "city": "Lucknow",
-    "lat": 26.8486,
-    "lng": 80.9113
+    "city": "Surat",
+    "lat": 21.1546,
+    "lng": 72.7878
   },
   {
     "id": 22,
-    "name": "Blood Donation Drive - Chennai",
+    "name": "Blood Donation Drive - Lucknow",
     "description": "Organize blood donation camps to save lives.",
     "category": "health",
-    "city": "Chennai",
-    "lat": 13.1288,
-    "lng": 80.3139
+    "city": "Lucknow",
+    "lat": 26.8902,
+    "lng": 80.9308
   },
   {
     "id": 23,
-    "name": "Mental Health Awareness - Bangalore",
+    "name": "Mental Health Awareness - Surat",
     "description": "Reduce stigma and provide counseling support.",
     "category": "health",
-    "city": "Bangalore",
-    "lat": 12.9556,
-    "lng": 77.5811
+    "city": "Surat",
+    "lat": 21.1313,
+    "lng": 72.7875
   },
   {
     "id": 24,
-    "name": "Yoga & Wellness Sessions - Mumbai",
+    "name": "Yoga & Wellness Sessions - Jaipur",
     "description": "Offer free yoga classes for physical and mental wellbeing.",
     "category": "health",
-    "city": "Mumbai",
-    "lat": 19.0334,
-    "lng": 72.8511
+    "city": "Jaipur",
+    "lat": 26.9535,
+    "lng": 75.8098
   },
   {
     "id": 25,
-    "name": "COVID Vaccination Support - Kolkata",
+    "name": "COVID Vaccination Support - Delhi",
     "description": "Help elderly and disabled get vaccinated.",
     "category": "health",
-    "city": "Kolkata",
-    "lat": 22.6166,
-    "lng": 88.327
+    "city": "Delhi",
+    "lat": 28.721,
+    "lng": 77.112
   },
   {
     "id": 26,
-    "name": "Nutrition Education Program - Hyderabad",
+    "name": "Nutrition Education Program - Jaipur",
     "description": "Teach balanced diets and healthy eating habits.",
     "category": "health",
-    "city": "Hyderabad",
-    "lat": 17.3626,
-    "lng": 78.4429
+    "city": "Jaipur",
+    "lat": 26.9138,
+    "lng": 75.7918
   },
   {
     "id": 27,
-    "name": "Eye Screening Camp - Hyderabad",
+    "name": "Eye Screening Camp - Kolkata",
     "description": "Provide free eye checkups and distribute glasses.",
     "category": "health",
-    "city": "Hyderabad",
-    "lat": 17.3523,
-    "lng": 78.4523
+    "city": "Kolkata",
+    "lat": 22.5894,
+    "lng": 88.326
   },
   {
     "id": 28,
@@ -248,161 +248,161 @@
     "description": "Teach life-saving emergency response skills.",
     "category": "health",
     "city": "Delhi",
-    "lat": 28.6554,
-    "lng": 77.0556
+    "lat": 28.7034,
+    "lng": 77.0598
   },
   {
     "id": 29,
-    "name": "Dental Care Initiative - Mumbai",
+    "name": "Dental Care Initiative - Hyderabad",
     "description": "Offer free dental checkups and oral hygiene education.",
     "category": "health",
-    "city": "Mumbai",
-    "lat": 19.1037,
-    "lng": 72.9169
+    "city": "Hyderabad",
+    "lat": 17.4041,
+    "lng": 78.4517
   },
   {
     "id": 30,
-    "name": "Fitness for All - Jaipur",
+    "name": "Fitness for All - Hyderabad",
     "description": "Organize community fitness activities and sports.",
     "category": "health",
-    "city": "Jaipur",
-    "lat": 26.9079,
-    "lng": 75.8159
+    "city": "Hyderabad",
+    "lat": 17.3705,
+    "lng": 78.4919
   },
   {
     "id": 31,
-    "name": "Free Health Checkup Camp - Hyderabad",
+    "name": "Free Health Checkup Camp - Delhi",
     "description": "Provide basic health screenings for underprivileged communities.",
     "category": "health",
-    "city": "Hyderabad",
-    "lat": 17.3658,
-    "lng": 78.4556
+    "city": "Delhi",
+    "lat": 28.7478,
+    "lng": 77.1267
   },
   {
     "id": 32,
-    "name": "Blood Donation Drive - Lucknow",
+    "name": "Blood Donation Drive - Bangalore",
     "description": "Organize blood donation camps to save lives.",
     "category": "health",
-    "city": "Lucknow",
-    "lat": 26.8497,
-    "lng": 80.9219
+    "city": "Bangalore",
+    "lat": 13.0076,
+    "lng": 77.5779
   },
   {
     "id": 33,
-    "name": "Mental Health Awareness - Chennai",
+    "name": "Mental Health Awareness - Surat",
     "description": "Reduce stigma and provide counseling support.",
     "category": "health",
-    "city": "Chennai",
-    "lat": 13.1256,
-    "lng": 80.2436
+    "city": "Surat",
+    "lat": 21.1531,
+    "lng": 72.8297
   },
   {
     "id": 34,
-    "name": "Yoga & Wellness Sessions - Jaipur",
+    "name": "Yoga & Wellness Sessions - Lucknow",
     "description": "Offer free yoga classes for physical and mental wellbeing.",
     "category": "health",
-    "city": "Jaipur",
-    "lat": 26.9275,
-    "lng": 75.8237
+    "city": "Lucknow",
+    "lat": 26.8592,
+    "lng": 80.9278
   },
   {
     "id": 35,
-    "name": "COVID Vaccination Support - Bangalore",
+    "name": "COVID Vaccination Support - Lucknow",
     "description": "Help elderly and disabled get vaccinated.",
     "category": "health",
-    "city": "Bangalore",
-    "lat": 12.9443,
-    "lng": 77.6276
+    "city": "Lucknow",
+    "lat": 26.8562,
+    "lng": 80.9895
   },
   {
     "id": 36,
-    "name": "Nutrition Education Program - Lucknow",
+    "name": "Nutrition Education Program - Surat",
     "description": "Teach balanced diets and healthy eating habits.",
     "category": "health",
-    "city": "Lucknow",
-    "lat": 26.8181,
-    "lng": 80.921
+    "city": "Surat",
+    "lat": 21.1918,
+    "lng": 72.8357
   },
   {
     "id": 37,
-    "name": "Eye Screening Camp - Delhi",
+    "name": "Eye Screening Camp - Mumbai",
     "description": "Provide free eye checkups and distribute glasses.",
     "category": "health",
-    "city": "Delhi",
-    "lat": 28.6965,
-    "lng": 77.1113
+    "city": "Mumbai",
+    "lat": 19.0606,
+    "lng": 72.8417
   },
   {
     "id": 38,
-    "name": "First Aid Training - Pune",
+    "name": "First Aid Training - Kolkata",
     "description": "Teach life-saving emergency response skills.",
     "category": "health",
-    "city": "Pune",
-    "lat": 18.4803,
-    "lng": 73.8262
+    "city": "Kolkata",
+    "lat": 22.6019,
+    "lng": 88.369
   },
   {
     "id": 39,
-    "name": "Dental Care Initiative - Delhi",
+    "name": "Dental Care Initiative - Bangalore",
     "description": "Offer free dental checkups and oral hygiene education.",
     "category": "health",
-    "city": "Delhi",
-    "lat": 28.7032,
-    "lng": 77.1457
+    "city": "Bangalore",
+    "lat": 13.0197,
+    "lng": 77.574
   },
   {
     "id": 40,
-    "name": "Fitness for All - Mumbai",
+    "name": "Fitness for All - Delhi",
     "description": "Organize community fitness activities and sports.",
     "category": "health",
-    "city": "Mumbai",
-    "lat": 19.0313,
-    "lng": 72.8548
+    "city": "Delhi",
+    "lat": 28.6955,
+    "lng": 77.0837
   },
   {
     "id": 41,
-    "name": "Evening Classes for Kids - Pune",
+    "name": "Evening Classes for Kids - Hyderabad",
     "description": "Teach underprivileged children after school hours.",
     "category": "education",
-    "city": "Pune",
-    "lat": 18.4914,
-    "lng": 73.8795
+    "city": "Hyderabad",
+    "lat": 17.362,
+    "lng": 78.4813
   },
   {
     "id": 42,
-    "name": "Digital Literacy Program - Pune",
+    "name": "Digital Literacy Program - Kolkata",
     "description": "Provide computer skills training to rural communities.",
     "category": "education",
-    "city": "Pune",
-    "lat": 18.539,
-    "lng": 73.8294
+    "city": "Kolkata",
+    "lat": 22.5227,
+    "lng": 88.3973
   },
   {
     "id": 43,
-    "name": "Book Donation Campaign - Lucknow",
+    "name": "Book Donation Campaign - Kolkata",
     "description": "Collect and distribute books to libraries in need.",
     "category": "education",
-    "city": "Lucknow",
-    "lat": 26.8739,
-    "lng": 80.9353
+    "city": "Kolkata",
+    "lat": 22.528,
+    "lng": 88.3729
   },
   {
     "id": 44,
-    "name": "Career Counseling Sessions - Surat",
+    "name": "Career Counseling Sessions - Hyderabad",
     "description": "Guide students in making informed career choices.",
     "category": "education",
-    "city": "Surat",
-    "lat": 21.161,
-    "lng": 72.8112
+    "city": "Hyderabad",
+    "lat": 17.3815,
+    "lng": 78.4842
   },
   {
     "id": 45,
-    "name": "English Speaking Classes - Delhi",
+    "name": "English Speaking Classes - Hyderabad",
     "description": "Improve communication skills for job seekers.",
     "category": "education",
-    "city": "Delhi",
-    "lat": 28.7031,
-    "lng": 77.09
+    "city": "Hyderabad",
+    "lat": 17.407,
+    "lng": 78.5286
   },
   {
     "id": 46,
@@ -410,44 +410,44 @@
     "description": "Help students excel in STEM subjects.",
     "category": "education",
     "city": "Jaipur",
-    "lat": 26.9226,
-    "lng": 75.8114
+    "lat": 26.9598,
+    "lng": 75.7951
   },
   {
     "id": 47,
-    "name": "Library Setup Project - Kolkata",
+    "name": "Library Setup Project - Chennai",
     "description": "Build community libraries in underserved areas.",
     "category": "education",
-    "city": "Kolkata",
-    "lat": 22.5994,
-    "lng": 88.3799
+    "city": "Chennai",
+    "lat": 13.1266,
+    "lng": 80.2747
   },
   {
     "id": 48,
-    "name": "Scholarship Support Drive - Mumbai",
+    "name": "Scholarship Support Drive - Delhi",
     "description": "Raise funds for meritorious but poor students.",
     "category": "education",
-    "city": "Mumbai",
-    "lat": 19.0512,
-    "lng": 72.9082
+    "city": "Delhi",
+    "lat": 28.7176,
+    "lng": 77.1248
   },
   {
     "id": 49,
-    "name": "Vocational Training Center - Chennai",
+    "name": "Vocational Training Center - Jaipur",
     "description": "Teach practical skills like tailoring and carpentry.",
     "category": "education",
-    "city": "Chennai",
-    "lat": 13.0731,
-    "lng": 80.2542
+    "city": "Jaipur",
+    "lat": 26.9477,
+    "lng": 75.8151
   },
   {
     "id": 50,
-    "name": "Adult Literacy Program - Hyderabad",
+    "name": "Adult Literacy Program - Mumbai",
     "description": "Teach reading and writing to adults who missed formal education.",
     "category": "education",
-    "city": "Hyderabad",
-    "lat": 17.4025,
-    "lng": 78.5066
+    "city": "Mumbai",
+    "lat": 19.124,
+    "lng": 72.9169
   },
   {
     "id": 51,
@@ -455,89 +455,89 @@
     "description": "Teach underprivileged children after school hours.",
     "category": "education",
     "city": "Hyderabad",
-    "lat": 17.3948,
-    "lng": 78.5202
+    "lat": 17.4276,
+    "lng": 78.4594
   },
   {
     "id": 52,
-    "name": "Digital Literacy Program - Chennai",
+    "name": "Digital Literacy Program - Jaipur",
     "description": "Provide computer skills training to rural communities.",
     "category": "education",
-    "city": "Chennai",
-    "lat": 13.1292,
-    "lng": 80.3168
+    "city": "Jaipur",
+    "lat": 26.934,
+    "lng": 75.8035
   },
   {
     "id": 53,
-    "name": "Book Donation Campaign - Hyderabad",
+    "name": "Book Donation Campaign - Jaipur",
     "description": "Collect and distribute books to libraries in need.",
     "category": "education",
-    "city": "Hyderabad",
-    "lat": 17.4146,
-    "lng": 78.4623
+    "city": "Jaipur",
+    "lat": 26.95,
+    "lng": 75.7633
   },
   {
     "id": 54,
-    "name": "Career Counseling Sessions - Pune",
+    "name": "Career Counseling Sessions - Delhi",
     "description": "Guide students in making informed career choices.",
     "category": "education",
-    "city": "Pune",
-    "lat": 18.54,
-    "lng": 73.8432
+    "city": "Delhi",
+    "lat": 28.7107,
+    "lng": 77.1512
   },
   {
     "id": 55,
-    "name": "English Speaking Classes - Bangalore",
+    "name": "English Speaking Classes - Surat",
     "description": "Improve communication skills for job seekers.",
     "category": "education",
-    "city": "Bangalore",
-    "lat": 12.9551,
-    "lng": 77.5703
+    "city": "Surat",
+    "lat": 21.1958,
+    "lng": 72.7983
   },
   {
     "id": 56,
-    "name": "Math & Science Tutoring - Pune",
+    "name": "Math & Science Tutoring - Surat",
     "description": "Help students excel in STEM subjects.",
     "category": "education",
-    "city": "Pune",
-    "lat": 18.5139,
-    "lng": 73.8746
+    "city": "Surat",
+    "lat": 21.1947,
+    "lng": 72.842
   },
   {
     "id": 57,
-    "name": "Library Setup Project - Mumbai",
+    "name": "Library Setup Project - Delhi",
     "description": "Build community libraries in underserved areas.",
     "category": "education",
-    "city": "Mumbai",
-    "lat": 19.0685,
-    "lng": 72.8811
+    "city": "Delhi",
+    "lat": 28.7273,
+    "lng": 77.0544
   },
   {
     "id": 58,
-    "name": "Scholarship Support Drive - Pune",
+    "name": "Scholarship Support Drive - Delhi",
     "description": "Raise funds for meritorious but poor students.",
     "category": "education",
-    "city": "Pune",
-    "lat": 18.5649,
-    "lng": 73.85
+    "city": "Delhi",
+    "lat": 28.7013,
+    "lng": 77.0861
   },
   {
     "id": 59,
-    "name": "Vocational Training Center - Surat",
+    "name": "Vocational Training Center - Kolkata",
     "description": "Teach practical skills like tailoring and carpentry.",
     "category": "education",
-    "city": "Surat",
-    "lat": 21.1222,
-    "lng": 72.8394
+    "city": "Kolkata",
+    "lat": 22.5766,
+    "lng": 88.3902
   },
   {
     "id": 60,
-    "name": "Adult Literacy Program - Bangalore",
+    "name": "Adult Literacy Program - Mumbai",
     "description": "Teach reading and writing to adults who missed formal education.",
     "category": "education",
-    "city": "Bangalore",
-    "lat": 12.9994,
-    "lng": 77.6134
+    "city": "Mumbai",
+    "lat": 19.1034,
+    "lng": 72.8316
   },
   {
     "id": 61,
@@ -545,8 +545,8 @@
     "description": "Provide regular meals to street dogs in the locality.",
     "category": "animals",
     "city": "Chennai",
-    "lat": 13.103,
-    "lng": 80.2908
+    "lat": 13.1139,
+    "lng": 80.3129
   },
   {
     "id": 62,
@@ -555,151 +555,151 @@
     "category": "animals",
     "city": "Mumbai",
     "lat": 19.1254,
-    "lng": 72.8745
+    "lng": 72.8795
   },
   {
     "id": 63,
-    "name": "Bird Conservation Project - Jaipur",
+    "name": "Bird Conservation Project - Pune",
     "description": "Protect local bird habitats and build nesting boxes.",
     "category": "animals",
-    "city": "Jaipur",
-    "lat": 26.9247,
-    "lng": 75.7827
+    "city": "Pune",
+    "lat": 18.5537,
+    "lng": 73.8596
   },
   {
     "id": 64,
-    "name": "Cow Rescue Initiative - Jaipur",
-    "description": "Save and rehabilitate injured or abandoned cattle.",
-    "category": "animals",
-    "city": "Jaipur",
-    "lat": 26.9212,
-    "lng": 75.8051
-  },
-  {
-    "id": 65,
-    "name": "Pet Adoption Drive - Pune",
-    "description": "Find loving homes for rescued animals.",
-    "category": "animals",
-    "city": "Pune",
-    "lat": 18.5586,
-    "lng": 73.9027
-  },
-  {
-    "id": 66,
-    "name": "Wildlife Awareness Campaign - Mumbai",
-    "description": "Educate about protecting endangered species.",
-    "category": "animals",
-    "city": "Mumbai",
-    "lat": 19.0512,
-    "lng": 72.8459
-  },
-  {
-    "id": 67,
-    "name": "Veterinary Camp - Lucknow",
-    "description": "Provide free medical care for community animals.",
-    "category": "animals",
-    "city": "Lucknow",
-    "lat": 26.854,
-    "lng": 80.8989
-  },
-  {
-    "id": 68,
-    "name": "Cat Sterilization Program - Mumbai",
-    "description": "Control stray cat population humanely.",
-    "category": "animals",
-    "city": "Mumbai",
-    "lat": 19.1028,
-    "lng": 72.9016
-  },
-  {
-    "id": 69,
-    "name": "Elephant Corridor Protection - Hyderabad",
-    "description": "Preserve natural migration routes for elephants.",
-    "category": "animals",
-    "city": "Hyderabad",
-    "lat": 17.3864,
-    "lng": 78.4795
-  },
-  {
-    "id": 70,
-    "name": "Aquarium & Marine Life Care - Chennai",
-    "description": "Maintain ethical aquatic animal habitats.",
-    "category": "animals",
-    "city": "Chennai",
-    "lat": 13.1202,
-    "lng": 80.2804
-  },
-  {
-    "id": 71,
-    "name": "Stray Dog Feeding Program - Mumbai",
-    "description": "Provide regular meals to street dogs in the locality.",
-    "category": "animals",
-    "city": "Mumbai",
-    "lat": 19.1046,
-    "lng": 72.853
-  },
-  {
-    "id": 72,
-    "name": "Animal Shelter Support - Delhi",
-    "description": "Help maintain shelters for abandoned pets.",
-    "category": "animals",
-    "city": "Delhi",
-    "lat": 28.7444,
-    "lng": 77.1043
-  },
-  {
-    "id": 73,
-    "name": "Bird Conservation Project - Lucknow",
-    "description": "Protect local bird habitats and build nesting boxes.",
-    "category": "animals",
-    "city": "Lucknow",
-    "lat": 26.8905,
-    "lng": 80.9374
-  },
-  {
-    "id": 74,
     "name": "Cow Rescue Initiative - Mumbai",
     "description": "Save and rehabilitate injured or abandoned cattle.",
     "category": "animals",
     "city": "Mumbai",
-    "lat": 19.0806,
-    "lng": 72.8536
+    "lat": 19.1226,
+    "lng": 72.8481
+  },
+  {
+    "id": 65,
+    "name": "Pet Adoption Drive - Mumbai",
+    "description": "Find loving homes for rescued animals.",
+    "category": "animals",
+    "city": "Mumbai",
+    "lat": 19.043,
+    "lng": 72.849
+  },
+  {
+    "id": 66,
+    "name": "Wildlife Awareness Campaign - Surat",
+    "description": "Educate about protecting endangered species.",
+    "category": "animals",
+    "city": "Surat",
+    "lat": 21.1317,
+    "lng": 72.8747
+  },
+  {
+    "id": 67,
+    "name": "Veterinary Camp - Chennai",
+    "description": "Provide free medical care for community animals.",
+    "category": "animals",
+    "city": "Chennai",
+    "lat": 13.0427,
+    "lng": 80.306
+  },
+  {
+    "id": 68,
+    "name": "Cat Sterilization Program - Surat",
+    "description": "Control stray cat population humanely.",
+    "category": "animals",
+    "city": "Surat",
+    "lat": 21.1487,
+    "lng": 72.8594
+  },
+  {
+    "id": 69,
+    "name": "Elephant Corridor Protection - Pune",
+    "description": "Preserve natural migration routes for elephants.",
+    "category": "animals",
+    "city": "Pune",
+    "lat": 18.484,
+    "lng": 73.8797
+  },
+  {
+    "id": 70,
+    "name": "Aquarium & Marine Life Care - Hyderabad",
+    "description": "Maintain ethical aquatic animal habitats.",
+    "category": "animals",
+    "city": "Hyderabad",
+    "lat": 17.3665,
+    "lng": 78.503
+  },
+  {
+    "id": 71,
+    "name": "Stray Dog Feeding Program - Delhi",
+    "description": "Provide regular meals to street dogs in the locality.",
+    "category": "animals",
+    "city": "Delhi",
+    "lat": 28.7024,
+    "lng": 77.0891
+  },
+  {
+    "id": 72,
+    "name": "Animal Shelter Support - Chennai",
+    "description": "Help maintain shelters for abandoned pets.",
+    "category": "animals",
+    "city": "Chennai",
+    "lat": 13.1287,
+    "lng": 80.2467
+  },
+  {
+    "id": 73,
+    "name": "Bird Conservation Project - Chennai",
+    "description": "Protect local bird habitats and build nesting boxes.",
+    "category": "animals",
+    "city": "Chennai",
+    "lat": 13.0348,
+    "lng": 80.3095
+  },
+  {
+    "id": 74,
+    "name": "Cow Rescue Initiative - Chennai",
+    "description": "Save and rehabilitate injured or abandoned cattle.",
+    "category": "animals",
+    "city": "Chennai",
+    "lat": 13.0361,
+    "lng": 80.2217
   },
   {
     "id": 75,
-    "name": "Pet Adoption Drive - Delhi",
+    "name": "Pet Adoption Drive - Chennai",
     "description": "Find loving homes for rescued animals.",
     "category": "animals",
-    "city": "Delhi",
-    "lat": 28.6575,
-    "lng": 77.0602
+    "city": "Chennai",
+    "lat": 13.0821,
+    "lng": 80.3096
   },
   {
     "id": 76,
-    "name": "Wildlife Awareness Campaign - Bangalore",
+    "name": "Wildlife Awareness Campaign - Chennai",
     "description": "Educate about protecting endangered species.",
     "category": "animals",
-    "city": "Bangalore",
-    "lat": 12.9514,
-    "lng": 77.5751
+    "city": "Chennai",
+    "lat": 13.1305,
+    "lng": 80.2367
   },
   {
     "id": 77,
-    "name": "Veterinary Camp - Bangalore",
+    "name": "Veterinary Camp - Chennai",
     "description": "Provide free medical care for community animals.",
     "category": "animals",
-    "city": "Bangalore",
-    "lat": 12.9997,
-    "lng": 77.5979
+    "city": "Chennai",
+    "lat": 13.1132,
+    "lng": 80.2685
   },
   {
     "id": 78,
-    "name": "Cat Sterilization Program - Lucknow",
+    "name": "Cat Sterilization Program - Delhi",
     "description": "Control stray cat population humanely.",
     "category": "animals",
-    "city": "Lucknow",
-    "lat": 26.842,
-    "lng": 80.9862
+    "city": "Delhi",
+    "lat": 28.6543,
+    "lng": 77.1244
   },
   {
     "id": 79,
@@ -707,53 +707,53 @@
     "description": "Preserve natural migration routes for elephants.",
     "category": "animals",
     "city": "Pune",
-    "lat": 18.5201,
-    "lng": 73.8918
+    "lat": 18.565,
+    "lng": 73.8162
   },
   {
     "id": 80,
-    "name": "Aquarium & Marine Life Care - Hyderabad",
+    "name": "Aquarium & Marine Life Care - Surat",
     "description": "Maintain ethical aquatic animal habitats.",
     "category": "animals",
-    "city": "Hyderabad",
-    "lat": 17.3972,
-    "lng": 78.504
+    "city": "Surat",
+    "lat": 21.2011,
+    "lng": 72.8334
   },
   {
     "id": 81,
-    "name": "Cricket Coaching for Kids - Pune",
+    "name": "Cricket Coaching for Kids - Bangalore",
     "description": "Train underprivileged children in cricket fundamentals.",
     "category": "sports",
-    "city": "Pune",
-    "lat": 18.5216,
-    "lng": 73.8672
+    "city": "Bangalore",
+    "lat": 12.9308,
+    "lng": 77.5645
   },
   {
     "id": 82,
-    "name": "Marathon for a Cause - Hyderabad",
+    "name": "Marathon for a Cause - Mumbai",
     "description": "Organize charity runs to raise awareness and funds.",
     "category": "sports",
-    "city": "Hyderabad",
-    "lat": 17.4003,
-    "lng": 78.4374
+    "city": "Mumbai",
+    "lat": 19.0768,
+    "lng": 72.9065
   },
   {
     "id": 83,
-    "name": "Football Academy - Pune",
+    "name": "Football Academy - Kolkata",
     "description": "Provide professional football training to aspiring players.",
     "category": "sports",
-    "city": "Pune",
-    "lat": 18.5668,
-    "lng": 73.8362
+    "city": "Kolkata",
+    "lat": 22.5592,
+    "lng": 88.3159
   },
   {
     "id": 84,
-    "name": "Badminton Training Camp - Hyderabad",
+    "name": "Badminton Training Camp - Pune",
     "description": "Teach badminton skills and promote fitness.",
     "category": "sports",
-    "city": "Hyderabad",
-    "lat": 17.3442,
-    "lng": 78.5057
+    "city": "Pune",
+    "lat": 18.5554,
+    "lng": 73.8272
   },
   {
     "id": 85,
@@ -761,44 +761,44 @@
     "description": "Collect and distribute sports gear to schools.",
     "category": "sports",
     "city": "Pune",
-    "lat": 18.4884,
-    "lng": 73.8829
+    "lat": 18.5316,
+    "lng": 73.8354
   },
   {
     "id": 86,
-    "name": "Community Cycling Event - Hyderabad",
+    "name": "Community Cycling Event - Chennai",
     "description": "Promote eco-friendly transport through group rides.",
     "category": "sports",
-    "city": "Hyderabad",
-    "lat": 17.3921,
-    "lng": 78.4481
+    "city": "Chennai",
+    "lat": 13.063,
+    "lng": 80.3058
   },
   {
     "id": 87,
-    "name": "Basketball League - Pune",
+    "name": "Basketball League - Lucknow",
     "description": "Organize local tournaments for youth engagement.",
     "category": "sports",
-    "city": "Pune",
-    "lat": 18.5381,
-    "lng": 73.8931
+    "city": "Lucknow",
+    "lat": 26.8386,
+    "lng": 80.8988
   },
   {
     "id": 88,
-    "name": "Swimming Lessons - Mumbai",
+    "name": "Swimming Lessons - Delhi",
     "description": "Teach water safety and swimming to children.",
     "category": "sports",
-    "city": "Mumbai",
-    "lat": 19.0891,
-    "lng": 72.8783
+    "city": "Delhi",
+    "lat": 28.7008,
+    "lng": 77.1124
   },
   {
     "id": 89,
-    "name": "Yoga & Athletics - Lucknow",
+    "name": "Yoga & Athletics - Surat",
     "description": "Combine traditional yoga with modern athletic training.",
     "category": "sports",
-    "city": "Lucknow",
-    "lat": 26.8265,
-    "lng": 80.9862
+    "city": "Surat",
+    "lat": 21.1792,
+    "lng": 72.8704
   },
   {
     "id": 90,
@@ -806,26 +806,26 @@
     "description": "Conduct mental sports competitions for all ages.",
     "category": "sports",
     "city": "Delhi",
-    "lat": 28.7193,
-    "lng": 77.121
+    "lat": 28.7366,
+    "lng": 77.0664
   },
   {
     "id": 91,
-    "name": "Cricket Coaching for Kids - Mumbai",
+    "name": "Cricket Coaching for Kids - Hyderabad",
     "description": "Train underprivileged children in cricket fundamentals.",
     "category": "sports",
-    "city": "Mumbai",
-    "lat": 19.0466,
-    "lng": 72.859
+    "city": "Hyderabad",
+    "lat": 17.3976,
+    "lng": 78.4537
   },
   {
     "id": 92,
-    "name": "Marathon for a Cause - Kolkata",
+    "name": "Marathon for a Cause - Pune",
     "description": "Organize charity runs to raise awareness and funds.",
     "category": "sports",
-    "city": "Kolkata",
-    "lat": 22.5618,
-    "lng": 88.3193
+    "city": "Pune",
+    "lat": 18.4948,
+    "lng": 73.8227
   },
   {
     "id": 93,
@@ -833,44 +833,44 @@
     "description": "Provide professional football training to aspiring players.",
     "category": "sports",
     "city": "Mumbai",
-    "lat": 19.0705,
-    "lng": 72.8986
+    "lat": 19.1189,
+    "lng": 72.8866
   },
   {
     "id": 94,
-    "name": "Badminton Training Camp - Delhi",
+    "name": "Badminton Training Camp - Chennai",
     "description": "Teach badminton skills and promote fitness.",
     "category": "sports",
-    "city": "Delhi",
-    "lat": 28.7018,
-    "lng": 77.1469
+    "city": "Chennai",
+    "lat": 13.0453,
+    "lng": 80.2911
   },
   {
     "id": 95,
-    "name": "Sports Equipment Donation - Hyderabad",
+    "name": "Sports Equipment Donation - Bangalore",
     "description": "Collect and distribute sports gear to schools.",
     "category": "sports",
-    "city": "Hyderabad",
-    "lat": 17.3664,
-    "lng": 78.4682
+    "city": "Bangalore",
+    "lat": 13.0141,
+    "lng": 77.5674
   },
   {
     "id": 96,
-    "name": "Community Cycling Event - Mumbai",
+    "name": "Community Cycling Event - Hyderabad",
     "description": "Promote eco-friendly transport through group rides.",
     "category": "sports",
-    "city": "Mumbai",
-    "lat": 19.1199,
-    "lng": 72.9124
+    "city": "Hyderabad",
+    "lat": 17.4324,
+    "lng": 78.5358
   },
   {
     "id": 97,
-    "name": "Basketball League - Pune",
+    "name": "Basketball League - Hyderabad",
     "description": "Organize local tournaments for youth engagement.",
     "category": "sports",
-    "city": "Pune",
-    "lat": 18.5701,
-    "lng": 73.8608
+    "city": "Hyderabad",
+    "lat": 17.4178,
+    "lng": 78.5268
   },
   {
     "id": 98,
@@ -878,44 +878,44 @@
     "description": "Teach water safety and swimming to children.",
     "category": "sports",
     "city": "Surat",
-    "lat": 21.1586,
-    "lng": 72.8199
+    "lat": 21.1544,
+    "lng": 72.8524
   },
   {
     "id": 99,
-    "name": "Yoga & Athletics - Surat",
+    "name": "Yoga & Athletics - Hyderabad",
     "description": "Combine traditional yoga with modern athletic training.",
     "category": "sports",
-    "city": "Surat",
-    "lat": 21.208,
-    "lng": 72.8045
+    "city": "Hyderabad",
+    "lat": 17.4262,
+    "lng": 78.536
   },
   {
     "id": 100,
-    "name": "Chess Championship - Kolkata",
+    "name": "Chess Championship - Lucknow",
     "description": "Conduct mental sports competitions for all ages.",
     "category": "sports",
-    "city": "Kolkata",
-    "lat": 22.6095,
-    "lng": 88.3399
+    "city": "Lucknow",
+    "lat": 26.8362,
+    "lng": 80.9329
   },
   {
     "id": 101,
-    "name": "Self-Defense Training - Kolkata",
+    "name": "Self-Defense Training - Jaipur",
     "description": "Teach martial arts and safety techniques to women.",
     "category": "women empowerment",
-    "city": "Kolkata",
-    "lat": 22.6192,
-    "lng": 88.3591
+    "city": "Jaipur",
+    "lat": 26.8906,
+    "lng": 75.768
   },
   {
     "id": 102,
-    "name": "Entrepreneurship Workshop - Mumbai",
+    "name": "Entrepreneurship Workshop - Pune",
     "description": "Help women start their own businesses.",
     "category": "women empowerment",
-    "city": "Mumbai",
-    "lat": 19.1254,
-    "lng": 72.8679
+    "city": "Pune",
+    "lat": 18.5333,
+    "lng": 73.8751
   },
   {
     "id": 103,
@@ -923,26 +923,26 @@
     "description": "Provide training in stitching, handicrafts, and more.",
     "category": "women empowerment",
     "city": "Kolkata",
-    "lat": 22.6121,
-    "lng": 88.3632
+    "lat": 22.5981,
+    "lng": 88.3198
   },
   {
     "id": 104,
-    "name": "Legal Rights Awareness - Bangalore",
+    "name": "Legal Rights Awareness - Lucknow",
     "description": "Educate women about their legal protections.",
     "category": "women empowerment",
-    "city": "Bangalore",
-    "lat": 12.9603,
-    "lng": 77.5506
+    "city": "Lucknow",
+    "lat": 26.8277,
+    "lng": 80.9234
   },
   {
     "id": 105,
-    "name": "Women's Health Camp - Delhi",
+    "name": "Women's Health Camp - Bangalore",
     "description": "Offer specialized medical screenings for women.",
     "category": "women empowerment",
-    "city": "Delhi",
-    "lat": 28.6667,
-    "lng": 77.0818
+    "city": "Bangalore",
+    "lat": 12.9839,
+    "lng": 77.6026
   },
   {
     "id": 106,
@@ -950,8 +950,8 @@
     "description": "Distribute sanitary products and educate about menstrual health.",
     "category": "women empowerment",
     "city": "Pune",
-    "lat": 18.4933,
-    "lng": 73.896
+    "lat": 18.5149,
+    "lng": 73.8308
   },
   {
     "id": 107,
@@ -959,71 +959,71 @@
     "description": "Teach budgeting, savings, and investment basics.",
     "category": "women empowerment",
     "city": "Hyderabad",
-    "lat": 17.3473,
-    "lng": 78.4995
+    "lat": 17.4136,
+    "lng": 78.4579
   },
   {
     "id": 108,
-    "name": "Leadership Training - Jaipur",
+    "name": "Leadership Training - Bangalore",
     "description": "Build confidence and leadership skills in young women.",
     "category": "women empowerment",
-    "city": "Jaipur",
-    "lat": 26.955,
-    "lng": 75.773
+    "city": "Bangalore",
+    "lat": 12.9958,
+    "lng": 77.5522
   },
   {
     "id": 109,
-    "name": "Domestic Violence Support - Jaipur",
+    "name": "Domestic Violence Support - Hyderabad",
     "description": "Provide counseling and legal aid to survivors.",
     "category": "women empowerment",
-    "city": "Jaipur",
-    "lat": 26.9399,
-    "lng": 75.823
+    "city": "Hyderabad",
+    "lat": 17.3709,
+    "lng": 78.5296
   },
   {
     "id": 110,
-    "name": "Mother & Child Care - Jaipur",
+    "name": "Mother & Child Care - Lucknow",
     "description": "Support maternal health and early childhood development.",
     "category": "women empowerment",
-    "city": "Jaipur",
-    "lat": 26.9013,
-    "lng": 75.7901
+    "city": "Lucknow",
+    "lat": 26.879,
+    "lng": 80.9005
   },
   {
     "id": 111,
-    "name": "Self-Defense Training - Pune",
+    "name": "Self-Defense Training - Jaipur",
     "description": "Teach martial arts and safety techniques to women.",
     "category": "women empowerment",
-    "city": "Pune",
-    "lat": 18.4738,
-    "lng": 73.9044
+    "city": "Jaipur",
+    "lat": 26.9341,
+    "lng": 75.7984
   },
   {
     "id": 112,
-    "name": "Entrepreneurship Workshop - Hyderabad",
+    "name": "Entrepreneurship Workshop - Surat",
     "description": "Help women start their own businesses.",
     "category": "women empowerment",
-    "city": "Hyderabad",
-    "lat": 17.4238,
-    "lng": 78.4548
+    "city": "Surat",
+    "lat": 21.149,
+    "lng": 72.8607
   },
   {
     "id": 113,
-    "name": "Skill Development Classes - Delhi",
+    "name": "Skill Development Classes - Bangalore",
     "description": "Provide training in stitching, handicrafts, and more.",
     "category": "women empowerment",
-    "city": "Delhi",
-    "lat": 28.6831,
-    "lng": 77.1183
+    "city": "Bangalore",
+    "lat": 12.9565,
+    "lng": 77.5517
   },
   {
     "id": 114,
-    "name": "Legal Rights Awareness - Mumbai",
+    "name": "Legal Rights Awareness - Delhi",
     "description": "Educate women about their legal protections.",
     "category": "women empowerment",
-    "city": "Mumbai",
-    "lat": 19.0991,
-    "lng": 72.8955
+    "city": "Delhi",
+    "lat": 28.7013,
+    "lng": 77.1187
   },
   {
     "id": 115,
@@ -1031,17 +1031,17 @@
     "description": "Offer specialized medical screenings for women.",
     "category": "women empowerment",
     "city": "Surat",
-    "lat": 21.1662,
-    "lng": 72.8392
+    "lat": 21.1347,
+    "lng": 72.8388
   },
   {
     "id": 116,
-    "name": "Menstrual Hygiene Drive - Chennai",
+    "name": "Menstrual Hygiene Drive - Kolkata",
     "description": "Distribute sanitary products and educate about menstrual health.",
     "category": "women empowerment",
-    "city": "Chennai",
-    "lat": 13.0887,
-    "lng": 80.2877
+    "city": "Kolkata",
+    "lat": 22.5856,
+    "lng": 88.4123
   },
   {
     "id": 117,
@@ -1049,17 +1049,17 @@
     "description": "Teach budgeting, savings, and investment basics.",
     "category": "women empowerment",
     "city": "Jaipur",
-    "lat": 26.8801,
-    "lng": 75.81
+    "lat": 26.9402,
+    "lng": 75.7731
   },
   {
     "id": 118,
-    "name": "Leadership Training - Delhi",
+    "name": "Leadership Training - Mumbai",
     "description": "Build confidence and leadership skills in young women.",
     "category": "women empowerment",
-    "city": "Delhi",
-    "lat": 28.748,
-    "lng": 77.1091
+    "city": "Mumbai",
+    "lat": 19.0344,
+    "lng": 72.9185
   },
   {
     "id": 119,
@@ -1067,26 +1067,26 @@
     "description": "Provide counseling and legal aid to survivors.",
     "category": "women empowerment",
     "city": "Mumbai",
-    "lat": 19.0617,
-    "lng": 72.8733
+    "lat": 19.0719,
+    "lng": 72.8684
   },
   {
     "id": 120,
-    "name": "Mother & Child Care - Kolkata",
+    "name": "Mother & Child Care - Hyderabad",
     "description": "Support maternal health and early childhood development.",
     "category": "women empowerment",
-    "city": "Kolkata",
-    "lat": 22.5558,
-    "lng": 88.3632
+    "city": "Hyderabad",
+    "lat": 17.3847,
+    "lng": 78.5203
   },
   {
     "id": 121,
-    "name": "Coding Classes for Kids - Pune",
+    "name": "Coding Classes for Kids - Jaipur",
     "description": "Introduce children to programming and app development.",
     "category": "technology",
-    "city": "Pune",
-    "lat": 18.4786,
-    "lng": 73.8634
+    "city": "Jaipur",
+    "lat": 26.8768,
+    "lng": 75.7612
   },
   {
     "id": 122,
@@ -1094,224 +1094,224 @@
     "description": "Teach basics of artificial intelligence.",
     "category": "technology",
     "city": "Delhi",
-    "lat": 28.7335,
-    "lng": 77.0556
+    "lat": 28.7336,
+    "lng": 77.118
   },
   {
     "id": 123,
-    "name": "Web Development Bootcamp - Lucknow",
+    "name": "Web Development Bootcamp - Bangalore",
     "description": "Train youth in building websites and web apps.",
     "category": "technology",
-    "city": "Lucknow",
-    "lat": 26.8595,
-    "lng": 80.9725
+    "city": "Bangalore",
+    "lat": 12.9544,
+    "lng": 77.5881
   },
   {
     "id": 124,
-    "name": "Robotics Club - Pune",
+    "name": "Robotics Club - Surat",
     "description": "Engage students in hands-on robotics projects.",
     "category": "technology",
-    "city": "Pune",
-    "lat": 18.4906,
-    "lng": 73.8703
+    "city": "Surat",
+    "lat": 21.1671,
+    "lng": 72.7946
   },
   {
     "id": 125,
-    "name": "Cybersecurity Awareness - Lucknow",
+    "name": "Cybersecurity Awareness - Mumbai",
     "description": "Educate about online safety and data protection.",
     "category": "technology",
-    "city": "Lucknow",
-    "lat": 26.8074,
-    "lng": 80.9527
+    "city": "Mumbai",
+    "lat": 19.0861,
+    "lng": 72.8782
   },
   {
     "id": 126,
-    "name": "Mobile App Development - Mumbai",
+    "name": "Mobile App Development - Delhi",
     "description": "Create Android/iOS apps for social causes.",
     "category": "technology",
-    "city": "Mumbai",
-    "lat": 19.0703,
-    "lng": 72.9249
+    "city": "Delhi",
+    "lat": 28.727,
+    "lng": 77.0742
   },
   {
     "id": 127,
-    "name": "Open Source Contribution - Pune",
+    "name": "Open Source Contribution - Kolkata",
     "description": "Encourage participation in global tech communities.",
     "category": "technology",
-    "city": "Pune",
-    "lat": 18.4945,
-    "lng": 73.823
+    "city": "Kolkata",
+    "lat": 22.6045,
+    "lng": 88.3859
   },
   {
     "id": 128,
-    "name": "Digital Marketing Skills - Pune",
-    "description": "Teach SEO, social media, and content marketing.",
-    "category": "technology",
-    "city": "Pune",
-    "lat": 18.5106,
-    "lng": 73.9034
-  },
-  {
-    "id": 129,
-    "name": "Tech for Seniors - Hyderabad",
-    "description": "Help elderly learn smartphones and internet usage.",
-    "category": "technology",
-    "city": "Hyderabad",
-    "lat": 17.3583,
-    "lng": 78.5016
-  },
-  {
-    "id": 130,
-    "name": "IoT Innovation Lab - Lucknow",
-    "description": "Build smart devices for solving local problems.",
-    "category": "technology",
-    "city": "Lucknow",
-    "lat": 26.8026,
-    "lng": 80.994
-  },
-  {
-    "id": 131,
-    "name": "Coding Classes for Kids - Delhi",
-    "description": "Introduce children to programming and app development.",
-    "category": "technology",
-    "city": "Delhi",
-    "lat": 28.7345,
-    "lng": 77.116
-  },
-  {
-    "id": 132,
-    "name": "AI & Machine Learning Workshop - Jaipur",
-    "description": "Teach basics of artificial intelligence.",
-    "category": "technology",
-    "city": "Jaipur",
-    "lat": 26.895,
-    "lng": 75.7559
-  },
-  {
-    "id": 133,
-    "name": "Web Development Bootcamp - Pune",
-    "description": "Train youth in building websites and web apps.",
-    "category": "technology",
-    "city": "Pune",
-    "lat": 18.5576,
-    "lng": 73.8233
-  },
-  {
-    "id": 134,
-    "name": "Robotics Club - Jaipur",
-    "description": "Engage students in hands-on robotics projects.",
-    "category": "technology",
-    "city": "Jaipur",
-    "lat": 26.9016,
-    "lng": 75.803
-  },
-  {
-    "id": 135,
-    "name": "Cybersecurity Awareness - Bangalore",
-    "description": "Educate about online safety and data protection.",
-    "category": "technology",
-    "city": "Bangalore",
-    "lat": 13.0024,
-    "lng": 77.5726
-  },
-  {
-    "id": 136,
-    "name": "Mobile App Development - Chennai",
-    "description": "Create Android/iOS apps for social causes.",
-    "category": "technology",
-    "city": "Chennai",
-    "lat": 13.0742,
-    "lng": 80.2771
-  },
-  {
-    "id": 137,
-    "name": "Open Source Contribution - Bangalore",
-    "description": "Encourage participation in global tech communities.",
-    "category": "technology",
-    "city": "Bangalore",
-    "lat": 12.9361,
-    "lng": 77.6424
-  },
-  {
-    "id": 138,
     "name": "Digital Marketing Skills - Hyderabad",
     "description": "Teach SEO, social media, and content marketing.",
     "category": "technology",
     "city": "Hyderabad",
-    "lat": 17.3356,
-    "lng": 78.4689
+    "lat": 17.3719,
+    "lng": 78.4497
+  },
+  {
+    "id": 129,
+    "name": "Tech for Seniors - Delhi",
+    "description": "Help elderly learn smartphones and internet usage.",
+    "category": "technology",
+    "city": "Delhi",
+    "lat": 28.6648,
+    "lng": 77.0885
+  },
+  {
+    "id": 130,
+    "name": "IoT Innovation Lab - Jaipur",
+    "description": "Build smart devices for solving local problems.",
+    "category": "technology",
+    "city": "Jaipur",
+    "lat": 26.9398,
+    "lng": 75.77
+  },
+  {
+    "id": 131,
+    "name": "Coding Classes for Kids - Pune",
+    "description": "Introduce children to programming and app development.",
+    "category": "technology",
+    "city": "Pune",
+    "lat": 18.5273,
+    "lng": 73.8724
+  },
+  {
+    "id": 132,
+    "name": "AI & Machine Learning Workshop - Hyderabad",
+    "description": "Teach basics of artificial intelligence.",
+    "category": "technology",
+    "city": "Hyderabad",
+    "lat": 17.3967,
+    "lng": 78.4528
+  },
+  {
+    "id": 133,
+    "name": "Web Development Bootcamp - Mumbai",
+    "description": "Train youth in building websites and web apps.",
+    "category": "technology",
+    "city": "Mumbai",
+    "lat": 19.0369,
+    "lng": 72.9203
+  },
+  {
+    "id": 134,
+    "name": "Robotics Club - Mumbai",
+    "description": "Engage students in hands-on robotics projects.",
+    "category": "technology",
+    "city": "Mumbai",
+    "lat": 19.0308,
+    "lng": 72.8776
+  },
+  {
+    "id": 135,
+    "name": "Cybersecurity Awareness - Jaipur",
+    "description": "Educate about online safety and data protection.",
+    "category": "technology",
+    "city": "Jaipur",
+    "lat": 26.9311,
+    "lng": 75.8255
+  },
+  {
+    "id": 136,
+    "name": "Mobile App Development - Pune",
+    "description": "Create Android/iOS apps for social causes.",
+    "category": "technology",
+    "city": "Pune",
+    "lat": 18.569,
+    "lng": 73.8931
+  },
+  {
+    "id": 137,
+    "name": "Open Source Contribution - Pune",
+    "description": "Encourage participation in global tech communities.",
+    "category": "technology",
+    "city": "Pune",
+    "lat": 18.5595,
+    "lng": 73.8645
+  },
+  {
+    "id": 138,
+    "name": "Digital Marketing Skills - Mumbai",
+    "description": "Teach SEO, social media, and content marketing.",
+    "category": "technology",
+    "city": "Mumbai",
+    "lat": 19.0275,
+    "lng": 72.8595
   },
   {
     "id": 139,
-    "name": "Tech for Seniors - Surat",
+    "name": "Tech for Seniors - Chennai",
     "description": "Help elderly learn smartphones and internet usage.",
     "category": "technology",
-    "city": "Surat",
-    "lat": 21.1781,
-    "lng": 72.8536
+    "city": "Chennai",
+    "lat": 13.0705,
+    "lng": 80.2409
   },
   {
     "id": 140,
-    "name": "IoT Innovation Lab - Kolkata",
+    "name": "IoT Innovation Lab - Bangalore",
     "description": "Build smart devices for solving local problems.",
     "category": "technology",
-    "city": "Kolkata",
-    "lat": 22.5432,
-    "lng": 88.3415
+    "city": "Bangalore",
+    "lat": 12.9716,
+    "lng": 77.6296
   },
   {
     "id": 141,
-    "name": "Community Kitchen Service - Delhi",
+    "name": "Community Kitchen Service - Mumbai",
     "description": "Prepare and serve meals to the homeless.",
     "category": "volunteering",
-    "city": "Delhi",
-    "lat": 28.7516,
-    "lng": 77.1159
+    "city": "Mumbai",
+    "lat": 19.0993,
+    "lng": 72.8908
   },
   {
     "id": 142,
-    "name": "Old Age Home Visits - Surat",
+    "name": "Old Age Home Visits - Pune",
     "description": "Spend time with elderly residents and provide companionship.",
     "category": "volunteering",
-    "city": "Surat",
-    "lat": 21.188,
-    "lng": 72.8092
+    "city": "Pune",
+    "lat": 18.5474,
+    "lng": 73.8169
   },
   {
     "id": 143,
-    "name": "Disaster Relief Support - Kolkata",
+    "name": "Disaster Relief Support - Delhi",
     "description": "Assist in rescue and rehabilitation during emergencies.",
     "category": "volunteering",
-    "city": "Kolkata",
-    "lat": 22.6108,
-    "lng": 88.3276
+    "city": "Delhi",
+    "lat": 28.6976,
+    "lng": 77.1512
   },
   {
     "id": 144,
-    "name": "Orphanage Support Program - Jaipur",
+    "name": "Orphanage Support Program - Delhi",
     "description": "Organize activities and donate supplies to orphanages.",
     "category": "volunteering",
-    "city": "Jaipur",
-    "lat": 26.912,
-    "lng": 75.7945
+    "city": "Delhi",
+    "lat": 28.7165,
+    "lng": 77.1017
   },
   {
     "id": 145,
-    "name": "Hospital Volunteer Program - Delhi",
+    "name": "Hospital Volunteer Program - Surat",
     "description": "Help patients and support hospital staff.",
     "category": "volunteering",
-    "city": "Delhi",
-    "lat": 28.7036,
-    "lng": 77.0969
+    "city": "Surat",
+    "lat": 21.1783,
+    "lng": 72.841
   },
   {
     "id": 146,
-    "name": "Slum Beautification - Lucknow",
+    "name": "Slum Beautification - Surat",
     "description": "Paint murals and improve living conditions in slums.",
     "category": "volunteering",
-    "city": "Lucknow",
-    "lat": 26.8556,
-    "lng": 80.9101
+    "city": "Surat",
+    "lat": 21.1989,
+    "lng": 72.8648
   },
   {
     "id": 147,
@@ -1319,8 +1319,8 @@
     "description": "Volunteer at NGO events and fundraisers.",
     "category": "volunteering",
     "city": "Mumbai",
-    "lat": 19.1143,
-    "lng": 72.8823
+    "lat": 19.0336,
+    "lng": 72.8409
   },
   {
     "id": 148,
@@ -1328,44 +1328,44 @@
     "description": "Answer calls for crisis hotlines and counseling services.",
     "category": "volunteering",
     "city": "Bangalore",
-    "lat": 12.9363,
-    "lng": 77.6188
+    "lat": 13.0004,
+    "lng": 77.57
   },
   {
     "id": 149,
-    "name": "Festival Celebration with Needy - Chennai",
+    "name": "Festival Celebration with Needy - Kolkata",
     "description": "Share joy by celebrating festivals with underprivileged.",
     "category": "volunteering",
-    "city": "Chennai",
-    "lat": 13.1125,
-    "lng": 80.315
+    "city": "Kolkata",
+    "lat": 22.54,
+    "lng": 88.3645
   },
   {
     "id": 150,
-    "name": "Traffic Awareness Campaign - Surat",
+    "name": "Traffic Awareness Campaign - Pune",
     "description": "Educate citizens about road safety rules.",
     "category": "volunteering",
-    "city": "Surat",
-    "lat": 21.1234,
-    "lng": 72.853
+    "city": "Pune",
+    "lat": 18.5061,
+    "lng": 73.8683
   },
   {
     "id": 151,
-    "name": "Community Kitchen Service - Surat",
+    "name": "Community Kitchen Service - Pune",
     "description": "Prepare and serve meals to the homeless.",
     "category": "volunteering",
-    "city": "Surat",
-    "lat": 21.1867,
-    "lng": 72.8804
+    "city": "Pune",
+    "lat": 18.5388,
+    "lng": 73.8263
   },
   {
     "id": 152,
-    "name": "Old Age Home Visits - Mumbai",
+    "name": "Old Age Home Visits - Jaipur",
     "description": "Spend time with elderly residents and provide companionship.",
     "category": "volunteering",
-    "city": "Mumbai",
-    "lat": 19.1076,
-    "lng": 72.8369
+    "city": "Jaipur",
+    "lat": 26.9296,
+    "lng": 75.7714
   },
   {
     "id": 153,
@@ -1373,98 +1373,98 @@
     "description": "Assist in rescue and rehabilitation during emergencies.",
     "category": "volunteering",
     "city": "Jaipur",
-    "lat": 26.9021,
-    "lng": 75.8346
+    "lat": 26.9146,
+    "lng": 75.7748
   },
   {
     "id": 154,
-    "name": "Orphanage Support Program - Chennai",
+    "name": "Orphanage Support Program - Surat",
     "description": "Organize activities and donate supplies to orphanages.",
     "category": "volunteering",
-    "city": "Chennai",
-    "lat": 13.0594,
-    "lng": 80.2503
+    "city": "Surat",
+    "lat": 21.1216,
+    "lng": 72.7893
   },
   {
     "id": 155,
-    "name": "Hospital Volunteer Program - Kolkata",
+    "name": "Hospital Volunteer Program - Pune",
     "description": "Help patients and support hospital staff.",
     "category": "volunteering",
-    "city": "Kolkata",
-    "lat": 22.5565,
-    "lng": 88.3629
+    "city": "Pune",
+    "lat": 18.551,
+    "lng": 73.8774
   },
   {
     "id": 156,
-    "name": "Slum Beautification - Lucknow",
+    "name": "Slum Beautification - Mumbai",
     "description": "Paint murals and improve living conditions in slums.",
     "category": "volunteering",
-    "city": "Lucknow",
-    "lat": 26.8396,
-    "lng": 80.9056
+    "city": "Mumbai",
+    "lat": 19.0625,
+    "lng": 72.9222
   },
   {
     "id": 157,
-    "name": "Event Management Help - Bangalore",
+    "name": "Event Management Help - Pune",
     "description": "Volunteer at NGO events and fundraisers.",
     "category": "volunteering",
-    "city": "Bangalore",
-    "lat": 12.9331,
-    "lng": 77.5719
+    "city": "Pune",
+    "lat": 18.5232,
+    "lng": 73.8896
   },
   {
     "id": 158,
-    "name": "Helpline Support - Lucknow",
+    "name": "Helpline Support - Kolkata",
     "description": "Answer calls for crisis hotlines and counseling services.",
     "category": "volunteering",
-    "city": "Lucknow",
-    "lat": 26.8088,
-    "lng": 80.8963
+    "city": "Kolkata",
+    "lat": 22.5958,
+    "lng": 88.4054
   },
   {
     "id": 159,
-    "name": "Festival Celebration with Needy - Delhi",
+    "name": "Festival Celebration with Needy - Lucknow",
     "description": "Share joy by celebrating festivals with underprivileged.",
     "category": "volunteering",
-    "city": "Delhi",
-    "lat": 28.6585,
-    "lng": 77.0727
+    "city": "Lucknow",
+    "lat": 26.8554,
+    "lng": 80.9075
   },
   {
     "id": 160,
-    "name": "Traffic Awareness Campaign - Chennai",
+    "name": "Traffic Awareness Campaign - Jaipur",
     "description": "Educate citizens about road safety rules.",
     "category": "volunteering",
-    "city": "Chennai",
-    "lat": 13.0619,
-    "lng": 80.2874
+    "city": "Jaipur",
+    "lat": 26.9052,
+    "lng": 75.7665
   },
   {
     "id": 161,
-    "name": "Storytelling Sessions - Hyderabad",
+    "name": "Storytelling Sessions - Jaipur",
     "description": "Read stories and nurture imagination in young minds.",
     "category": "children",
-    "city": "Hyderabad",
-    "lat": 17.4217,
-    "lng": 78.4375
+    "city": "Jaipur",
+    "lat": 26.9115,
+    "lng": 75.7821
   },
   {
     "id": 162,
-    "name": "Art & Craft Classes - Hyderabad",
+    "name": "Art & Craft Classes - Mumbai",
     "description": "Teach painting, drawing, and creative activities.",
     "category": "children",
-    "city": "Hyderabad",
-    "lat": 17.3467,
-    "lng": 78.4997
+    "city": "Mumbai",
+    "lat": 19.0766,
+    "lng": 72.8788
   },
   {
     "id": 163,
-    "name": "Toy Donation Drive - Surat",
+    "name": "Toy Donation Drive - Chennai",
     "description": "Collect and distribute toys to underprivileged children.",
     "category": "children",
-    "city": "Surat",
-    "lat": 21.2033,
-    "lng": 72.8293
+    "city": "Chennai",
+    "lat": 13.1323,
+    "lng": 80.2765
   },
   {
     "id": 164,
@@ -1472,35 +1472,35 @@
     "description": "Educate about child labor and protection laws.",
     "category": "children",
     "city": "Pune",
-    "lat": 18.4996,
-    "lng": 73.8423
+    "lat": 18.4897,
+    "lng": 73.8695
   },
   {
     "id": 165,
-    "name": "Immunization Support - Hyderabad",
+    "name": "Immunization Support - Mumbai",
     "description": "Help ensure all children receive necessary vaccinations.",
     "category": "children",
-    "city": "Hyderabad",
-    "lat": 17.3636,
-    "lng": 78.5273
+    "city": "Mumbai",
+    "lat": 19.0787,
+    "lng": 72.8946
   },
   {
     "id": 166,
-    "name": "Music & Dance Classes - Delhi",
+    "name": "Music & Dance Classes - Chennai",
     "description": "Introduce children to performing arts.",
     "category": "children",
-    "city": "Delhi",
-    "lat": 28.698,
-    "lng": 77.0855
+    "city": "Chennai",
+    "lat": 13.0497,
+    "lng": 80.2593
   },
   {
     "id": 167,
-    "name": "Nutrition Supplementation - Hyderabad",
+    "name": "Nutrition Supplementation - Surat",
     "description": "Provide healthy meals to malnourished kids.",
     "category": "children",
-    "city": "Hyderabad",
-    "lat": 17.405,
-    "lng": 78.5202
+    "city": "Surat",
+    "lat": 21.1849,
+    "lng": 72.8384
   },
   {
     "id": 168,
@@ -1508,35 +1508,35 @@
     "description": "Teach kids about stranger danger and online safety.",
     "category": "children",
     "city": "Mumbai",
-    "lat": 19.0365,
-    "lng": 72.8761
+    "lat": 19.0305,
+    "lng": 72.8494
   },
   {
     "id": 169,
-    "name": "Science Experiment Lab - Mumbai",
+    "name": "Science Experiment Lab - Bangalore",
     "description": "Make learning fun through hands-on experiments.",
     "category": "children",
-    "city": "Mumbai",
-    "lat": 19.1091,
-    "lng": 72.8833
+    "city": "Bangalore",
+    "lat": 12.9221,
+    "lng": 77.6116
   },
   {
     "id": 170,
-    "name": "Reading Buddies Program - Pune",
+    "name": "Reading Buddies Program - Bangalore",
     "description": "Mentor young readers to improve literacy.",
     "category": "children",
-    "city": "Pune",
-    "lat": 18.5532,
-    "lng": 73.8598
+    "city": "Bangalore",
+    "lat": 12.9394,
+    "lng": 77.6003
   },
   {
     "id": 171,
-    "name": "Storytelling Sessions - Pune",
+    "name": "Storytelling Sessions - Hyderabad",
     "description": "Read stories and nurture imagination in young minds.",
     "category": "children",
-    "city": "Pune",
-    "lat": 18.4836,
-    "lng": 73.8494
+    "city": "Hyderabad",
+    "lat": 17.3981,
+    "lng": 78.451
   },
   {
     "id": 172,
@@ -1544,107 +1544,107 @@
     "description": "Teach painting, drawing, and creative activities.",
     "category": "children",
     "city": "Bangalore",
-    "lat": 13.0105,
-    "lng": 77.5791
+    "lat": 12.9585,
+    "lng": 77.5837
   },
   {
     "id": 173,
-    "name": "Toy Donation Drive - Chennai",
+    "name": "Toy Donation Drive - Jaipur",
     "description": "Collect and distribute toys to underprivileged children.",
     "category": "children",
-    "city": "Chennai",
-    "lat": 13.1256,
-    "lng": 80.2481
+    "city": "Jaipur",
+    "lat": 26.8785,
+    "lng": 75.7459
   },
   {
     "id": 174,
-    "name": "Child Rights Awareness - Surat",
+    "name": "Child Rights Awareness - Bangalore",
     "description": "Educate about child labor and protection laws.",
     "category": "children",
-    "city": "Surat",
-    "lat": 21.2015,
-    "lng": 72.825
+    "city": "Bangalore",
+    "lat": 13.0149,
+    "lng": 77.6216
   },
   {
     "id": 175,
-    "name": "Immunization Support - Delhi",
+    "name": "Immunization Support - Hyderabad",
     "description": "Help ensure all children receive necessary vaccinations.",
     "category": "children",
-    "city": "Delhi",
-    "lat": 28.7319,
-    "lng": 77.0836
+    "city": "Hyderabad",
+    "lat": 17.4172,
+    "lng": 78.4511
   },
   {
     "id": 176,
-    "name": "Music & Dance Classes - Mumbai",
+    "name": "Music & Dance Classes - Lucknow",
     "description": "Introduce children to performing arts.",
     "category": "children",
-    "city": "Mumbai",
-    "lat": 19.0479,
-    "lng": 72.9189
+    "city": "Lucknow",
+    "lat": 26.8448,
+    "lng": 80.9606
   },
   {
     "id": 177,
-    "name": "Nutrition Supplementation - Pune",
+    "name": "Nutrition Supplementation - Surat",
     "description": "Provide healthy meals to malnourished kids.",
     "category": "children",
-    "city": "Pune",
-    "lat": 18.4986,
-    "lng": 73.8411
+    "city": "Surat",
+    "lat": 21.1544,
+    "lng": 72.8605
   },
   {
     "id": 178,
-    "name": "Child Safety Workshop - Chennai",
+    "name": "Child Safety Workshop - Pune",
     "description": "Teach kids about stranger danger and online safety.",
     "category": "children",
-    "city": "Chennai",
-    "lat": 13.1061,
-    "lng": 80.2269
+    "city": "Pune",
+    "lat": 18.4869,
+    "lng": 73.8931
   },
   {
     "id": 179,
-    "name": "Science Experiment Lab - Hyderabad",
+    "name": "Science Experiment Lab - Lucknow",
     "description": "Make learning fun through hands-on experiments.",
     "category": "children",
-    "city": "Hyderabad",
-    "lat": 17.3595,
-    "lng": 78.4941
+    "city": "Lucknow",
+    "lat": 26.87,
+    "lng": 80.9629
   },
   {
     "id": 180,
-    "name": "Reading Buddies Program - Pune",
+    "name": "Reading Buddies Program - Chennai",
     "description": "Mentor young readers to improve literacy.",
     "category": "children",
-    "city": "Pune",
-    "lat": 18.556,
-    "lng": 73.8752
+    "city": "Chennai",
+    "lat": 13.0912,
+    "lng": 80.2755
   },
   {
     "id": 181,
-    "name": "Youth Leadership Summit - Bangalore",
+    "name": "Youth Leadership Summit - Pune",
     "description": "Develop future leaders through interactive sessions.",
     "category": "youth",
-    "city": "Bangalore",
-    "lat": 12.9499,
-    "lng": 77.6019
+    "city": "Pune",
+    "lat": 18.5635,
+    "lng": 73.8946
   },
   {
     "id": 182,
-    "name": "Internship Placement Drive - Delhi",
+    "name": "Internship Placement Drive - Jaipur",
     "description": "Connect students with job opportunities.",
     "category": "youth",
-    "city": "Delhi",
-    "lat": 28.7297,
-    "lng": 77.1159
+    "city": "Jaipur",
+    "lat": 26.9507,
+    "lng": 75.7451
   },
   {
     "id": 183,
-    "name": "Mental Health Peer Support - Chennai",
+    "name": "Mental Health Peer Support - Pune",
     "description": "Create safe spaces for youth to discuss challenges.",
     "category": "youth",
-    "city": "Chennai",
-    "lat": 13.0329,
-    "lng": 80.2675
+    "city": "Pune",
+    "lat": 18.5109,
+    "lng": 73.8653
   },
   {
     "id": 184,
@@ -1652,26 +1652,26 @@
     "description": "Help young musicians form bands and perform.",
     "category": "youth",
     "city": "Jaipur",
-    "lat": 26.9201,
-    "lng": 75.8108
+    "lat": 26.9246,
+    "lng": 75.7952
   },
   {
     "id": 185,
-    "name": "Public Speaking Club - Surat",
+    "name": "Public Speaking Club - Jaipur",
     "description": "Build confidence through debate and speech training.",
     "category": "youth",
-    "city": "Surat",
-    "lat": 21.2177,
-    "lng": 72.7889
+    "city": "Jaipur",
+    "lat": 26.8658,
+    "lng": 75.7857
   },
   {
     "id": 186,
-    "name": "Environmental Youth Group - Lucknow",
+    "name": "Environmental Youth Group - Surat",
     "description": "Mobilize young people for climate action.",
     "category": "youth",
-    "city": "Lucknow",
-    "lat": 26.8874,
-    "lng": 80.9729
+    "city": "Surat",
+    "lat": 21.1394,
+    "lng": 72.8068
   },
   {
     "id": 187,
@@ -1679,17 +1679,17 @@
     "description": "Encourage storytelling and poetry among youth.",
     "category": "youth",
     "city": "Bangalore",
-    "lat": 12.9364,
-    "lng": 77.5544
+    "lat": 12.9419,
+    "lng": 77.5941
   },
   {
     "id": 188,
-    "name": "Startup Incubation - Pune",
+    "name": "Startup Incubation - Mumbai",
     "description": "Mentor young entrepreneurs in launching startups.",
     "category": "youth",
-    "city": "Pune",
-    "lat": 18.4952,
-    "lng": 73.815
+    "city": "Mumbai",
+    "lat": 19.1177,
+    "lng": 72.8492
   },
   {
     "id": 189,
@@ -1697,98 +1697,98 @@
     "description": "Teach photography skills and organize exhibitions.",
     "category": "youth",
     "city": "Jaipur",
-    "lat": 26.9421,
-    "lng": 75.7939
+    "lat": 26.9016,
+    "lng": 75.8109
   },
   {
     "id": 190,
-    "name": "Social Media Activism - Surat",
+    "name": "Social Media Activism - Kolkata",
     "description": "Use digital platforms for social change campaigns.",
     "category": "youth",
-    "city": "Surat",
-    "lat": 21.1397,
-    "lng": 72.8755
+    "city": "Kolkata",
+    "lat": 22.5961,
+    "lng": 88.4102
   },
   {
     "id": 191,
-    "name": "Youth Leadership Summit - Mumbai",
+    "name": "Youth Leadership Summit - Kolkata",
     "description": "Develop future leaders through interactive sessions.",
     "category": "youth",
-    "city": "Mumbai",
-    "lat": 19.1083,
-    "lng": 72.8439
+    "city": "Kolkata",
+    "lat": 22.5796,
+    "lng": 88.3924
   },
   {
     "id": 192,
-    "name": "Internship Placement Drive - Lucknow",
+    "name": "Internship Placement Drive - Chennai",
     "description": "Connect students with job opportunities.",
     "category": "youth",
-    "city": "Lucknow",
-    "lat": 26.8829,
-    "lng": 80.9496
+    "city": "Chennai",
+    "lat": 13.0951,
+    "lng": 80.2534
   },
   {
     "id": 193,
-    "name": "Mental Health Peer Support - Pune",
+    "name": "Mental Health Peer Support - Surat",
     "description": "Create safe spaces for youth to discuss challenges.",
     "category": "youth",
-    "city": "Pune",
-    "lat": 18.527,
-    "lng": 73.8978
+    "city": "Surat",
+    "lat": 21.1628,
+    "lng": 72.8625
   },
   {
     "id": 194,
-    "name": "Music Band Formation - Mumbai",
+    "name": "Music Band Formation - Jaipur",
     "description": "Help young musicians form bands and perform.",
     "category": "youth",
-    "city": "Mumbai",
-    "lat": 19.1257,
-    "lng": 72.8699
+    "city": "Jaipur",
+    "lat": 26.9116,
+    "lng": 75.7489
   },
   {
     "id": 195,
-    "name": "Public Speaking Club - Lucknow",
+    "name": "Public Speaking Club - Kolkata",
     "description": "Build confidence through debate and speech training.",
     "category": "youth",
-    "city": "Lucknow",
-    "lat": 26.8358,
-    "lng": 80.9427
+    "city": "Kolkata",
+    "lat": 22.5613,
+    "lng": 88.3377
   },
   {
     "id": 196,
-    "name": "Environmental Youth Group - Bangalore",
+    "name": "Environmental Youth Group - Delhi",
     "description": "Mobilize young people for climate action.",
     "category": "youth",
-    "city": "Bangalore",
-    "lat": 12.9835,
-    "lng": 77.584
+    "city": "Delhi",
+    "lat": 28.6695,
+    "lng": 77.1239
   },
   {
     "id": 197,
-    "name": "Creative Writing Workshop - Bangalore",
+    "name": "Creative Writing Workshop - Delhi",
     "description": "Encourage storytelling and poetry among youth.",
     "category": "youth",
-    "city": "Bangalore",
-    "lat": 12.9946,
-    "lng": 77.6213
+    "city": "Delhi",
+    "lat": 28.6675,
+    "lng": 77.1215
   },
   {
     "id": 198,
-    "name": "Startup Incubation - Delhi",
+    "name": "Startup Incubation - Jaipur",
     "description": "Mentor young entrepreneurs in launching startups.",
     "category": "youth",
-    "city": "Delhi",
-    "lat": 28.6726,
-    "lng": 77.1261
+    "city": "Jaipur",
+    "lat": 26.9175,
+    "lng": 75.7378
   },
   {
     "id": 199,
-    "name": "Photography Club - Kolkata",
+    "name": "Photography Club - Mumbai",
     "description": "Teach photography skills and organize exhibitions.",
     "category": "youth",
-    "city": "Kolkata",
-    "lat": 22.5531,
-    "lng": 88.3439
+    "city": "Mumbai",
+    "lat": 19.0443,
+    "lng": 72.8842
   },
   {
     "id": 200,
@@ -1796,7 +1796,7 @@
     "description": "Use digital platforms for social change campaigns.",
     "category": "youth",
     "city": "Bangalore",
-    "lat": 12.9484,
-    "lng": 77.5693
+    "lat": 12.9688,
+    "lng": 77.6174
   }
 ]

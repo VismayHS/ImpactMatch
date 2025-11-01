@@ -25,9 +25,9 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    // In production, compare hashed password with bcrypt
-    // For demo, direct comparison (NOT SECURE)
-    if (user.password !== password) {
+    // Compare hashed password using bcrypt
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
@@ -62,6 +62,61 @@ router.post('/login', async (req, res) => {
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ error: 'Login failed' });
+  }
+});
+
+// POST /api/users/forgot-password
+// Request password reset (for demo - just logs the request)
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    // Check if user exists
+    const user = await User.findOne({ email });
+    
+    // For security, always return success even if user doesn't exist
+    // This prevents email enumeration attacks
+    if (!user) {
+      return res.json({
+        message: 'If an account exists with this email, a password reset link has been sent.',
+      });
+    }
+
+    // In production, you would:
+    // 1. Generate a unique reset token
+    // 2. Store token with expiry in database
+    // 3. Send email with reset link
+    // 4. Create a reset password page that validates token
+    
+    // For demo purposes, just log it
+    console.log(`Password reset requested for: ${email} (${user.role})`);
+    
+    // Log activity
+    const metadata = getRequestMetadata(req);
+    await logActivity('password_reset_request', {
+      userId: user._id,
+      userType: user.role,
+      details: `Password reset requested for ${email}`,
+      metadata: { email },
+      ...metadata,
+    });
+
+    res.json({
+      message: 'If an account exists with this email, a password reset link has been sent.',
+      // For demo, include reset info (remove in production!)
+      demo: {
+        email: user.email,
+        role: user.role,
+        name: user.name,
+      },
+    });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({ error: 'Password reset request failed' });
   }
 });
 

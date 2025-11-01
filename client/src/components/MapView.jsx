@@ -74,6 +74,8 @@ export default function MapView({ user }) {
       // Fetch all causes from database
       const response = await axios.get(`${API_BASE_URL}/api/match/causes`);
       
+      console.log('🗺️ Map: Loaded causes:', response.data.length);
+      
       if (response.data && response.data.length > 0) {
         // Transform causes with coordinates
         const causesWithCoords = response.data.map((cause, index) => {

@@ -9,32 +9,64 @@ import {
   Shield, 
   Share2, 
   LogOut, 
-  User 
+  User,
+  MapPin
 } from 'lucide-react';
 import { toast } from 'react-toastify';
 
-// Import complete User components
+// Import core User components (4 pages now)
 import UserDiscover from './user/UserDiscover';
-import MyCauses from './user/MyCauses';
-import ImpactScore from './user/ImpactScore';
-import UserAnalytics from './user/UserAnalytics';
-import BlockchainProofs from './user/BlockchainProofs';
-import ShareImpact from './user/ShareImpact';
+import MyCauses from "./user/MyCauses";
+import UserSettings from "./user/UserSettings";
+import MapView from "../MapView";
 
 const UserDashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
   useEffect(() => {
+    console.log('🔍 UserDashboard: Component mounted, checking authentication...');
+    console.log('🔍 Current URL:', window.location.pathname);
+    
     const userData = localStorage.getItem('user');
     const token = localStorage.getItem('token');
+    const userRole = localStorage.getItem('userRole');
+    const userId = localStorage.getItem('userId');
+    
+    console.log('📦 UserDashboard - localStorage FULL check:', {
+      hasUser: !!userData,
+      hasToken: !!token,
+      hasRole: !!userRole,
+      hasUserId: !!userId,
+      token: token?.substring(0, 20) + '...',
+      userRole: userRole,
+      userId: userId,
+      rawUserData: userData
+    });
     
     if (!userData || !token) {
-      navigate('/login');
+      console.log('❌ UserDashboard: Missing data, redirecting to login');
+      console.log('❌ Missing:', { userData: !userData, token: !token });
+      navigate('/login/user');
       return;
     }
 
-    setUser(JSON.parse(userData));
+    try {
+      const parsedUser = JSON.parse(userData);
+      console.log('✅ UserDashboard: User authenticated successfully!');
+      console.log('✅ User details:', { 
+        name: parsedUser.name, 
+        email: parsedUser.email, 
+        role: parsedUser.role,
+        id: parsedUser.id,
+        _id: parsedUser._id
+      });
+      setUser(parsedUser);
+    } catch (err) {
+      console.error('❌ Failed to parse user data:', err);
+      localStorage.clear();
+      navigate('/login/user');
+    }
   }, [navigate]);
 
   const handleLogout = () => {
@@ -45,12 +77,10 @@ const UserDashboard = () => {
   };
 
   const menuItems = [
-    { path: '', icon: Compass, label: 'Discover', gradient: 'from-purple-500 to-pink-500' },
-    { path: 'my-causes', icon: Heart, label: 'My Causes', gradient: 'from-pink-500 to-rose-500' },
-    { path: 'impact-score', icon: Trophy, label: 'Impact Score', gradient: 'from-yellow-500 to-orange-500' },
-    { path: 'analytics', icon: BarChart3, label: 'Analytics', gradient: 'from-blue-500 to-cyan-500' },
-    { path: 'blockchain', icon: Shield, label: 'Blockchain Proofs', gradient: 'from-green-500 to-emerald-500' },
-    { path: 'share', icon: Share2, label: 'Share Impact', gradient: 'from-indigo-500 to-purple-500' },
+    { path: '', icon: Compass, label: 'Discover Causes', gradient: 'from-purple-500 to-pink-500' },
+    { path: 'my-causes', icon: Heart, label: 'Impact Dashboard', gradient: 'from-pink-500 to-rose-500' },
+    { path: 'map', icon: MapPin, label: 'Cause Map', gradient: 'from-green-500 to-emerald-500' },
+    { path: 'settings', icon: User, label: 'Profile Settings', gradient: 'from-blue-500 to-cyan-500' },
   ];
 
   if (!user) return null;
@@ -118,10 +148,8 @@ const UserDashboard = () => {
             <Routes>
               <Route index element={<UserDiscover />} />
               <Route path="my-causes" element={<MyCauses />} />
-              <Route path="impact-score" element={<ImpactScore />} />
-              <Route path="analytics" element={<UserAnalytics />} />
-              <Route path="blockchain" element={<BlockchainProofs />} />
-              <Route path="share" element={<ShareImpact />} />
+              <Route path="map" element={<MapView user={user} />} />
+              <Route path="settings" element={<UserSettings />} />
             </Routes>
           </motion.div>
         </main>

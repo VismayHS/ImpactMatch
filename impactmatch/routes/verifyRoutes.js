@@ -4,6 +4,7 @@ const User = require('../models/User');
 const Match = require('../models/Match');
 const Verification = require('../models/Verification');
 const { recordImpact } = require('../utils/blockchain');
+const { authMiddleware, verifyRole, verifyNGOApproved } = require('../middleware/auth');
 
 // Helper function to calculate badge tier
 function calculateBadges(score) {
@@ -12,11 +13,11 @@ function calculateBadges(score) {
   else if (score >= 100) badges.push('SILVER');
   else if (score >= 50) badges.push('BRONZE');
   return badges;
-}
+} 
 
 // GET /api/verify/pending?userId=<id>
-// Get pending verifications for user
-router.get('/pending', async (req, res) => {
+// Get pending verifications for user (authenticated users only)
+router.get('/pending', authMiddleware, async (req, res) => {
   try {
     const { userId } = req.query;
 
@@ -47,8 +48,8 @@ router.get('/pending', async (req, res) => {
 });
 
 // GET /api/verify (or /api/verifications)
-// Get all verifications (for analytics/dashboard)
-router.get('/', async (req, res) => {
+// Get all verifications (for analytics/dashboard - authenticated users)
+router.get('/', authMiddleware, async (req, res) => {
   try {
     const { userId, verifierId, matchId } = req.query;
     
@@ -84,8 +85,8 @@ router.get('/', async (req, res) => {
 });
 
 // POST /api/verify
-// Verify a match and record on blockchain
-router.post('/', async (req, res) => {
+// Verify a match and record on blockchain (NGO only - must be verified)
+router.post('/', authMiddleware, verifyRole('ngo'), verifyNGOApproved, async (req, res) => {
   try {
     const { matchId, verifierId } = req.body;
 

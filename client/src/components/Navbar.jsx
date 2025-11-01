@@ -10,6 +10,9 @@ export default function Navbar({ user, onLogout }) {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  // Get user role from localStorage
+  const userRole = localStorage.getItem('userRole');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,9 +36,7 @@ export default function Navbar({ user, onLogout }) {
 
   const navLinks = [
     { path: '/', label: 'Home', iconName: 'home' },
-    { path: '/swipe', label: 'Causes', iconName: 'causes' },
     { path: '/dashboard', label: 'Dashboard', iconName: 'dashboard', protected: true },
-    { path: '/map', label: 'Map', iconName: 'map' },
   ];
 
   return (
@@ -143,8 +144,10 @@ export default function Navbar({ user, onLogout }) {
                   {navLinks.map((link) => {
                     const isActive = location.pathname === link.path;
                     const shouldHide = link.protected && !user;
+                    // Hide userOnly links for NGOs and admins
+                    const shouldHideForRole = link.userOnly && (userRole === 'ngo' || userRole === 'admin');
                     
-                    if (shouldHide) return null;
+                    if (shouldHide || shouldHideForRole) return null;
 
                     return (
                       <Link
@@ -374,8 +377,10 @@ export default function Navbar({ user, onLogout }) {
                 {navLinks.map((link, index) => {
                   const isActive = location.pathname === link.path;
                   const shouldHide = link.protected && !user;
+                  // Hide userOnly links for NGOs and admins
+                  const shouldHideForRole = link.userOnly && (userRole === 'ngo' || userRole === 'admin');
                   
-                  if (shouldHide) return null;
+                  if (shouldHide || shouldHideForRole) return null;
 
                   return (
                     <motion.div
@@ -444,8 +449,10 @@ export default function Navbar({ user, onLogout }) {
             {navLinks.map((link) => {
               const isActive = location.pathname === link.path;
               const shouldHide = link.protected && !user;
+              // Hide userOnly links for NGOs and admins
+              const shouldHideForRole = link.userOnly && (userRole === 'ngo' || userRole === 'admin');
               
-              if (shouldHide) return null;
+              if (shouldHide || shouldHideForRole) return null;
 
               return (
                 <Link

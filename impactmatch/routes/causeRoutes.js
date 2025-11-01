@@ -4,6 +4,7 @@ const Cause = require('../models/Cause');
 const User = require('../models/User');
 const multer = require('multer');
 const path = require('path');
+const { authMiddleware, verifyRole, verifyNGOApproved } = require('../middleware/auth');
 
 // Configure multer for image uploads
 const storage = multer.diskStorage({
@@ -72,8 +73,8 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST /api/causes
-// Create a new cause (NGO only)
-router.post('/', upload.single('image'), async (req, res) => {
+// Create a new cause (NGO only - must be verified)
+router.post('/', authMiddleware, verifyRole('ngo'), verifyNGOApproved, upload.single('image'), async (req, res) => {
   try {
     const { title, description, category, city, lat, lng, volunteerLimit, ngoId } = req.body;
 
@@ -118,8 +119,8 @@ router.post('/', upload.single('image'), async (req, res) => {
 });
 
 // PUT /api/causes/:id
-// Update a cause
-router.put('/:id', async (req, res) => {
+// Update a cause (NGO or Admin only)
+router.put('/:id', authMiddleware, verifyRole('ngo', 'admin'), async (req, res) => {
   try {
     const { title, description, category, city, lat, lng, volunteerLimit, status } = req.body;
 
@@ -151,8 +152,8 @@ router.put('/:id', async (req, res) => {
 });
 
 // DELETE /api/causes/:id
-// Delete a cause
-router.delete('/:id', async (req, res) => {
+// Delete a cause (NGO or Admin only)
+router.delete('/:id', authMiddleware, verifyRole('ngo', 'admin'), async (req, res) => {
   try {
     const cause = await Cause.findByIdAndDelete(req.params.id);
     

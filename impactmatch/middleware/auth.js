@@ -1,33 +1,26 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'impactmatch_super_secret_key_2024';
-
-// Middleware to verify JWT token
+// Verify JWT token and attach user to request
 const authMiddleware = async (req, res, next) => {
   try {
-    // Get token from header
-    const token = req.header('Authorization')?.replace('Bearer ', '');
+    const token = req.headers.authorization?.replace('Bearer ', '');
 
     if (!token) {
-      return res.status(401).json({ error: 'No authentication token, access denied' });
+      return res.status(401).json({ error: 'Authentication required' });
     }
 
-    // Verify token
-    const decoded = jwt.verify(token, JWT_SECRET);
-    
-    // Get user from token (support both 'id' and 'userId' field names)
-    const user = await User.findById(decoded.id || decoded.userId).select('-password');
-    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'impactmatch_super_secret_key_2024');
+    const user = await User.findById(decoded.userId);
+
     if (!user) {
-      return res.status(401).json({ error: 'Token is not valid' });
+      return res.status(401).json({ error: 'User not found' });
     }
 
     if (user.suspended) {
-      return res.status(403).json({ error: 'Account suspended. Contact admin.' });
+      return res.status(403).json({ error: 'Account suspended' });
     }
 
-    // Attach user to request
     req.user = user;
     req.userId = user._id;
     next();
@@ -35,7 +28,7 @@ const authMiddleware = async (req, res, next) => {
     if (error.name === 'TokenExpiredError') {
       return res.status(401).json({ error: 'Session expired. Please login again.' });
     }
-    res.status(401).json({ error: 'Token is not valid' });
+    return res.status(401).json({ error: 'Invalid authentication token' });
   }
 };
 
@@ -60,24 +53,6 @@ const verifyRole = (...allowedRoles) => {
       return res.status(500).json({ error: 'Authorization check failed' });
     }
   };
-};
-
-// Middleware to check if user is admin (backward compatibility)
-const adminMiddleware = async (req, res, next) => {
-  try {
-    if (!req.user) {
-      return res.status(401).json({ error: 'Not authenticated' });
-    }
-
-    // Check if user has admin role
-    if (req.user.role !== 'admin' && !req.user.isAdmin) {
-      return res.status(403).json({ error: 'Access denied. Admin only.' });
-    }
-
-    next();
-  } catch (error) {
-    res.status(500).json({ error: 'Authorization error' });
-  }
 };
 
 // Verify NGO is approved before allowing certain actions
@@ -105,17 +80,19 @@ const verifyNGOApproved = async (req, res, next) => {
   }
 };
 
-// Generate JWT token
-const generateToken = (userId) => {
-  return jwt.sign({ userId, id: userId }, JWT_SECRET, {
-    expiresIn: '7d', // Token expires in 7 days
-  });
+// Generate JWT token with expiry
+const generateToken = (userId, expiresIn = '7d') => {
+  return jwt.sign(
+    { userId },
+    process.env.JWT_SECRET || 'impactmatch_super_secret_key_2024',
+    { expiresIn }
+  );
 };
 
-// Verify token and return decoded data
+// Verify token and return decoded data (for checking expiry on frontend)
 const verifyToken = (token) => {
   try {
-    return jwt.verify(token, JWT_SECRET);
+    return jwt.verify(token, process.env.JWT_SECRET || 'impactmatch_super_secret_key_2024');
   } catch (error) {
     return null;
   }
@@ -123,10 +100,8 @@ const verifyToken = (token) => {
 
 module.exports = {
   authMiddleware,
-  adminMiddleware,
   verifyRole,
   verifyNGOApproved,
   generateToken,
   verifyToken,
-  JWT_SECRET,
 };

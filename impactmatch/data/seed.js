@@ -23,12 +23,34 @@ async function seedDatabase() {
     await Verification.deleteMany({});
     console.log('✅ Database cleared');
 
+    // Create demo NGO user first (needed for causes)
+    console.log('🏢 Creating demo NGO...');
+    const demoNGO = await User.create({
+      name: 'ImpactMatch Foundation',
+      email: 'ngo@impactmatch.org',
+      password: 'demo123',
+      role: 'ngo',
+      city: 'Bangalore',
+      interests: 'all social causes',
+      availability: 'always',
+      verified: true,
+      ngoDetails: {
+        registrationNumber: 'NGO123456',
+        description: 'Leading social impact organization in India',
+        website: 'https://impactmatch.org',
+        contactPerson: 'Admin',
+        contactPhone: '+91-1234567890',
+        yearEstablished: 2020,
+      },
+    });
+    console.log(`✅ Created NGO: ${demoNGO.name}`);
+
     // Load causes from JSON
     console.log('📁 Loading causes data...');
     const causesPath = path.join(__dirname, 'causes.json');
     const causesData = JSON.parse(fs.readFileSync(causesPath, 'utf8'));
 
-    // Insert causes
+    // Insert causes with NGO ID
     console.log('💾 Inserting causes...');
     const causes = await Cause.insertMany(
       causesData.map((c) => ({
@@ -38,6 +60,7 @@ async function seedDatabase() {
         city: c.city,
         lat: c.lat,
         lng: c.lng,
+        ngoId: demoNGO._id,
       }))
     );
     console.log(`✅ Inserted ${causes.length} causes`);
@@ -91,7 +114,12 @@ async function seedDatabase() {
       },
     ];
 
-    const users = await User.insertMany(demoUsers);
+    // Create users one by one to trigger pre-save hook for password hashing
+    const users = [];
+    for (const userData of demoUsers) {
+      const user = await User.create(userData);
+      users.push(user);
+    }
     console.log(`✅ Created ${users.length} demo users`);
 
     // Create sample matches and verifications

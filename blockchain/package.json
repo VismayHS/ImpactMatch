@@ -1,0 +1,24 @@
+{
+  "name": "impactmatch-blockchain",
+  "version": "1.0.0",
+  "description": "Blockchain smart contracts for ImpactMatch - Proof of Impact verification",
+  "main": "hardhat.config.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "deploy:local": "hardhat run scripts/deploy.js --network localhost",
+    "deploy:mumbai": "hardhat run scripts/deploy.js --network mumbai",
+    "node": "hardhat node",
+    "test": "hardhat test",
+    "clean": "hardhat clean"
+  },
+  "keywords": ["blockchain", "ethereum", "polygon", "social-impact"],
+  "author": "ImpactMatch Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  }
+}

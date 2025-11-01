@@ -14,12 +14,9 @@ import {
 } from 'lucide-react';
 import { toast } from 'react-toastify';
 
-// Import complete NGO components
+// Import core NGO components only (3 pages)
 import NGOOverview from './ngo/NGOOverview';
-import AddCause from './ngo/AddCause';
 import VolunteerVerification from './ngo/VolunteerVerification';
-import VerificationHistory from './ngo/VerificationHistory';
-import NGOAnalytics from './ngo/NGOAnalytics';
 import NGOSettings from './ngo/NGOSettings';
 
 const NGODashboard = () => {
@@ -33,7 +30,7 @@ const NGODashboard = () => {
     const token = localStorage.getItem('token');
     
     if (!userData || !token) {
-      navigate('/login');
+      navigate('/login/ngo');
       return;
     }
 
@@ -44,7 +41,7 @@ const NGODashboard = () => {
       if (!parsedUser || !parsedUser.name || !parsedUser.role) {
         console.error('Invalid user data in localStorage');
         localStorage.clear();
-        navigate('/login');
+        navigate('/login/ngo');
         return;
       }
       
@@ -56,7 +53,7 @@ const NGODashboard = () => {
     } catch (error) {
       console.error('Error parsing user data:', error);
       localStorage.clear();
-      navigate('/login');
+      navigate('/login/ngo');
     }
   }, [navigate]);
 
@@ -68,12 +65,9 @@ const NGODashboard = () => {
   };
 
   const menuItems = [
-    { path: '', icon: LayoutDashboard, label: 'Overview' },
-    { path: 'add-cause', icon: PlusCircle, label: 'Add Cause' },
+    { path: '', icon: LayoutDashboard, label: 'Home / Causes' },
     { path: 'verify-volunteers', icon: CheckCircle, label: 'Verify Volunteers' },
-    { path: 'history', icon: History, label: 'History' },
-    { path: 'analytics', icon: BarChart3, label: 'Analytics' },
-    { path: 'settings', icon: Settings, label: 'Settings' },
+    { path: 'settings', icon: Settings, label: 'Profile Settings' },
   ];
 
   // Show loading state
@@ -162,10 +156,7 @@ const NGODashboard = () => {
           >
             <Routes>
               <Route index element={<NGOOverview />} />
-              <Route path="add-cause" element={<AddCause />} />
               <Route path="verify-volunteers" element={<VolunteerVerification />} />
-              <Route path="history" element={<VerificationHistory />} />
-              <Route path="analytics" element={<NGOAnalytics />} />
               <Route path="settings" element={<NGOSettings />} />
             </Routes>
           </motion.div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Heart, MapPin, Calendar, CheckCircle, Clock, XCircle, ExternalLink } from 'lucide-react';
+import { Heart, MapPin, Calendar, CheckCircle, Clock, XCircle, ExternalLink, RefreshCw } from 'lucide-react';
 import api, { API_BASE_URL } from '../../../utils/axiosConfig';
 import { toast } from 'react-toastify';
 
@@ -18,22 +18,56 @@ const MyCauses = () => {
       setLoading(true);
       const user = JSON.parse(localStorage.getItem('user'));
       const userId = user?.id || user?._id;
+      
+      console.log('🔍 Loading causes for user ID:', userId);
 
       // Get user's matches
       const matchesResponse = await api.get('/api/matches');
-      const userMatches = matchesResponse.data.filter(m => m.userId === userId);
+      const matchesData = Array.isArray(matchesResponse.data) 
+        ? matchesResponse.data 
+        : matchesResponse.data.matches || [];
+      
+      console.log('📦 All matches from API:', matchesData.length);
+      
+      const userMatches = matchesData.filter(m => {
+        const matchUserId = m.userId?._id || m.userId;
+        return matchUserId.toString() === userId.toString();
+      });
+      
+      console.log('✅ User matches found:', userMatches.length);
+      console.log('📋 User matches:', userMatches);
 
       // Get verifications
-      const verificationsResponse = await api.get('/api/verifications');
-      const userVerifications = verificationsResponse.data.filter(v => v.userId === userId);
+      const verificationsResponse = await api.get('/api/verify');
+      const verificationsData = Array.isArray(verificationsResponse.data) 
+        ? verificationsResponse.data 
+        : verificationsResponse.data.verifications || [];
+      const userVerifications = verificationsData.filter(v => 
+        v.matchId?.userId?._id === userId || v.matchId?.userId === userId
+      );
+      
+      console.log('🔐 Verifications found:', userVerifications.length);
 
       // Get all causes
       const causesResponse = await api.get('/api/causes');
+      const causesData = Array.isArray(causesResponse.data) 
+        ? causesResponse.data 
+        : causesResponse.data.causes || [];
+      
+      console.log('🎯 All causes available:', causesData.length);
 
       // Enrich matches with cause details and verification status
       const enrichedCauses = userMatches.map(match => {
-        const cause = causesResponse.data.find(c => c._id === match.causeId);
-        const verification = userVerifications.find(v => v.causeId === match.causeId);
+        const matchCauseId = match.causeId?._id || match.causeId;
+        const cause = causesData.find(c => c._id.toString() === matchCauseId.toString());
+        const verification = userVerifications.find(v => {
+          const vMatchId = v.matchId?._id || v.matchId;
+          return vMatchId.toString() === match._id.toString();
+        });
+        
+        if (!cause) {
+          console.warn('⚠️ Cause not found for match:', match._id, 'causeId:', matchCauseId);
+        }
         
         return {
           ...cause,
@@ -44,11 +78,15 @@ const MyCauses = () => {
           verification: verification || null
         };
       }).filter(c => c._id); // Filter out null causes
+      
+      console.log('🎉 Final enriched causes:', enrichedCauses.length);
+      console.log('📊 Enriched causes details:', enrichedCauses);
 
       setJoinedCauses(enrichedCauses);
     } catch (error) {
-      console.error('Error loading joined causes:', error);
+      console.error('❌ Error loading joined causes:', error);
       toast.error('Failed to load your causes');
+      setJoinedCauses([]); // Set empty array on error
     } finally {
       setLoading(false);
     }
@@ -59,14 +97,14 @@ const MyCauses = () => {
       return (
         <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
           <CheckCircle className="w-4 h-4" />
-          Verified
+          Attendance Verified
         </span>
       );
-    } else if (cause.status === 'joined') {
+    } else if (cause.status === 'joined' || cause.status === 'interested') {
       return (
-        <span className="inline-flex items-center gap-1 px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">
-          <Clock className="w-4 h-4" />
-          Pending
+        <span className="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
+          <Calendar className="w-4 h-4" />
+          Registered - Upcoming Event
         </span>
       );
     } else {
@@ -99,11 +137,25 @@ const MyCauses = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
-          My Causes
-        </h1>
-        <p className="text-gray-600">Track your volunteer activities and impact</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+            My Causes
+          </h1>
+          <p className="text-gray-600">Track your volunteer activities and impact</p>
+        </div>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => {
+            toast.info('Refreshing your causes...');
+            loadJoinedCauses();
+          }}
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-medium hover:shadow-lg transition-all"
+        >
+          <RefreshCw className="w-4 h-4" />
+          Refresh
+        </motion.button>
       </div>
 
       {/* Stats */}

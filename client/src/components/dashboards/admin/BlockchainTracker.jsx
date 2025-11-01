@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Copy, Download, Search, ExternalLink, Filter } from 'lucide-react';
-import axios from 'axios';
+import api from '../../../utils/axiosConfig';
 import { toast } from 'react-toastify';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5173';
 
 const BlockchainTracker = () => {
   const [verifications, setVerifications] = useState([]);
@@ -20,22 +18,39 @@ const BlockchainTracker = () => {
     try {
       setLoading(true);
       const [verificationsRes, usersRes, causesRes] = await Promise.all([
-        axios.get(`${API_BASE_URL}/api/verifications`),
-        axios.get(`${API_BASE_URL}/api/users`),
-        axios.get(`${API_BASE_URL}/api/causes`)
+        api.get('/api/verify'), // Verifications endpoint
+        api.get('/api/admin/users'),
+        api.get('/api/causes')
       ]);
 
-      const enrichedData = verificationsRes.data.map(v => ({
-        ...v,
-        userName: usersRes.data.find(u => u._id === v.userId)?.name || 'Unknown',
-        causeName: causesRes.data.find(c => c._id === v.causeId)?.title || 'Unknown',
-        ngoName: causesRes.data.find(c => c._id === v.causeId)?.ngoId?.name || 'Unknown'
-      }));
+      // Handle response format - admin/users returns { users: [...] }
+      const users = usersRes.data.users || usersRes.data || [];
+      const causes = causesRes.data || [];
+      const verificationsData = verificationsRes.data.verifications || verificationsRes.data || [];
+
+      const enrichedData = verificationsData.map(v => {
+        // Verifications are populated with matchId -> userId and causeId
+        const userName = v.matchId?.userId?.name || 'Unknown User';
+        const causeName = v.matchId?.causeId?.title || 'Unknown Cause';
+        const ngoName = v.verifierId?.name || 'Unknown NGO';
+        
+        return {
+          _id: v._id,
+          userName,
+          causeName,
+          ngoName,
+          blockchainHash: v.txHash || 'N/A',
+          timestamp: v.createdAt || v.timestamp || new Date(),
+          userId: v.matchId?.userId?._id,
+          causeId: v.matchId?.causeId?._id
+        };
+      });
 
       setVerifications(enrichedData);
     } catch (error) {
       console.error('Error loading verifications:', error);
       toast.error('Failed to load blockchain verifications');
+      setVerifications([]); // Set empty array on error
     } finally {
       setLoading(false);
     }
@@ -153,51 +168,69 @@ const BlockchainTracker = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {filteredVerifications.map((verification, index) => (
-                <motion.tr
-                  key={verification._id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: index * 0.03 }}
-                  className="hover:bg-white/30 transition-colors"
-                >
-                  <td className="px-6 py-4 text-sm text-gray-800">{verification.userName}</td>
-                  <td className="px-6 py-4 text-sm text-gray-800">{verification.causeName}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{verification.ngoName}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <code className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">
-                        {verification.blockchainHash.substring(0, 12)}...{verification.blockchainHash.slice(-8)}
-                      </code>
-                      <button
-                        onClick={() => copyHash(verification.blockchainHash)}
-                        className="text-gray-400 hover:text-blue-600 transition-colors"
-                      >
-                        <Copy className="w-4 h-4" />
-                      </button>
+              {filteredVerifications.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="px-6 py-12 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <Shield className="w-16 h-16 text-gray-300 mb-4" />
+                      <h3 className="text-lg font-semibold text-gray-600 mb-2">
+                        No Verifications Yet
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        {searchTerm || filterType !== 'all' 
+                          ? 'No verifications match your search criteria'
+                          : 'Blockchain verifications will appear here once NGOs start verifying volunteer impact'}
+                      </p>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">
-                    {new Date(verification.timestamp).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => downloadProof(verification)}
-                        className="text-blue-600 hover:text-blue-800 transition-colors"
-                      >
-                        <Download className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => window.open(`https://blockchain-explorer.example.com/tx/${verification.blockchainHash}`)}
-                        className="text-purple-600 hover:text-purple-800 transition-colors"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
-                </motion.tr>
-              ))}
+                </tr>
+              ) : (
+                filteredVerifications.map((verification, index) => (
+                  <motion.tr
+                    key={verification._id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: index * 0.03 }}
+                    className="hover:bg-white/30 transition-colors"
+                  >
+                    <td className="px-6 py-4 text-sm text-gray-800">{verification.userName}</td>
+                    <td className="px-6 py-4 text-sm text-gray-800">{verification.causeName}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{verification.ngoName}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <code className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">
+                          {verification.blockchainHash.substring(0, 12)}...{verification.blockchainHash.slice(-8)}
+                        </code>
+                        <button
+                          onClick={() => copyHash(verification.blockchainHash)}
+                          className="text-gray-400 hover:text-blue-600 transition-colors"
+                        >
+                          <Copy className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {new Date(verification.timestamp).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => downloadProof(verification)}
+                          className="text-blue-600 hover:text-blue-800 transition-colors"
+                        >
+                          <Download className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => window.open(`https://blockchain-explorer.example.com/tx/${verification.blockchainHash}`)}
+                          className="text-purple-600 hover:text-purple-800 transition-colors"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </motion.tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

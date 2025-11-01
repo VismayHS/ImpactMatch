@@ -13,6 +13,12 @@ import MapView from './components/MapView';
 import IconShowcase from './components/IconShowcase';
 import PrivateRoute from './components/PrivateRoute';
 
+// Role-Based Authentication
+import UserLogin from './components/auth/UserLogin';
+import NGOLogin from './components/auth/NGOLogin';
+import AdminLogin from './components/auth/AdminLogin';
+import ForgotPassword from './components/auth/ForgotPassword';
+
 // Premium Dashboards
 import NGODashboard from './components/dashboards/NGODashboard';
 import UserDashboard from './components/dashboards/UserDashboard';
@@ -23,44 +29,45 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in
-    const savedUserId = localStorage.getItem('userId');
-    if (savedUserId) {
-      // Fetch user data with timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-      fetch(`/api/users/${savedUserId}`, { signal: controller.signal })
-        .then(res => {
-          clearTimeout(timeoutId);
-          if (!res.ok) throw new Error('User not found');
-          return res.json();
-        })
-        .then(data => {
-          // Backend returns flat user object, not { user: {...} }
-          if (data && data.id) setUser(data);
-        })
-        .catch(err => {
-          console.error('Failed to load user:', err);
-          // Clear invalid user ID
-          localStorage.removeItem('userId');
-          localStorage.removeItem('userName');
-        })
-        .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
+    // Check if user is logged in from localStorage
+    const savedUser = localStorage.getItem('user');
+    const savedToken = localStorage.getItem('token');
+    
+    if (savedUser && savedToken) {
+      try {
+        const userData = JSON.parse(savedUser);
+        if (userData && (userData.id || userData._id)) {
+          setUser(userData);
+        }
+      } catch (err) {
+        console.error('Failed to parse user data:', err);
+        // Clear invalid data
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        localStorage.removeItem('userRole');
+      }
     }
+    setLoading(false);
   }, []);
 
   const handleLogin = (userData) => {
     setUser(userData);
+    // Store complete user object and ensure all required fields are set
+    localStorage.setItem('user', JSON.stringify(userData));
     localStorage.setItem('userId', userData._id || userData.id);
+    localStorage.setItem('userRole', userData.role);
+    localStorage.setItem('userName', userData.name);
   };
 
   const handleLogout = () => {
     setUser(null);
+    // Clear all auth data
+    localStorage.removeItem('user');
     localStorage.removeItem('userId');
     localStorage.removeItem('userName');
+    localStorage.removeItem('token');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userVerified');
   };
 
   // Show minimal loading only if checking auth
@@ -100,9 +107,15 @@ function App() {
           <Route path="/swipe" element={<SwipePage user={user} />} />
           <Route path="/icons" element={<IconShowcase />} />
           
+          {/* Role-Based Login Routes */}
+          <Route path="/login/user" element={<UserLogin onLogin={handleLogin} />} />
+          <Route path="/login/ngo" element={<NGOLogin onLogin={handleLogin} />} />
+          <Route path="/login/admin" element={<AdminLogin onLogin={handleLogin} />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          
           {/* Protected routes */}
           <Route
-            path="/dashboard"
+            path="/dashboard/*"
             element={
               <PrivateRoute>
                 <Dashboard user={user} setUser={setUser} />
@@ -126,7 +139,33 @@ function App() {
             }
           />
 
-          {/* Premium Dashboards */}
+          {/* Role-Based Dashboards */}
+          <Route 
+            path="/dashboard/user" 
+            element={
+              <PrivateRoute requiredRole="user">
+                <UserDashboard />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/dashboard/ngo" 
+            element={
+              <PrivateRoute requiredRole="ngo">
+                <NGODashboard />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/dashboard/admin/*" 
+            element={
+              <PrivateRoute requiredRole="admin">
+                <AdminDashboard />
+              </PrivateRoute>
+            } 
+          />
+          
+          {/* Legacy Premium Dashboards (for backward compatibility) */}
           <Route path="/ngo-dashboard/*" element={<NGODashboard />} />
           <Route path="/user-dashboard/*" element={<UserDashboard />} />
           <Route path="/admin-dashboard/*" element={<AdminDashboard />} />

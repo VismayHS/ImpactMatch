@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import api from '../utils/axiosConfig';
 import { toast } from 'react-toastify';
 
 const Login = () => {
@@ -12,7 +13,7 @@ const Login = () => {
     password: '',
     name: '',
   });
-
+  
   const from = location.state?.from?.pathname || '/';
 
   const handleSubmit = async (e) => {
@@ -22,17 +23,20 @@ const Login = () => {
       // Login logic - for demo, we'll check if user exists in database
       try {
         // In production, this would be a proper login endpoint
-        const response = await axios.post('/api/users/login', {
+        const response = await api.post('/api/users/login', {
           email: formData.email,
           password: formData.password,
         });
 
         if (response.data.userId && response.data.user) {
           const user = response.data.user;
+          
+          // Store auth data (overwrite any old values)
           localStorage.setItem('userId', response.data.userId);
           localStorage.setItem('userName', user.name);
+          localStorage.setItem('userRole', user.role);
           localStorage.setItem('user', JSON.stringify(user));
-          localStorage.setItem('token', response.data.token || 'demo-token');
+          localStorage.setItem('token', response.data.token);
           
           toast.success(`Welcome back, ${user.name}!`);
           
@@ -67,10 +71,13 @@ const Login = () => {
 
         if (response.data.userId && response.data.user) {
           const user = response.data.user;
+          
+          // Store auth data (overwrite any old values)
           localStorage.setItem('userId', response.data.userId);
           localStorage.setItem('userName', user.name);
-          localStorage.setItem('user', JSON.stringify(user)); // ✅ Store full user object
-          localStorage.setItem('token', response.data.token || 'demo-token'); // ✅ Store token
+          localStorage.setItem('userRole', user.role);
+          localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('token', response.data.token);
           
           toast.success('Registration successful!');
           

@@ -5,7 +5,7 @@ const NGODetails = require('../models/NGODetails');
 const ActivityLog = require('../models/ActivityLog');
 const Cause = require('../models/Cause');
 const Match = require('../models/Match');
-const { authMiddleware, adminMiddleware, generateToken } = require('../utils/auth');
+const { authMiddleware, verifyRole, generateToken } = require('../middleware/auth');
 const { logActivity, getRequestMetadata } = require('../utils/logger');
 const upload = require('../utils/upload');
 const path = require('path');
@@ -65,7 +65,7 @@ router.post('/login', async (req, res) => {
 });
 
 // Get dashboard statistics
-router.get('/dashboard/stats', authMiddleware, adminMiddleware, async (req, res) => {
+router.get('/dashboard/stats', authMiddleware, verifyRole('admin'), async (req, res) => {
   try {
     const [
       totalUsers,
@@ -125,7 +125,7 @@ router.get('/dashboard/stats', authMiddleware, adminMiddleware, async (req, res)
 });
 
 // Get all users with filters
-router.get('/users', authMiddleware, adminMiddleware, async (req, res) => {
+router.get('/users', authMiddleware, verifyRole('admin'), async (req, res) => {
   try {
     const { role, verified, search, page = 1, limit = 20 } = req.query;
 
@@ -167,7 +167,7 @@ router.get('/users', authMiddleware, adminMiddleware, async (req, res) => {
 });
 
 // Get user details by ID
-router.get('/users/:id', authMiddleware, adminMiddleware, async (req, res) => {
+router.get('/users/:id', authMiddleware, verifyRole('admin'), async (req, res) => {
   try {
     const user = await User.findById(req.params.id)
       .select('-password')
@@ -201,7 +201,7 @@ router.get('/users/:id', authMiddleware, adminMiddleware, async (req, res) => {
 });
 
 // Get all NGO certificates
-router.get('/ngos/certificates', authMiddleware, adminMiddleware, async (req, res) => {
+router.get('/ngos/certificates', authMiddleware, verifyRole('admin'), async (req, res) => {
   try {
     const { status, page = 1, limit = 20 } = req.query;
 
@@ -236,7 +236,7 @@ router.get('/ngos/certificates', authMiddleware, adminMiddleware, async (req, re
 });
 
 // Verify/Reject NGO
-router.post('/ngos/:id/verify', authMiddleware, adminMiddleware, async (req, res) => {
+router.post('/ngos/:id/verify', authMiddleware, verifyRole('admin'), async (req, res) => {
   try {
     const { status, notes, rejectionReason } = req.body;
 
@@ -286,7 +286,7 @@ router.post('/ngos/:id/verify', authMiddleware, adminMiddleware, async (req, res
 });
 
 // Get activity logs
-router.get('/logs', authMiddleware, adminMiddleware, async (req, res) => {
+router.get('/logs', authMiddleware, verifyRole('admin'), async (req, res) => {
   try {
     const { 
       action, 
@@ -334,7 +334,7 @@ router.get('/logs', authMiddleware, adminMiddleware, async (req, res) => {
 });
 
 // Export logs as CSV
-router.get('/logs/export', authMiddleware, adminMiddleware, async (req, res) => {
+router.get('/logs/export', authMiddleware, verifyRole('admin'), async (req, res) => {
   try {
     const logs = await ActivityLog.find()
       .populate('userId', 'name email')
@@ -368,7 +368,7 @@ router.get('/logs/export', authMiddleware, adminMiddleware, async (req, res) => 
 });
 
 // Delete user (soft delete - set verified to false)
-router.delete('/users/:id', authMiddleware, adminMiddleware, async (req, res) => {
+router.delete('/users/:id', authMiddleware, verifyRole('admin'), async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(
       req.params.id,

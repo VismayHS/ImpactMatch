@@ -36,10 +36,14 @@ const AdminOverview = () => {
       ]);
 
       // Handle response format - admin/users returns { users: [...] }
-      const users = usersRes.data.users || usersRes.data || [];
-      const causes = causesRes.data || [];
-      const matches = matchesRes.data || [];
-      const verifications = verificationsRes.data || [];
+      const users = Array.isArray(usersRes.data.users) ? usersRes.data.users : 
+                    Array.isArray(usersRes.data) ? usersRes.data : [];
+      const causes = Array.isArray(causesRes.data) ? causesRes.data : 
+                     Array.isArray(causesRes.data.causes) ? causesRes.data.causes : [];
+      const matches = Array.isArray(matchesRes.data) ? matchesRes.data : 
+                      Array.isArray(matchesRes.data.matches) ? matchesRes.data.matches : [];
+      const verifications = Array.isArray(verificationsRes.data) ? verificationsRes.data : 
+                           Array.isArray(verificationsRes.data.verifications) ? verificationsRes.data.verifications : [];
 
       // Calculate stats
       const totalUsers = users.filter(u => u.role === 'user' || u.role === 'organisation').length;
@@ -93,6 +97,17 @@ const AdminOverview = () => {
       setRecentActivity(recent);
     } catch (error) {
       console.error('Error loading dashboard data:', error);
+      // Set empty data to prevent errors
+      setStats({
+        totalUsers: 0,
+        totalNGOs: 0,
+        totalCauses: 0,
+        totalVerifications: 0,
+        pendingNGOs: 0,
+        activeCauses: 0
+      });
+      setChartData([]);
+      setRecentActivity([]);
     } finally {
       setLoading(false);
     }
