@@ -80,6 +80,35 @@ const verifyNGOApproved = async (req, res, next) => {
   }
 };
 
+// Verify NGO has dashboard access (AI score >= 75)
+const verifyDashboardAccess = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+
+    // Non-NGOs always have dashboard access
+    if (req.user.role !== 'ngo') {
+      return next();
+    }
+
+    // Check if NGO has dashboard access
+    if (!req.user.dashboardAccess) {
+      return res.status(403).json({ 
+        error: 'Dashboard access restricted. Your AI trust score is below the required threshold (75). Please wait for manual verification.',
+        dashboardAccess: false,
+        aiTrustScore: req.user.aiTrustScore,
+        certificateVerified: req.user.certificateVerified,
+        requiresManualReview: true
+      });
+    }
+
+    next();
+  } catch (error) {
+    return res.status(500).json({ error: 'Dashboard access check failed' });
+  }
+};
+
 // Generate JWT token with expiry
 const generateToken = (userId, expiresIn = '7d') => {
   return jwt.sign(
@@ -102,6 +131,7 @@ module.exports = {
   authMiddleware,
   verifyRole,
   verifyNGOApproved,
+  verifyDashboardAccess,
   generateToken,
   verifyToken,
 };

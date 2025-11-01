@@ -34,9 +34,26 @@ export default function Navbar({ user, onLogout }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
+  // Dynamic dashboard path based on user role
+  const getDashboardPath = () => {
+    if (!user || !userRole) return '/dashboard';
+    
+    switch(userRole) {
+      case 'user':
+      case 'organisation':
+        return '/user-dashboard';
+      case 'ngo':
+        return '/ngo-dashboard';
+      case 'admin':
+        return '/admin-dashboard';
+      default:
+        return '/dashboard';
+    }
+  };
+
   const navLinks = [
     { path: '/', label: 'Home', iconName: 'home' },
-    { path: '/dashboard', label: 'Dashboard', iconName: 'dashboard', protected: true },
+    { path: getDashboardPath(), label: 'Dashboard', iconName: 'dashboard', protected: true },
   ];
 
   return (

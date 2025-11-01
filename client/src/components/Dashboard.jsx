@@ -17,9 +17,19 @@ function RegularDashboard({ user, setUser }) {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedMatch, setSelectedMatch] = useState(null);
+  
+  // Personalization state
+  const [showCustomization, setShowCustomization] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [selectedInterests, setSelectedInterests] = useState([]);
+  const [selectedCities, setSelectedCities] = useState([]);
+  const [savingPreferences, setSavingPreferences] = useState(false);
 
   useEffect(() => {
     loadDashboard();
+    loadFilterOptions();
+    loadUserPreferences();
   }, [user]);
 
   const loadDashboard = async () => {
@@ -37,6 +47,81 @@ function RegularDashboard({ user, setUser }) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const loadFilterOptions = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/causes/filters/options`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      setCategories(data.categories || []);
+      setCities(data.cities || []);
+    } catch (error) {
+      console.error('Failed to load filter options:', error);
+    }
+  };
+
+  const loadUserPreferences = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const userId = user._id || user.id;
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/users/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      setSelectedInterests(data.selectedInterests || []);
+      setSelectedCities(data.selectedCities || []);
+    } catch (error) {
+      console.error('Failed to load user preferences:', error);
+    }
+  };
+
+  const savePreferences = async () => {
+    setSavingPreferences(true);
+    try {
+      const token = localStorage.getItem('token');
+      const userId = user._id || user.id;
+      await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          selectedInterests,
+          selectedCities
+        })
+      });
+      toast.success('Preferences saved! Your cause feed will now be personalized.');
+      setShowCustomization(false);
+    } catch (error) {
+      console.error('Failed to save preferences:', error);
+      toast.error('Failed to save preferences');
+    } finally {
+      setSavingPreferences(false);
+    }
+  };
+
+  const toggleInterest = (interest) => {
+    setSelectedInterests(prev =>
+      prev.includes(interest)
+        ? prev.filter(i => i !== interest)
+        : [...prev, interest]
+    );
+  };
+
+  const toggleCity = (city) => {
+    setSelectedCities(prev =>
+      prev.includes(city)
+        ? prev.filter(c => c !== city)
+        : [...prev, city]
+    );
   };
 
   if (loading) {
@@ -73,6 +158,103 @@ function RegularDashboard({ user, setUser }) {
           </h1>
           <p className="text-secondary">Track your impact journey</p>
         </motion.div>
+
+        {/* Customization Banner (Only for regular users) */}
+        {user.role === 'user' && (
+          <motion.div
+            initial={{ y: -10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="mb-6"
+          >
+            <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl shadow-soft p-6 text-white">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold mb-2">🎯 Customize Your Cause Feed</h3>
+                  <p className="text-green-50">
+                    {selectedInterests.length > 0 || selectedCities.length > 0
+                      ? `Personalized for ${selectedInterests.length} interests${selectedCities.length > 0 ? ` in ${selectedCities.length} cities` : ''}`
+                      : 'Select your interests and cities to see the most relevant causes'}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowCustomization(!showCustomization)}
+                  className="px-6 py-3 bg-white text-green-600 rounded-lg font-semibold hover:bg-green-50 transition-colors ml-4"
+                >
+                  {showCustomization ? 'Hide' : 'Customize'}
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Customization Panel (Only for regular users) */}
+        {user.role === 'user' && showCustomization && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="mb-6 bg-white rounded-xl shadow-soft p-6"
+          >
+            <h4 className="text-lg font-semibold text-gray-900 mb-4">Select Your Preferences</h4>
+            
+            {/* Interests */}
+            <div className="mb-6">
+              <h5 className="font-medium text-gray-700 mb-3">🎨 Interests (Categories)</h5>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {categories.map(category => (
+                  <button
+                    key={category}
+                    onClick={() => toggleInterest(category)}
+                    className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                      selectedInterests.includes(category)
+                        ? 'bg-green-500 text-white shadow-md'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Cities */}
+            <div className="mb-6">
+              <h5 className="font-medium text-gray-700 mb-3">📍 Preferred Cities</h5>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {cities.map(city => (
+                  <button
+                    key={city}
+                    onClick={() => toggleCity(city)}
+                    className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                      selectedCities.includes(city)
+                        ? 'bg-blue-500 text-white shadow-md'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    {city}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Save Button */}
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowCustomization(false)}
+                className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={savePreferences}
+                disabled={savingPreferences}
+                className="px-6 py-2 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {savingPreferences ? 'Saving...' : 'Save Preferences'}
+              </button>
+            </div>
+          </motion.div>
+        )}
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

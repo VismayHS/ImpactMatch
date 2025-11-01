@@ -10,14 +10,16 @@ import {
   Share2, 
   LogOut, 
   User,
-  MapPin
+  MapPin,
+  Settings
 } from 'lucide-react';
 import { toast } from 'react-toastify';
 
-// Import core User components (4 pages now)
+// Import core User components (5 pages now)
 import UserDiscover from './user/UserDiscover';
 import MyCauses from "./user/MyCauses";
 import UserSettings from "./user/UserSettings";
+import UserPreferences from "./user/UserPreferences";
 import MapView from "../MapView";
 
 const UserDashboard = () => {
@@ -79,6 +81,7 @@ const UserDashboard = () => {
   const menuItems = [
     { path: '', icon: Compass, label: 'Discover Causes', gradient: 'from-purple-500 to-pink-500' },
     { path: 'my-causes', icon: Heart, label: 'Impact Dashboard', gradient: 'from-pink-500 to-rose-500' },
+    { path: 'preferences', icon: Settings, label: 'My Preferences', gradient: 'from-indigo-500 to-purple-500' },
     { path: 'map', icon: MapPin, label: 'Cause Map', gradient: 'from-green-500 to-emerald-500' },
     { path: 'settings', icon: User, label: 'Profile Settings', gradient: 'from-blue-500 to-cyan-500' },
   ];
@@ -148,6 +151,7 @@ const UserDashboard = () => {
             <Routes>
               <Route index element={<UserDiscover />} />
               <Route path="my-causes" element={<MyCauses />} />
+              <Route path="preferences" element={<UserPreferences />} />
               <Route path="map" element={<MapView user={user} />} />
               <Route path="settings" element={<UserSettings />} />
             </Routes>

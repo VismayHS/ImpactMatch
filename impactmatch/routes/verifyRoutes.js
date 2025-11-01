@@ -5,6 +5,10 @@ const Match = require('../models/Match');
 const Verification = require('../models/Verification');
 const { recordImpact } = require('../utils/blockchain');
 const { authMiddleware, verifyRole, verifyNGOApproved } = require('../middleware/auth');
+const axios = require('axios');
+
+// AI Model URL for NGO verification
+const AI_MODEL_URL = process.env.AI_MODEL_URL || 'http://localhost:8000';
 
 // Helper function to calculate badge tier
 function calculateBadges(score) {
@@ -207,6 +211,75 @@ router.post('/deny', authMiddleware, verifyRole('ngo'), verifyNGOApproved, async
   } catch (error) {
     console.error('Deny verification error:', error);
     res.status(500).json({ error: 'Failed to deny attendance' });
+  }
+});
+
+// POST /api/verify/ngo
+// AI-powered NGO verification endpoint
+router.post('/ngo', async (req, res) => {
+  try {
+    const { ngoName } = req.body;
+
+    if (!ngoName) {
+      return res.status(400).json({ error: 'NGO name is required' });
+    }
+
+    console.log(`🔍 AI Verification request for: ${ngoName}`);
+
+    // Call AI verification service
+    try {
+      const response = await axios.post(
+        `${AI_MODEL_URL}/verify_ngo`,
+        { ngo_name: ngoName },
+        {
+          headers: { 'Content-Type': 'application/json' },
+          timeout: 30000  // 30 second timeout for web scraping
+        }
+      );
+
+      const verificationData = response.data;
+      
+      console.log(`✅ AI Verification complete: Trust Score ${verificationData.trust_score}/100 (${verificationData.trust_level})`);
+
+      // Return full verification data
+      res.json({
+        success: true,
+        ngoName: verificationData.ngo_name,
+        trustScore: verificationData.trust_score,
+        trustLevel: verificationData.trust_level,
+        sentimentLabel: verificationData.sentiment_label,
+        sentimentScore: verificationData.sentiment_score,
+        numLinks: verificationData.num_links,
+        links: verificationData.links,
+        notes: verificationData.notes,
+        verified: verificationData.trust_score >= 60,  // Auto-verify if trust score >= 60
+        timestamp: new Date()
+      });
+
+    } catch (aiError) {
+      console.error('❌ AI verification service error:', aiError.message);
+      
+      // Fallback: Return neutral score if AI service is down
+      res.json({
+        success: false,
+        ngoName,
+        trustScore: 50,
+        trustLevel: 'UNKNOWN',
+        sentimentLabel: 'NEUTRAL',
+        sentimentScore: 0.5,
+        numLinks: 0,
+        links: [],
+        notes: ['AI service unavailable - manual verification required'],
+        verified: false,
+        requiresManualReview: true,
+        error: 'AI service temporarily unavailable',
+        timestamp: new Date()
+      });
+    }
+
+  } catch (error) {
+    console.error('NGO verification error:', error);
+    res.status(500).json({ error: 'Failed to verify NGO' });
   }
 });
 

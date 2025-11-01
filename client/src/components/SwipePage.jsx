@@ -13,6 +13,7 @@ export default function SwipePage({ user }) {
   const [loading, setLoading] = useState(true);
   const [celebrating, setCelebrating] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const [isPersonalized, setIsPersonalized] = useState(false);
   const currentIndexRef = useRef(currentIndex);
 
   const categoryIcons = {
@@ -44,7 +45,49 @@ export default function SwipePage({ user }) {
   const fetchCauses = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/api/causes');
+      
+      // If user is logged in and is a regular user, fetch personalized causes
+      let response;
+      if (user && user.role === 'user') {
+        const token = localStorage.getItem('token');
+        try {
+          response = await api.get('/api/causes/personalized', {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          
+          if (response.data && response.data.causes && response.data.causes.length > 0) {
+            // Format personalized causes
+            const formattedCauses = response.data.causes.map(cause => ({
+              _id: cause._id,
+              title: cause.name,
+              organization: cause.ngoId?.name || 'Unknown Organization',
+              location: cause.city,
+              description: cause.description,
+              category: cause.category,
+              volunteers: cause.volunteersJoined || 0,
+              impactScore: Math.round(cause.relevanceScore * 10) || Math.floor(Math.random() * 100) + 1,
+              ngoId: cause.ngoId?._id || cause.ngoId,
+              relevanceScore: cause.relevanceScore
+            }));
+            
+            // Take first 20 causes
+            const swipeDeck = formattedCauses.slice(0, 20);
+            setCauses(swipeDeck);
+            setCurrentIndex(swipeDeck.length - 1);
+            currentIndexRef.current = swipeDeck.length - 1;
+            setIsPersonalized(true);
+            setLoading(false);
+            return;
+          }
+        } catch (personalizedError) {
+          console.log('Personalized causes not available, falling back to all causes');
+        }
+      }
+      
+      // Fallback: fetch all causes (for non-logged-in users or if personalized fails)
+      response = await api.get('/api/causes');
       
       if (response.data && response.data.causes && response.data.causes.length > 0) {
         // Format causes to include NGO organization name
@@ -262,6 +305,18 @@ export default function SwipePage({ user }) {
           <p className="text-lg text-gray-600">
             Swipe right to join a cause, left to skip • {currentIndex + 1} remaining
           </p>
+          
+          {/* Personalized Indicator */}
+          {isPersonalized && user?.role === 'user' && (
+            <motion.div
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="mt-4 inline-flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full font-medium"
+            >
+              <span className="text-xl">🎯</span>
+              <span>Personalized for you</span>
+            </motion.div>
+          )}
         </motion.div>
 
         {/* Swipe Instructions */}

@@ -4,7 +4,8 @@ const Cause = require('../models/Cause');
 const User = require('../models/User');
 const multer = require('multer');
 const path = require('path');
-const { authMiddleware, verifyRole, verifyNGOApproved } = require('../middleware/auth');
+const { authMiddleware, verifyRole, verifyNGOApproved, verifyDashboardAccess } = require('../middleware/auth');
+const { getPersonalizedCauses } = require('../utils/tfidfMatcher');
 
 // Configure multer for image uploads
 const storage = multer.diskStorage({
@@ -53,6 +54,81 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET /api/causes/filters/options
+// Get all unique cities for filter checkboxes (simplified to cities only)
+router.get('/filters/options', async (req, res) => {
+  try {
+    // Get all unique cities only
+    const cities = await Cause.distinct('city');
+
+    res.json({
+      cities: cities.sort()
+    });
+  } catch (error) {
+    console.error('Fetch filter options error:', error);
+    res.status(500).json({ error: 'Failed to fetch filter options' });
+  }
+});
+
+// GET /api/causes/personalized
+// Get personalized causes based on user's selected CITIES only (simplified)
+router.get('/personalized', authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    // Fetch user city preferences only
+    const user = await User.findById(userId).select('selectedCities');
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    console.log('🔍 PERSONALIZED CAUSES REQUEST (CITY-BASED):');
+    console.log('  User ID:', userId);
+    console.log('  User from DB:', JSON.stringify(user, null, 2));
+    console.log('  Selected Cities:', user.selectedCities || []);
+    console.log('  Cities type:', typeof user.selectedCities, 'Array?', Array.isArray(user.selectedCities));
+    console.log('  Cities length:', (user.selectedCities || []).length);
+
+    // Fetch all active causes
+    const causes = await Cause.find({ status: 'active' })
+      .populate('ngoId', 'name email city')
+      .lean();
+
+    console.log('  Total active causes:', causes.length);
+
+    // ⚠️ CRITICAL CHECK: Verify selectedCities is not empty
+    const selectedCities = user.selectedCities || [];
+    console.log('  🚨 PASSING TO FILTER:', {
+      selectedCitiesArray: selectedCities,
+      isArray: Array.isArray(selectedCities),
+      length: selectedCities.length,
+      isEmpty: selectedCities.length === 0
+    });
+
+    // Apply city-based filtering and ranking
+    const personalizedCauses = getPersonalizedCauses(causes, {
+      selectedCities: selectedCities
+    });
+
+    console.log('  Filtered/Ranked causes:', personalizedCauses.length);
+    console.log('  Sample causes returned:', personalizedCauses.slice(0, 3).map(c => ({
+      name: c.name,
+      city: c.city,
+      score: c.relevanceScore
+    })));
+
+    res.json({ 
+      causes: personalizedCauses,
+      preferences: {
+        selectedCities: user.selectedCities || []
+      }
+    });
+  } catch (error) {
+    console.error('Fetch personalized causes error:', error);
+    res.status(500).json({ error: 'Failed to fetch personalized causes' });
+  }
+});
+
 // GET /api/causes/:id
 // Get single cause by ID
 router.get('/:id', async (req, res) => {
@@ -73,8 +149,8 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST /api/causes
-// Create a new cause (NGO only - must be verified)
-router.post('/', authMiddleware, verifyRole('ngo'), verifyNGOApproved, upload.single('image'), async (req, res) => {
+// Create a new cause (NGO only - must have dashboard access)
+router.post('/', authMiddleware, verifyRole('ngo'), verifyDashboardAccess, upload.single('image'), async (req, res) => {
   try {
     const { title, description, category, city, lat, lng, volunteerLimit, ngoId } = req.body;
 

@@ -235,6 +235,66 @@ router.get('/ngos/certificates', authMiddleware, verifyRole('admin'), async (req
   }
 });
 
+// Get pending NGO verifications (includes AI trust scores and certificate status)
+router.get('/ngos/pending', authMiddleware, verifyRole('admin'), async (req, res) => {
+  try {
+    const { page = 1, limit = 20 } = req.query;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    // Find all NGOs that need manual verification
+    const [pendingNGOs, total] = await Promise.all([
+      User.find({ 
+        role: 'ngo',
+        certificateVerified: false // Not yet verified by admin
+      })
+        .select('name email city createdAt aiTrustScore dashboardAccess certificateVerified verified certificateUploaded')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(parseInt(limit))
+        .lean(),
+      User.countDocuments({ 
+        role: 'ngo',
+        certificateVerified: false
+      })
+    ]);
+
+    // Get NGO details for each pending NGO
+    const ngosWithDetails = await Promise.all(
+      pendingNGOs.map(async (ngo) => {
+        const ngoDetails = await NGODetails.findOne({ userId: ngo._id });
+        return {
+          ...ngo,
+          ngoDetails,
+          status: ngo.dashboardAccess ? 'has_access' : 'locked',
+          requiresUrgentReview: !ngo.dashboardAccess // AI score < 75
+        };
+      })
+    );
+
+    // Separate into high priority (locked) and low priority (has access)
+    const lockedNGOs = ngosWithDetails.filter(ngo => !ngo.dashboardAccess);
+    const accessGrantedNGOs = ngosWithDetails.filter(ngo => ngo.dashboardAccess);
+
+    res.json({
+      pendingNGOs: ngosWithDetails,
+      summary: {
+        total,
+        locked: lockedNGOs.length,
+        accessGranted: accessGrantedNGOs.length
+      },
+      pagination: {
+        total,
+        page: parseInt(page),
+        limit: parseInt(limit),
+        pages: Math.ceil(total / parseInt(limit)),
+      },
+    });
+  } catch (error) {
+    console.error('Get pending NGOs error:', error);
+    res.status(500).json({ error: 'Failed to fetch pending NGO verifications' });
+  }
+});
+
 // Verify/Reject NGO
 router.post('/ngos/:id/verify', authMiddleware, verifyRole('admin'), async (req, res) => {
   try {
@@ -262,6 +322,8 @@ router.post('/ngos/:id/verify', authMiddleware, verifyRole('admin'), async (req,
     // Update user verification status
     await User.findByIdAndUpdate(ngoDetails.userId, {
       verified: status === 'approved',
+      certificateVerified: status === 'approved',
+      dashboardAccess: status === 'approved' // Grant access if approved
     });
 
     // Log activity
@@ -281,6 +343,78 @@ router.post('/ngos/:id/verify', authMiddleware, verifyRole('admin'), async (req,
     });
   } catch (error) {
     console.error('NGO verification error:', error);
+    res.status(500).json({ error: 'Verification failed' });
+  }
+});
+
+// Manually verify NGO certificate (for new system with AI scores)
+router.post('/ngos/verify-certificate/:userId', authMiddleware, verifyRole('admin'), async (req, res) => {
+  try {
+    const { approved, notes, rejectionReason, grantDashboardAccess } = req.body;
+    const { userId } = req.params;
+
+    const user = await User.findById(userId);
+    
+    if (!user || user.role !== 'ngo') {
+      return res.status(404).json({ error: 'NGO user not found' });
+    }
+
+    // Update user verification fields
+    const updateData = {
+      certificateVerified: approved,
+      verified: approved
+    };
+
+    // Admin can override dashboard access
+    if (grantDashboardAccess !== undefined) {
+      updateData.dashboardAccess = grantDashboardAccess;
+    } else if (approved) {
+      // If approved and not specified, grant access
+      updateData.dashboardAccess = true;
+    }
+
+    await User.findByIdAndUpdate(userId, updateData);
+
+    // Update or create NGO details
+    let ngoDetails = await NGODetails.findOne({ userId });
+    if (ngoDetails) {
+      ngoDetails.status = approved ? 'approved' : 'rejected';
+      ngoDetails.verifiedByAdmin = approved;
+      ngoDetails.verifiedBy = req.user._id;
+      ngoDetails.verifiedAt = new Date();
+      ngoDetails.verificationNotes = notes || '';
+      ngoDetails.rejectionReason = approved ? '' : (rejectionReason || '');
+      await ngoDetails.save();
+    }
+
+    // Log activity
+    const metadata = getRequestMetadata(req);
+    await logActivity(approved ? 'ngo_certificate_approved' : 'ngo_certificate_rejected', {
+      userId,
+      performedBy: req.user._id,
+      userType: 'admin',
+      details: `NGO certificate ${approved ? 'approved' : 'rejected'} by admin ${req.user.name}`,
+      metadata: { 
+        aiTrustScore: user.aiTrustScore,
+        dashboardAccess: updateData.dashboardAccess,
+        notes, 
+        rejectionReason 
+      },
+      ...metadata,
+    });
+
+    res.json({
+      message: `NGO certificate ${approved ? 'approved' : 'rejected'} successfully`,
+      user: {
+        id: user._id,
+        name: user.name,
+        certificateVerified: updateData.certificateVerified,
+        dashboardAccess: updateData.dashboardAccess,
+        verified: updateData.verified
+      }
+    });
+  } catch (error) {
+    console.error('Certificate verification error:', error);
     res.status(500).json({ error: 'Verification failed' });
   }
 });

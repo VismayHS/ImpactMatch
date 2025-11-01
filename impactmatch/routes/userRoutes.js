@@ -3,8 +3,13 @@ const router = express.Router();
 const User = require('../models/User');
 const NGODetails = require('../models/NGODetails');
 const Match = require('../models/Match');
-const { authMiddleware, generateToken } = require('../utils/auth');
+const { generateToken } = require('../utils/auth');
+const { authMiddleware, verifyRole } = require('../middleware/auth');
 const { logActivity, getRequestMetadata } = require('../utils/logger');
+const axios = require('axios');
+
+// AI Model URL for NGO verification
+const AI_MODEL_URL = process.env.AI_MODEL_URL || 'http://localhost:8000';
 const upload = require('../utils/upload');
 const path = require('path');
 
@@ -57,6 +62,10 @@ router.post('/login', async (req, res) => {
         verified: user.verified,
         impactScore: user.impactScore,
         badges: user.badges,
+        // NGO-specific fields
+        dashboardAccess: user.dashboardAccess,
+        aiTrustScore: user.aiTrustScore,
+        certificateVerified: user.certificateVerified,
       },
     });
   } catch (error) {
@@ -168,9 +177,54 @@ router.post('/register', async (req, res) => {
       userData.verified = true;
     } else if (role === 'ngo') {
       userData.certificateUploaded = certificateUploaded || false;
-      userData.verified = verified !== undefined ? verified : false; // NGOs need admin approval
+      
+      // 🤖 AI-powered NGO verification
+      let trustScore = 0;
+      let dashboardAccess = false;
+      
+      try {
+        console.log(`🔍 Running AI verification for NGO: ${name}`);
+        const aiResponse = await axios.post(
+          `${AI_MODEL_URL}/verify_ngo`,
+          { ngo_name: name },
+          {
+            headers: { 'Content-Type': 'application/json' },
+            timeout: 30000
+          }
+        );
+        
+        trustScore = aiResponse.data.trust_score || 0;
+        const trustLevel = aiResponse.data.trust_level || 'UNKNOWN';
+        
+        console.log(`✅ AI Trust Score: ${trustScore}/100 (${trustLevel})`);
+        
+        // Dashboard access control based on trust score
+        if (trustScore >= 75) {
+          dashboardAccess = true;
+          console.log(`✅ NGO granted dashboard access (score: ${trustScore})`);
+        } else {
+          dashboardAccess = false;
+          console.log(`🔒 NGO dashboard locked - score too low (${trustScore} < 75)`);
+        }
+        
+        // Store AI verification data
+        userData.aiTrustScore = trustScore;
+        userData.dashboardAccess = dashboardAccess;
+        userData.certificateVerified = false; // Always requires manual admin verification
+        userData.verified = false; // NGO not verified until admin approves certificate
+        
+      } catch (aiError) {
+        console.error('⚠️ AI verification failed:', aiError.message);
+        // If AI fails, lock dashboard and require manual review
+        userData.aiTrustScore = 0;
+        userData.dashboardAccess = false;
+        userData.certificateVerified = false;
+        userData.verified = false;
+      }
+      
     } else {
       userData.verified = true; // Regular users are auto-verified
+      userData.dashboardAccess = true;
     }
 
     const user = new User(userData);
@@ -255,7 +309,20 @@ router.put('/:id', authMiddleware, async (req, res) => {
       return res.status(403).json({ error: 'Access denied' });
     }
 
-    const { interests, availability, city, name, email, officeAddress, verified, suspended } = req.body;
+    const { 
+      interests, 
+      availability, 
+      city, 
+      name, 
+      email, 
+      officeAddress, 
+      verified, 
+      suspended,
+      selectedInterests,
+      selectedCities,
+      certificateVerified,
+      dashboardAccess
+    } = req.body;
 
     const updateData = {};
     if (interests) updateData.interests = Array.isArray(interests) ? interests.join(', ') : interests;
@@ -264,11 +331,23 @@ router.put('/:id', authMiddleware, async (req, res) => {
     if (name) updateData.name = name;
     if (email) updateData.email = email;
     if (officeAddress) updateData.officeAddress = officeAddress;
+    
+    // User preference updates (for TF-IDF)
+    if (selectedInterests !== undefined) updateData.selectedInterests = selectedInterests;
+    if (selectedCities !== undefined) updateData.selectedCities = selectedCities;
 
-    // Only admins can update verified and suspended status
+    console.log('💾 UPDATING USER PREFERENCES:');
+    console.log('  User ID:', req.params.id);
+    console.log('  New selectedInterests:', selectedInterests);
+    console.log('  New selectedCities:', selectedCities);
+    console.log('  UpdateData:', JSON.stringify(updateData, null, 2));
+
+    // Only admins can update verified, certificateVerified, dashboardAccess, and suspended status
     if (req.user.role === 'admin') {
       if (verified !== undefined) updateData.verified = verified;
       if (suspended !== undefined) updateData.suspended = suspended;
+      if (certificateVerified !== undefined) updateData.certificateVerified = certificateVerified;
+      if (dashboardAccess !== undefined) updateData.dashboardAccess = dashboardAccess;
     }
 
     const user = await User.findByIdAndUpdate(req.params.id, updateData, { new: true });
@@ -288,6 +367,10 @@ router.put('/:id', authMiddleware, async (req, res) => {
         interests: user.interests,
         impactScore: user.impactScore,
         badges: user.badges,
+        selectedInterests: user.selectedInterests,
+        selectedCities: user.selectedCities,
+        dashboardAccess: user.dashboardAccess,
+        certificateVerified: user.certificateVerified,
       },
     });
   } catch (error) {

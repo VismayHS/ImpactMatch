@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Heart, X, MapPin, Users, Calendar, Info, Clock } from 'lucide-react';
 import TinderCard from 'react-tinder-card';
 import api, { API_BASE_URL } from '../../../utils/axiosConfig';
@@ -10,6 +10,7 @@ const UserDiscover = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [isPersonalized, setIsPersonalized] = useState(false);
   const currentIndexRef = useRef(currentIndex);
 
   useEffect(() => {
@@ -22,7 +23,65 @@ const UserDiscover = () => {
   const loadCauses = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/api/causes', {
+      const userData = JSON.parse(localStorage.getItem('user'));
+      const token = localStorage.getItem('token');
+      
+      // Try to get personalized causes first
+      let response;
+      try {
+        console.log('🚀 Attempting to fetch personalized causes...');
+        response = await api.get('/api/causes/personalized', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        if (response.data && response.data.causes) {
+          console.log('✅ Loaded personalized causes:', response.data.causes.length);
+          console.log('📋 User preferences from API:', response.data.preferences);
+          console.log('📦 Sample causes:', response.data.causes.slice(0, 3).map(c => ({
+            title: c.title,
+            city: c.city,
+            category: c.category,
+            score: c.relevanceScore
+          })));
+          
+          const personalizedCauses = response.data.causes.map(c => ({
+            ...c,
+            title: c.title || c.name, // Support both name and title fields
+            relevanceScore: c.relevanceScore || 0
+          }));
+          
+          // Filter out already joined causes
+          const userId = userData?.id || userData?._id;
+          const matchesResponse = await api.get('/api/matches');
+          const matchesData = Array.isArray(matchesResponse.data) 
+            ? matchesResponse.data 
+            : matchesResponse.data.matches || [];
+          
+          const userMatches = matchesData.filter(m => {
+            const matchUserId = m.userId?._id || m.userId;
+            return matchUserId.toString() === userId.toString();
+          });
+          
+          const joinedCauseIds = userMatches.map(m => {
+            const causeId = m.causeId?._id || m.causeId;
+            return causeId.toString();
+          });
+          
+          const availableCauses = personalizedCauses.filter(c => !joinedCauseIds.includes(c._id.toString()));
+          
+          setCauses(availableCauses);
+          setCurrentIndex(availableCauses.length - 1);
+          currentIndexRef.current = availableCauses.length - 1;
+          setIsPersonalized(true);
+          setLoading(false);
+          return;
+        }
+      } catch (err) {
+        console.log('ℹ️ Personalized causes not available, falling back to all causes');
+      }
+      
+      // Fallback to all causes
+      response = await api.get('/api/causes', {
         params: { status: 'active' }
       });
       
@@ -62,13 +121,19 @@ const UserDiscover = () => {
       console.log('✅ User matches:', userMatches.length);
       console.log('🎯 Joined cause IDs:', joinedCauseIds);
       
-      const availableCauses = allCauses.filter(c => !joinedCauseIds.includes(c._id.toString()));
+      const availableCauses = allCauses
+        .filter(c => !joinedCauseIds.includes(c._id.toString()))
+        .map(c => ({
+          ...c,
+          title: c.title || c.name // Support both name and title fields
+        }));
       
       console.log('🆕 Available causes count:', availableCauses.length);
         
       setCauses(availableCauses);
       setCurrentIndex(availableCauses.length - 1);
       currentIndexRef.current = availableCauses.length - 1;
+      setIsPersonalized(false);
     } catch (error) {
       console.error('❌ Error loading causes:', error);
       toast.error('Failed to load causes');
@@ -166,7 +231,7 @@ const UserDiscover = () => {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
-          Discover Causes
+          Discover Causes {isPersonalized && <span className="text-green-600">🎯</span>}
         </h1>
         <p className="text-gray-600">Swipe right to join, left to skip • {currentIndex + 1} remaining</p>
       </div>

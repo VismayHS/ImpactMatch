@@ -1,0 +1,9 @@
+Flask==3.0.0
+flask-cors==4.0.0
+gunicorn==21.2.0
+transformers==4.35.0
+torch==2.1.0
+requests==2.31.0
+beautifulsoup4==4.12.2
+duckduckgo-search==3.9.6
+urllib3==2.1.0
