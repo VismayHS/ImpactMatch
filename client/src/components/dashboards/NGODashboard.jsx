@@ -18,6 +18,7 @@ import { toast } from 'react-toastify';
 import NGOOverview from './ngo/NGOOverview';
 import VolunteerVerification from './ngo/VolunteerVerification';
 import NGOSettings from './ngo/NGOSettings';
+import NGOCollaborationRequests from './ngo/NGOCollaborationRequests';
 
 const NGODashboard = () => {
   const navigate = useNavigate();
@@ -66,6 +67,7 @@ const NGODashboard = () => {
 
   const menuItems = [
     { path: '', icon: LayoutDashboard, label: 'Home / Causes' },
+    { path: 'collaborations', icon: Building2, label: 'Collaboration Requests' },
     { path: 'verify-volunteers', icon: CheckCircle, label: 'Verify Volunteers' },
     { path: 'settings', icon: Settings, label: 'Profile Settings' },
   ];
@@ -156,6 +158,7 @@ const NGODashboard = () => {
           >
             <Routes>
               <Route index element={<NGOOverview />} />
+              <Route path="collaborations" element={<NGOCollaborationRequests />} />
               <Route path="verify-volunteers" element={<VolunteerVerification />} />
               <Route path="settings" element={<NGOSettings />} />
             </Routes>

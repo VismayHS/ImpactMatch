@@ -24,6 +24,7 @@ const Register = () => {
     name: '',
     email: '',
     password: '',
+    city: '',
     officeAddress: '',
   });
 
@@ -95,7 +96,9 @@ const Register = () => {
           redirectPath = '/admin-dashboard';
         } else if (user.role === 'ngo') {
           redirectPath = '/ngo-dashboard';
-        } else if (user.role === 'user' || user.role === 'organisation') {
+        } else if (user.role === 'organisation') {
+          redirectPath = '/organisation-dashboard';
+        } else if (user.role === 'user') {
           redirectPath = '/user-dashboard';
         }
         
@@ -139,7 +142,7 @@ const Register = () => {
         };
       } else if (activeTab === 'organisation') {
         // Validate organisation form
-        if (!orgForm.name || !orgForm.email || !orgForm.password || !orgForm.officeAddress) {
+        if (!orgForm.name || !orgForm.email || !orgForm.password || !orgForm.city || !orgForm.officeAddress) {
           toast.error('Please fill in all required fields');
           setLoading(false);
           return;
@@ -149,7 +152,7 @@ const Register = () => {
           name: orgForm.name,
           email: orgForm.email,
           password: orgForm.password,
-          city: orgForm.officeAddress,
+          city: orgForm.city,
           interests: 'Corporate Social Responsibility',
           availability: 'full-time',
           role: 'organisation',
@@ -220,7 +223,9 @@ const Register = () => {
           redirectPath = '/admin-dashboard';
         } else if (registrationData.role === 'ngo') {
           redirectPath = '/ngo-dashboard';
-        } else if (registrationData.role === 'user' || registrationData.role === 'organisation') {
+        } else if (registrationData.role === 'organisation') {
+          redirectPath = '/organisation-dashboard';
+        } else if (registrationData.role === 'user') {
           redirectPath = '/user-dashboard';
         }
         
@@ -510,12 +515,24 @@ const Register = () => {
                   </div>
 
                   <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">City *</label>
+                    <input
+                      type="text"
+                      value={orgForm.city}
+                      onChange={(e) => setOrgForm({ ...orgForm, city: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 transition-all outline-none"
+                      placeholder="e.g., Bangalore, Mumbai, Delhi"
+                      required
+                    />
+                  </div>
+
+                  <div>
                     <label className="block text-sm font-bold text-gray-700 mb-2">Permanent Office Address *</label>
                     <textarea
                       value={orgForm.officeAddress}
                       onChange={(e) => setOrgForm({ ...orgForm, officeAddress: e.target.value })}
                       className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 transition-all outline-none resize-none"
-                      placeholder="Full office address including city, state, and postal code"
+                      placeholder="Full office address including state and postal code"
                       rows="3"
                       required
                     />

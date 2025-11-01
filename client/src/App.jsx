@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import LandingPage from './components/LandingPage';
 import Onboarding from './components/Onboarding';
-import Login from './components/Login';
 import Register from './components/Register';
 import SwipePage from './components/SwipePage';
 import Dashboard from './components/Dashboard';
@@ -17,12 +16,14 @@ import PrivateRoute from './components/PrivateRoute';
 import UserLogin from './components/auth/UserLogin';
 import NGOLogin from './components/auth/NGOLogin';
 import AdminLogin from './components/auth/AdminLogin';
+import OrganisationLogin from './components/auth/OrganisationLogin';
 import ForgotPassword from './components/auth/ForgotPassword';
 
 // Premium Dashboards
 import NGODashboard from './components/dashboards/NGODashboard';
 import UserDashboard from './components/dashboards/UserDashboard';
 import AdminDashboard from './components/dashboards/AdminDashboard';
+import OrganisationDashboard from './components/dashboards/OrganisationDashboard';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -102,14 +103,15 @@ function App() {
           {/* Public routes */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/signup" element={<Onboarding onLogin={handleLogin} />} />
-          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/swipe" element={<SwipePage user={user} />} />
           <Route path="/icons" element={<IconShowcase />} />
           
           {/* Role-Based Login Routes */}
+          <Route path="/login" element={<Navigate to="/login/user" replace />} />
           <Route path="/login/user" element={<UserLogin onLogin={handleLogin} />} />
           <Route path="/login/ngo" element={<NGOLogin onLogin={handleLogin} />} />
+          <Route path="/login/organisation" element={<OrganisationLogin onLogin={handleLogin} />} />
           <Route path="/login/admin" element={<AdminLogin onLogin={handleLogin} />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           
@@ -157,6 +159,14 @@ function App() {
             } 
           />
           <Route 
+            path="/dashboard/organisation" 
+            element={
+              <PrivateRoute requiredRole="organisation">
+                <OrganisationDashboard />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
             path="/dashboard/admin/*" 
             element={
               <PrivateRoute requiredRole="admin">
@@ -168,6 +178,7 @@ function App() {
           {/* Legacy Premium Dashboards (for backward compatibility) */}
           <Route path="/ngo-dashboard/*" element={<NGODashboard />} />
           <Route path="/user-dashboard/*" element={<UserDashboard />} />
+          <Route path="/organisation-dashboard/*" element={<OrganisationDashboard />} />
           <Route path="/admin-dashboard/*" element={<AdminDashboard />} />
         </Routes>
       </div>

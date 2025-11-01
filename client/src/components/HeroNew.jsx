@@ -144,22 +144,22 @@ export default function HeroNew() {
           Swipe, connect, and create real change in your community.
         </motion.p>
 
-        {/* CTA Buttons with vibrant gradient */}
+        {/* CTA Button - centered */}
         <motion.div
-          className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
+          className="flex justify-center mb-16"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
         >
           <motion.button
             onClick={() => navigate('/register')}
-            className="relative group px-8 py-4 bg-gradient-to-r from-[#00C6A7] to-[#007CF0] text-white rounded-2xl font-bold text-lg shadow-xl overflow-hidden"
+            className="relative group px-10 py-5 bg-gradient-to-r from-[#00C6A7] to-[#007CF0] text-white rounded-2xl font-bold text-xl shadow-xl overflow-hidden"
             style={{
               boxShadow: '0 8px 20px 0 rgba(0, 198, 167, 0.3)',
             }}
             whileHover={{ 
-              scale: 1.03, 
-              y: -2,
+              scale: 1.05, 
+              y: -3,
               background: 'linear-gradient(to right, #007CF0, #00C6A7)',
             }}
             whileTap={{ scale: 0.98 }}
@@ -167,25 +167,10 @@ export default function HeroNew() {
           >
             {/* Glowing hover effect */}
             <div className="absolute inset-0 bg-gradient-to-r from-[#007CF0] to-[#00C6A7] opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-300" />
-            <span className="relative flex items-center justify-center gap-2">
+            <span className="relative flex items-center justify-center gap-3">
               Get Started Free
-              <span className="text-xl">→</span>
+              <span className="text-2xl">→</span>
             </span>
-          </motion.button>
-
-          <motion.button
-            onClick={() => navigate('/swipe')}
-            className="relative group px-8 py-4 bg-white/80 backdrop-blur-md text-gray-700 rounded-2xl font-bold text-lg shadow-lg border border-[#00C6A7]/20 overflow-hidden"
-            whileHover={{ 
-              scale: 1.03, 
-              y: -2, 
-              borderColor: 'rgba(0, 198, 167, 0.4)',
-              color: '#007CF0'
-            }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ duration: 0.2 }}
-          >
-            <span className="relative">Explore Causes</span>
           </motion.button>
         </motion.div>
 

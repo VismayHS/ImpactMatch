@@ -265,7 +265,7 @@ const CausesFeed = () => {
                   {cause.title}
                 </h3>
                 
-                <div className="inline-block px-4 py-2 text-white rounded-full font-bold text-sm mb-4 shadow-lg"
+                <div className="inline-block px-4 py-2 text-gray-800 rounded-full font-bold text-sm mb-4 shadow-lg"
                   style={{
                     background: `linear-gradient(135deg, ${cause.glowColor}, ${cause.glowColor}dd)`
                   }}
@@ -273,15 +273,13 @@ const CausesFeed = () => {
                   {cause.category}
                 </div>
                 
-                <div className="flex items-center gap-2 text-gray-600 text-lg mb-4">
-                  <ModernIcon name="location" size="xs" gradient="teal" animated={false} glow={false} />
-                  <span className="font-medium">{cause.location}</span>
-                </div>
+                <p className="text-gray-600 text-base mb-3 font-medium">
+                  📍 {cause.location}
+                </p>
                 
-                <div className="flex items-center gap-2 text-gray-700 font-semibold">
-                  <ModernIcon name="dashboard" size="xs" gradient="blue" animated={false} glow={false} />
-                  <span className="text-lg">{cause.volunteers} volunteers</span>
-                </div>
+                <p className="text-gray-700 text-base font-semibold">
+                  👥 {cause.volunteers} volunteers
+                </p>
 
                 {/* Bottom accent bar */}
                 <motion.div

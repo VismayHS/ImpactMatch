@@ -32,7 +32,7 @@ const activityLogSchema = new mongoose.Schema({
   },
   userType: {
     type: String,
-    enum: ['user', 'organisation', 'ngo', 'admin', 'system'],
+    enum: ['user', 'ngo', 'admin', 'system'],
     default: 'user',
   },
   details: {

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organisation Login Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2563eb;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .success {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+            color: #065f46;
+        }
+        .error {
+            background: #fee2e2;
+            border: 2px solid #ef4444;
+            color: #991b1b;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        .quick-fill {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .quick-fill button {
+            flex: 1;
+            padding: 8px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏢 Organisation Login Test</h1>
+        
+        <div class="quick-fill">
+            <button onclick="fillTech()">Tech Solutions</button>
+            <button onclick="fillGreen()">Green Earth</button>
+            <button onclick="fillEdu()">Global Edu</button>
+            <button onclick="fillHealth()">HealthCare+</button>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" id="email" required placeholder="organisation@example.com">
+            </div>
+            
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" id="password" required placeholder="Enter password">
+            </div>
+            
+            <button type="submit" id="submitBtn">Login</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5173';
+        
+        // Quick fill functions
+        function fillTech() {
+            document.getElementById('email').value = 'techsolutions@example.com';
+            document.getElementById('password').value = 'tech@2024';
+        }
+        
+        function fillGreen() {
+            document.getElementById('email').value = 'greenearth@example.com';
+            document.getElementById('password').value = 'green@2024';
+        }
+        
+        function fillEdu() {
+            document.getElementById('email').value = 'globaledu@example.com';
+            document.getElementById('password').value = 'edu@2024';
+        }
+        
+        function fillHealth() {
+            document.getElementById('email').value = 'healthcareplus@example.com';
+            document.getElementById('password').value = 'health@2024';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Logging in...';
+            
+            try {
+                console.log('Sending login request...');
+                const response = await fetch(`${API_URL}/api/users/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                console.log('Response:', data);
+                
+                resultDiv.style.display = 'block';
+                
+                if (response.ok && data.token) {
+                    resultDiv.className = 'success';
+                    
+                    if (data.user.role !== 'organisation') {
+                        resultDiv.innerHTML = `
+                            <h3>⚠️ Role Mismatch!</h3>
+                            <p><strong>Expected:</strong> organisation</p>
+                            <p><strong>Got:</strong> ${data.user.role}</p>
+                            <p>Please use the correct login page.</p>
+                        `;
+                    } else {
+                        resultDiv.innerHTML = `
+                            <h3>✅ Login Successful!</h3>
+                            <p><strong>Name:</strong> ${data.user.name}</p>
+                            <p><strong>Email:</strong> ${data.user.email}</p>
+                            <p><strong>Role:</strong> ${data.user.role}</p>
+                            <p><strong>City:</strong> ${data.user.city}</p>
+                            <p><strong>ID:</strong> ${data.user.id}</p>
+                            <p><strong>Token:</strong> Generated ✓</p>
+                            <details>
+                                <summary>Full Response (click to expand)</summary>
+                                <pre>${JSON.stringify(data, null, 2)}</pre>
+                            </details>
+                        `;
+                    }
+                } else {
+                    resultDiv.className = 'error';
+                    resultDiv.innerHTML = `
+                        <h3>❌ Login Failed</h3>
+                        <p><strong>Error:</strong> ${data.error || 'Unknown error'}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                resultDiv.style.display = 'block';
+                resultDiv.className = 'error';
+                resultDiv.innerHTML = `
+                    <h3>❌ Request Failed</h3>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <p>Make sure the backend server is running on port 5173</p>
+                `;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Login';
+            }
+        });
+        
+        // Auto-fill first option on load
+        fillTech();
+    </script>
+</body>
+</html>

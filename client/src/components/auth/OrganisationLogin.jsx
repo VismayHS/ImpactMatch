@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { User, Mail, Lock, ArrowRight, AlertCircle } from 'lucide-react';
+import { Briefcase, Mail, Lock, ArrowRight, AlertCircle } from 'lucide-react';
 import api from '../../utils/axiosConfig';
 
-export default function UserLogin({ onLogin }) {
+export default function OrganisationLogin({ onLogin }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
@@ -27,50 +27,58 @@ export default function UserLogin({ onLogin }) {
     setLoading(true);
 
     try {
+      console.log('📤 Sending login request...');
       const response = await api.post('/api/users/login', {
         ...formData,
-        expectedRole: 'user', // Help backend validate role
+        expectedRole: 'organisation',
       });
+
+      console.log('📥 Response received:', response.status);
+      console.log('Response data:', response.data);
 
       const { token, user } = response.data;
 
-      // Verify this is actually a user account
-      if (user.role !== 'user') {
+      if (!token || !user) {
+        console.error('❌ Missing token or user in response');
+        setError('Invalid response from server');
+        setLoading(false);
+        return;
+      }
+
+      console.log('User from API:', user);
+
+      // Verify this is actually an organisation account
+      if (user.role !== 'organisation') {
+        console.log('❌ Wrong role:', user.role);
         setError(`This is a ${user.role} account. Please use the ${user.role} login page.`);
         setLoading(false);
         return;
       }
 
-      // Store auth data (overwrite any old values)
-      console.log('💾 UserLogin: Storing auth data...', { userId: user.id, role: user.role, name: user.name });
+      // Store auth data in localStorage (overwrite any old values)
       localStorage.setItem('token', token);
       localStorage.setItem('userId', user.id);
       localStorage.setItem('userRole', user.role);
       localStorage.setItem('userName', user.name);
+      localStorage.setItem('userVerified', user.verified);
       localStorage.setItem('user', JSON.stringify(user));
-      
-      console.log('✅ UserLogin: Auth data stored, verifying...');
-      console.log('📦 Stored values:', {
-        token: localStorage.getItem('token')?.substring(0, 20) + '...',
-        userId: localStorage.getItem('userId'),
-        userRole: localStorage.getItem('userRole'),
-        userName: localStorage.getItem('userName'),
-        userObject: localStorage.getItem('user')
-      });
 
-      // Call parent login handler
+      console.log('✅ Auth stored. Role:', user.role);
+      console.log('Verifying storage:', localStorage.getItem('user') ? 'YES' : 'NO');
+
+      // Call parent login handler if provided
       if (onLogin) {
-        console.log('📞 Calling onLogin handler...');
+        console.log('📞 Calling onLogin...');
         onLogin(user);
       }
 
-      // Navigate to dashboard
-      console.log('🚀 UserLogin: About to navigate to /user-dashboard in 100ms');
-      console.log('🚀 Current location before navigate:', window.location.pathname);
+      console.log('🚀 Redirecting to /organisation-dashboard in 200ms');
+      
+      // Small delay to ensure localStorage writes complete before redirect
       setTimeout(() => {
-        console.log('🚀 NAVIGATING NOW to /user-dashboard');
-        navigate('/user-dashboard');
-      }, 100);
+        console.log('Redirect NOW');
+        window.location.href = '/organisation-dashboard';
+      }, 200);
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed. Please try again.');
       setLoading(false);
@@ -78,7 +86,7 @@ export default function UserLogin({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-teal-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -90,15 +98,15 @@ export default function UserLogin({ onLogin }) {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: 'spring', stiffness: 200 }}
-            className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-blue-500 rounded-full mb-4"
+            className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full mb-4"
           >
-            <User className="w-8 h-8 text-white" />
+            <Briefcase className="w-8 h-8 text-white" />
           </motion.div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-            Volunteer Login
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            Organisation Login
           </h1>
           <p className="text-gray-600 mt-2">
-            Sign in to discover causes and make an impact
+            Access your organization dashboard
           </p>
         </div>
 
@@ -119,7 +127,7 @@ export default function UserLogin({ onLogin }) {
           {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email Address
+              Organization Email
             </label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -128,9 +136,9 @@ export default function UserLogin({ onLogin }) {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="volunteer@example.com"
+                placeholder="contact@organization.org"
                 required
-                className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
               />
             </div>
           </div>
@@ -149,7 +157,7 @@ export default function UserLogin({ onLogin }) {
                 onChange={handleChange}
                 placeholder="••••••••"
                 required
-                className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
               />
             </div>
           </div>
@@ -158,7 +166,7 @@ export default function UserLogin({ onLogin }) {
           <div className="text-right">
             <Link
               to="/forgot-password"
-              className="text-sm text-green-600 hover:text-green-700 font-medium"
+              className="text-sm text-orange-600 hover:text-orange-700 font-medium"
             >
               Forgot password?
             </Link>
@@ -170,7 +178,7 @@ export default function UserLogin({ onLogin }) {
             whileTap={{ scale: 0.98 }}
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:from-green-600 hover:to-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-gradient-to-r from-orange-500 to-purple-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:from-orange-600 hover:to-purple-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
@@ -187,25 +195,25 @@ export default function UserLogin({ onLogin }) {
         </form>
 
         {/* Demo Account */}
-        <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
-          <p className="text-sm text-green-800 font-medium mb-2">
-            🎯 Demo Account:
+        <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+          <p className="text-sm text-blue-800 font-medium mb-2">
+            🏢 Demo Account:
           </p>
-          <p className="text-xs text-green-700">
-            Email: vismay@example.com<br />
-            Password: demo123
-          </p>
+          <div className="text-xs text-blue-700 space-y-1">
+            <p>Email: techsolutions@example.com</p>
+            <p>Password: tech@2024</p>
+          </div>
         </div>
 
-        {/* Sign Up Link */}
+        {/* Register Link */}
         <div className="mt-6 text-center">
           <p className="text-gray-600">
-            New volunteer?{' '}
+            New organization?{' '}
             <Link
-              to="/register"
-              className="text-green-600 hover:text-green-700 font-semibold"
+              to="/register/organisation"
+              className="text-blue-600 hover:text-blue-700 font-semibold"
             >
-              Create an account
+              Register your company
             </Link>
           </p>
         </div>
@@ -215,24 +223,18 @@ export default function UserLogin({ onLogin }) {
           <p className="text-center text-sm text-gray-600 mb-3">
             Different account type?
           </p>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="flex gap-3">
             <Link
-              to="/login/organisation"
-              className="text-center py-2 px-3 border border-blue-300 text-blue-600 rounded-lg hover:bg-blue-50 transition text-sm font-medium"
+              to="/login/user"
+              className="flex-1 text-center py-2 px-4 border border-green-300 text-green-600 rounded-lg hover:bg-green-50 transition text-sm font-medium"
             >
-              Organisation
+              Volunteer Login
             </Link>
             <Link
               to="/login/ngo"
-              className="text-center py-2 px-3 border border-orange-300 text-orange-600 rounded-lg hover:bg-orange-50 transition text-sm font-medium"
+              className="flex-1 text-center py-2 px-4 border border-orange-300 text-orange-600 rounded-lg hover:bg-orange-50 transition text-sm font-medium"
             >
-              NGO
-            </Link>
-            <Link
-              to="/login/admin"
-              className="text-center py-2 px-3 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition text-sm font-medium"
-            >
-              Admin
+              NGO Login
             </Link>
           </div>
         </div>

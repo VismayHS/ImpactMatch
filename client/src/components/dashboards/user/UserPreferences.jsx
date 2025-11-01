@@ -4,6 +4,7 @@ import { Heart, MapPin, Save, RefreshCw } from 'lucide-react';
 import api from '../../../utils/axiosConfig';
 import { toast } from 'react-toastify';
 
+// City-based preferences component (interests removed)
 const UserPreferences = () => {
   const [cities, setCities] = useState([]);
   const [selectedCities, setSelectedCities] = useState([]);

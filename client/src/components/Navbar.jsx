@@ -40,8 +40,9 @@ export default function Navbar({ user, onLogout }) {
     
     switch(userRole) {
       case 'user':
-      case 'organisation':
         return '/user-dashboard';
+      case 'organisation':
+        return '/organisation-dashboard';
       case 'ngo':
         return '/ngo-dashboard';
       case 'admin':

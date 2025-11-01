@@ -13,6 +13,7 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const verifyRoutes = require('./routes/verifyRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const partnershipRoutes = require('./routes/partnershipRoutes');
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use('/api/match', matchRoutes); // Public: Browse causes (AI matching)
 app.use('/api/matches', matchesRoutes); // Matches CRUD (join/view causes)
 app.use('/api/chat', chatRoutes); // Public: Chat suggestions
 app.use('/api/causes', causeRoutes); // Causes CRUD
+app.use('/api/partnerships', partnershipRoutes); // Partnership/Collaboration requests
 
 // Protected API Routes (require auth - to be implemented)
 app.use('/api/users', userRoutes);

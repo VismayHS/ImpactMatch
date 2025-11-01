@@ -171,11 +171,9 @@ router.post('/register', async (req, res) => {
       joinedCauses: [],
     };
 
-    // Add role-specific fields
-    if (role === 'organisation') {
+    // Add role-specific fields for NGOs
+    if (role === 'ngo') {
       userData.officeAddress = officeAddress || '';
-      userData.verified = true;
-    } else if (role === 'ngo') {
       userData.certificateUploaded = certificateUploaded || false;
       
       // 🤖 AI-powered NGO verification
@@ -222,6 +220,15 @@ router.post('/register', async (req, res) => {
         userData.verified = false;
       }
       
+    } else if (role === 'organisation') {
+      // Organization-specific fields
+      userData.officeAddress = officeAddress || '';
+      userData.verified = true; // Organizations are auto-verified
+      userData.dashboardAccess = true;
+      userData.certificateVerified = false;
+      userData.aiTrustScore = null;
+      console.log(`✅ Organisation registered: ${name} in ${city}`);
+      
     } else {
       userData.verified = true; // Regular users are auto-verified
       userData.dashboardAccess = true;
@@ -232,7 +239,11 @@ router.post('/register', async (req, res) => {
 
     // Log registration activity
     const metadata = getRequestMetadata(req);
-    await logActivity(role === 'ngo' ? 'ngo_register' : 'user_register', {
+    let activityType = 'user_register';
+    if (role === 'ngo') activityType = 'ngo_register';
+    else if (role === 'organisation') activityType = 'organisation_register';
+    
+    await logActivity(activityType, {
       userId: user._id,
       userType: role || 'user',
       details: `New ${role || 'user'} registered: ${user.name}`,
@@ -260,8 +271,13 @@ router.post('/register', async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Registration error:', error);
-    res.status(500).json({ error: 'Registration failed' });
+    console.error('❌ Registration error:', error);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
+    res.status(500).json({ 
+      error: 'Registration failed',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 });
 
