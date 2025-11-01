@@ -23,9 +23,9 @@ async function seedDatabase() {
     await Verification.deleteMany({});
     console.log('✅ Database cleared');
 
-    // Create demo NGO user first (needed for causes)
-    console.log('🏢 Creating demo NGO...');
-    const demoNGO = await User.create({
+    // Create demo NGOs
+    console.log('🏢 Creating demo NGOs...');
+    const ngo1 = await User.create({
       name: 'ImpactMatch Foundation',
       email: 'ngo@impactmatch.org',
       password: 'demo123',
@@ -34,6 +34,8 @@ async function seedDatabase() {
       interests: 'all social causes',
       availability: 'always',
       verified: true,
+      officeAddress: '123 Tech Park, Bangalore',
+      certificateUploaded: true,
       ngoDetails: {
         registrationNumber: 'NGO123456',
         description: 'Leading social impact organization in India',
@@ -43,7 +45,35 @@ async function seedDatabase() {
         yearEstablished: 2020,
       },
     });
-    console.log(`✅ Created NGO: ${demoNGO.name}`);
+
+    const ngo2 = await User.create({
+      name: 'Green Earth NGO',
+      email: 'ngo@greennearth.org',
+      password: 'ngo123',
+      role: 'ngo',
+      city: 'Delhi',
+      interests: 'Environment, Sustainability',
+      availability: 'full-time',
+      verified: true,
+      officeAddress: '123 Green Street, Delhi',
+      certificateUploaded: true,
+    });
+
+    const ngo3 = await User.create({
+      name: 'Hope Foundation',
+      email: 'ngo@hopefoundation.org',
+      password: 'ngo123',
+      role: 'ngo',
+      city: 'Mumbai',
+      interests: 'Education, Social Welfare',
+      availability: 'full-time',
+      verified: false, // Pending verification
+      officeAddress: '456 Hope Avenue, Mumbai',
+      certificateUploaded: true,
+    });
+
+    console.log(`✅ Created 3 NGOs (2 verified, 1 pending)`);
+    const demoNGO = ngo1; // Use for causes
 
     // Load causes from JSON
     console.log('📁 Loading causes data...');
@@ -120,7 +150,24 @@ async function seedDatabase() {
       const user = await User.create(userData);
       users.push(user);
     }
-    console.log(`✅ Created ${users.length} demo users`);
+    
+    // Create admin user
+    const adminUser = await User.create({
+      name: 'Admin User',
+      email: 'admin@impactmatch.com',
+      password: 'admin123',
+      city: 'Bangalore',
+      interests: 'Platform Management',
+      availability: 'full-time',
+      role: 'admin',
+      isAdmin: true,
+      verified: true,
+      impactScore: 0,
+      badges: [],
+    });
+    users.push(adminUser);
+    
+    console.log(`✅ Created ${users.length} demo users + 1 admin`);
 
     // Create sample matches and verifications
     console.log('🤝 Creating sample matches...');
@@ -208,19 +255,34 @@ async function seedDatabase() {
     console.log(`✅ Created ${verifications.length} verification records`);
 
     // Print summary
-    console.log('\n📊 Database Seeding Summary:');
-    console.log(`   👥 Users: ${users.length}`);
+    console.log('\n═══════════════════════════════════════════════════════');
+    console.log('🎉 DATABASE SEEDING COMPLETE!');
+    console.log('═══════════════════════════════════════════════════════');
+    
+    console.log('\n📊 Summary:');
+    console.log(`   👥 Total Users: ${users.length + 3} (4 volunteers + 3 NGOs + 1 admin)`);
     console.log(`   🎯 Causes: ${causes.length}`);
     console.log(`   🤝 Matches: ${savedMatches.length}`);
     console.log(`   ✅ Verified: ${verifiedMatches.length}`);
     console.log(`   🔐 Verifications: ${verifications.length}`);
 
-    console.log('\n🎉 Database seeding complete!');
-    console.log('\n📋 Demo Login Credentials:');
+    console.log('\n🔑 DEMO CREDENTIALS:\n');
+    
+    console.log('� VOLUNTEER ACCOUNTS:');
     console.log('   Email: vismay@example.com | Password: demo123');
     console.log('   Email: priya@example.com | Password: demo123');
     console.log('   Email: amit@example.com | Password: demo123');
     console.log('   Email: sneha@example.com | Password: demo123');
+    
+    console.log('\n🏢 NGO ACCOUNTS:');
+    console.log('   Email: ngo@impactmatch.org | Password: demo123 (✅ Verified)');
+    console.log('   Email: ngo@greennearth.org | Password: ngo123 (✅ Verified)');
+    console.log('   Email: ngo@hopefoundation.org | Password: ngo123 (⏳ Pending)');
+    
+    console.log('\n🛠️  ADMIN ACCOUNT:');
+    console.log('   Email: admin@impactmatch.com | Password: admin123');
+    
+    console.log('\n═══════════════════════════════════════════════════════');
 
     await mongoose.connection.close();
     console.log('\n✅ Database connection closed');
