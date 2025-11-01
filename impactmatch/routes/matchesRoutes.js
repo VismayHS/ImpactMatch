@@ -25,17 +25,28 @@ router.get('/', async (req, res) => {
     
     const matches = await Match.find(query)
       .populate('userId', 'name email city')
-      .populate('causeId', 'title category city ngoId')
+      .populate({
+        path: 'causeId',
+        select: 'name title category city ngoId',
+        populate: {
+          path: 'ngoId',
+          select: 'name email'
+        }
+      })
+      .sort({ createdAt: -1 })
       .limit(100)
       .lean();
     
     // Filter by ngoId if provided
     let filteredMatches = matches;
     if (ngoId) {
-      filteredMatches = matches.filter(match => 
-        match.causeId && match.causeId.ngoId && match.causeId.ngoId.toString() === ngoId
-      );
+      filteredMatches = matches.filter(match => {
+        const causeNgoId = match.causeId?.ngoId?._id || match.causeId?.ngoId;
+        return causeNgoId && causeNgoId.toString() === ngoId.toString();
+      });
     }
+    
+    console.log(`📊 Matches API: Total=${matches.length}, Filtered=${filteredMatches.length}, NGOFilter=${ngoId || 'none'}`);
     
     res.json({ matches: filteredMatches });
   } catch (error) {
@@ -77,6 +88,10 @@ router.post('/', async (req, res) => {
     });
     await match.save();
 
+    // Increment volunteersJoined count on the cause
+    cause.volunteersJoined = (cause.volunteersJoined || 0) + 1;
+    await cause.save();
+
     // Update user: add to joinedCauses and increment score by +10
     const user = await User.findById(userId);
     if (!user) {
@@ -87,6 +102,8 @@ router.post('/', async (req, res) => {
     user.impactScore += 10;
     user.badges = calculateBadges(user.impactScore);
     await user.save();
+
+    console.log(`✅ Match created: User ${user.name} joined cause "${cause.name}" (${cause.volunteersJoined} volunteers now)`);
 
     res.json({
       message: 'Joined cause successfully',

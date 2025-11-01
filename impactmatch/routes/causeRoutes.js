@@ -42,7 +42,7 @@ router.get('/', async (req, res) => {
     if (status) query.status = status;
 
     const causes = await Cause.find(query)
-      .populate('ngoId', 'name email')
+      .populate('ngoId', 'name email city')
       .sort({ createdAt: -1 })
       .lean();
     

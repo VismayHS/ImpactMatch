@@ -47,8 +47,21 @@ export default function SwipePage({ user }) {
       const response = await api.get('/api/causes');
       
       if (response.data && response.data.causes && response.data.causes.length > 0) {
+        // Format causes to include NGO organization name
+        const formattedCauses = response.data.causes.map(cause => ({
+          _id: cause._id,
+          title: cause.name,
+          organization: cause.ngoId?.name || 'Unknown Organization',
+          location: cause.city,
+          description: cause.description,
+          category: cause.category,
+          volunteers: cause.volunteersJoined || 0,
+          impactScore: Math.floor(Math.random() * 100) + 1,
+          ngoId: cause.ngoId?._id || cause.ngoId,
+        }));
+        
         // Take first 20 causes for swipe deck
-        const swipeDeck = response.data.causes.slice(0, 20);
+        const swipeDeck = formattedCauses.slice(0, 20);
         setCauses(swipeDeck);
         setCurrentIndex(swipeDeck.length - 1);
         currentIndexRef.current = swipeDeck.length - 1;
@@ -106,15 +119,20 @@ export default function SwipePage({ user }) {
       }
 
       try {
-        await api.post('/api/match', {
+        // Create match using the matches endpoint
+        await api.post('/api/matches', {
           userId: user._id || user.id,
           causeId: cause._id,
-          action: 'like',
+          status: 'interested',
         });
         toast.success(`Matched with ${cause.title}!`);
       } catch (error) {
         console.error('Match failed:', error);
-        toast.info(`Interested in ${cause.title}`);
+        if (error.response?.data?.error === 'Already joined this cause') {
+          toast.info(`Already joined ${cause.title}`);
+        } else {
+          toast.error('Failed to join cause');
+        }
       }
     }
 

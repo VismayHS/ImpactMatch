@@ -23,8 +23,8 @@ async function seedDatabase() {
     await Verification.deleteMany({});
     console.log('✅ Database cleared');
 
-    // Create demo NGOs
-    console.log('🏢 Creating demo NGOs...');
+    // Create demo NGOs (8 total)
+    console.log('🏢 Creating 8 demo NGOs...');
     const ngo1 = await User.create({
       name: 'ImpactMatch Foundation',
       email: 'ngo@impactmatch.org',
@@ -57,6 +57,14 @@ async function seedDatabase() {
       verified: true,
       officeAddress: '123 Green Street, Delhi',
       certificateUploaded: true,
+      ngoDetails: {
+        registrationNumber: 'NGO789012',
+        description: 'Environmental conservation and sustainability initiatives',
+        website: 'https://greennearth.org',
+        contactPerson: 'Environmental Director',
+        contactPhone: '+91-9876543210',
+        yearEstablished: 2018,
+      },
     });
 
     const ngo3 = await User.create({
@@ -67,33 +75,157 @@ async function seedDatabase() {
       city: 'Mumbai',
       interests: 'Education, Social Welfare',
       availability: 'full-time',
-      verified: false, // Pending verification
+      verified: true,
       officeAddress: '456 Hope Avenue, Mumbai',
       certificateUploaded: true,
+      ngoDetails: {
+        registrationNumber: 'NGO345678',
+        description: 'Providing education and social welfare to underprivileged communities',
+        website: 'https://hopefoundation.org',
+        contactPerson: 'Education Coordinator',
+        contactPhone: '+91-8765432109',
+        yearEstablished: 2015,
+      },
     });
 
-    console.log(`✅ Created 3 NGOs (2 verified, 1 pending)`);
-    const demoNGO = ngo1; // Use for causes
+    const ngo4 = await User.create({
+      name: 'Health for All',
+      email: 'ngo@healthforall.org',
+      password: 'ngo123',
+      role: 'ngo',
+      city: 'Chennai',
+      interests: 'Health, Medical Care, Wellness',
+      availability: 'full-time',
+      verified: true,
+      officeAddress: '789 Medical Complex, Chennai',
+      certificateUploaded: true,
+      ngoDetails: {
+        registrationNumber: 'NGO456789',
+        description: 'Healthcare services and medical support for rural and urban poor',
+        website: 'https://healthforall.org',
+        contactPerson: 'Medical Director',
+        contactPhone: '+91-7654321098',
+        yearEstablished: 2017,
+      },
+    });
 
-    // Load causes from JSON
+    const ngo5 = await User.create({
+      name: 'Animal Rescue Society',
+      email: 'ngo@animalrescue.org',
+      password: 'ngo123',
+      role: 'ngo',
+      city: 'Pune',
+      interests: 'Animal Welfare, Wildlife Protection',
+      availability: 'full-time',
+      verified: true,
+      officeAddress: '321 Animal Shelter Road, Pune',
+      certificateUploaded: true,
+      ngoDetails: {
+        registrationNumber: 'NGO567890',
+        description: 'Rescuing and rehabilitating stray and injured animals',
+        website: 'https://animalrescue.org',
+        contactPerson: 'Wildlife Coordinator',
+        contactPhone: '+91-6543210987',
+        yearEstablished: 2019,
+      },
+    });
+
+    const ngo6 = await User.create({
+      name: 'Tech for Good',
+      email: 'ngo@techforgood.org',
+      password: 'ngo123',
+      role: 'ngo',
+      city: 'Hyderabad',
+      interests: 'Technology, Digital Literacy, Innovation',
+      availability: 'full-time',
+      verified: true,
+      officeAddress: '654 Innovation Hub, Hyderabad',
+      certificateUploaded: true,
+      ngoDetails: {
+        registrationNumber: 'NGO678901',
+        description: 'Bridging the digital divide through technology education',
+        website: 'https://techforgood.org',
+        contactPerson: 'Tech Director',
+        contactPhone: '+91-5432109876',
+        yearEstablished: 2021,
+      },
+    });
+
+    const ngo7 = await User.create({
+      name: 'Arts & Culture Foundation',
+      email: 'ngo@artsculture.org',
+      password: 'ngo123',
+      role: 'ngo',
+      city: 'Kolkata',
+      interests: 'Arts, Culture, Heritage Preservation',
+      availability: 'full-time',
+      verified: true,
+      officeAddress: '987 Cultural Center, Kolkata',
+      certificateUploaded: true,
+      ngoDetails: {
+        registrationNumber: 'NGO789012',
+        description: 'Promoting arts, culture, and heritage preservation',
+        website: 'https://artsculture.org',
+        contactPerson: 'Cultural Director',
+        contactPhone: '+91-4321098765',
+        yearEstablished: 2016,
+      },
+    });
+
+    const ngo8 = await User.create({
+      name: 'Community Sports League',
+      email: 'ngo@communitysports.org',
+      password: 'ngo123',
+      role: 'ngo',
+      city: 'Ahmedabad',
+      interests: 'Sports, Youth Development, Fitness',
+      availability: 'full-time',
+      verified: true,
+      officeAddress: '159 Sports Complex, Ahmedabad',
+      certificateUploaded: true,
+      ngoDetails: {
+        registrationNumber: 'NGO890123',
+        description: 'Empowering youth through sports and fitness programs',
+        website: 'https://communitysports.org',
+        contactPerson: 'Sports Coordinator',
+        contactPhone: '+91-3210987654',
+        yearEstablished: 2020,
+      },
+    });
+
+    const allNGOs = [ngo1, ngo2, ngo3, ngo4, ngo5, ngo6, ngo7, ngo8];
+    console.log(`✅ Created 8 NGOs (all verified)`);
+
+    // Load causes from JSON and distribute across all 8 NGOs
     console.log('📁 Loading causes data...');
     const causesPath = path.join(__dirname, 'causes.json');
     const causesData = JSON.parse(fs.readFileSync(causesPath, 'utf8'));
 
-    // Insert causes with NGO ID
-    console.log('💾 Inserting causes...');
-    const causes = await Cause.insertMany(
-      causesData.map((c) => ({
+    // Distribute causes evenly across all 8 NGOs (~25 each)
+    console.log('💾 Distributing causes across 8 NGOs...');
+    const causesPerNGO = Math.ceil(causesData.length / allNGOs.length);
+    const causesWithNGOs = causesData.map((c, index) => {
+      const ngoIndex = Math.floor(index / causesPerNGO) % allNGOs.length;
+      return {
         name: c.name,
         description: c.description,
         category: c.category,
         city: c.city,
         lat: c.lat,
         lng: c.lng,
-        ngoId: demoNGO._id,
-      }))
-    );
-    console.log(`✅ Inserted ${causes.length} causes`);
+        ngoId: allNGOs[ngoIndex]._id,
+      };
+    });
+
+    const causes = await Cause.insertMany(causesWithNGOs);
+    console.log(`✅ Inserted ${causes.length} causes distributed across 8 NGOs`);
+    
+    // Log distribution
+    for (let i = 0; i < allNGOs.length; i++) {
+      const ngoId = allNGOs[i]._id;
+      const count = causes.filter(c => c.ngoId.toString() === ngoId.toString()).length;
+      console.log(`   📌 ${allNGOs[i].name}: ${count} causes`);
+    }
 
     // Create demo users
     console.log('👥 Creating demo users...');
@@ -260,8 +392,8 @@ async function seedDatabase() {
     console.log('═══════════════════════════════════════════════════════');
     
     console.log('\n📊 Summary:');
-    console.log(`   👥 Total Users: ${users.length + 3} (4 volunteers + 3 NGOs + 1 admin)`);
-    console.log(`   🎯 Causes: ${causes.length}`);
+    console.log(`   👥 Total Users: ${users.length + allNGOs.length} (4 volunteers + 8 NGOs + 1 admin)`);
+    console.log(`   🎯 Causes: ${causes.length} (distributed across 8 NGOs)`);
     console.log(`   🤝 Matches: ${savedMatches.length}`);
     console.log(`   ✅ Verified: ${verifiedMatches.length}`);
     console.log(`   🔐 Verifications: ${verifications.length}`);
@@ -274,10 +406,15 @@ async function seedDatabase() {
     console.log('   Email: amit@example.com | Password: demo123');
     console.log('   Email: sneha@example.com | Password: demo123');
     
-    console.log('\n🏢 NGO ACCOUNTS:');
-    console.log('   Email: ngo@impactmatch.org | Password: demo123 (✅ Verified)');
-    console.log('   Email: ngo@greennearth.org | Password: ngo123 (✅ Verified)');
-    console.log('   Email: ngo@hopefoundation.org | Password: ngo123 (⏳ Pending)');
+    console.log('\n🏢 NGO ACCOUNTS (All Verified):');
+    console.log('   Email: ngo@impactmatch.org | Password: demo123 | ImpactMatch Foundation (Bangalore)');
+    console.log('   Email: ngo@greennearth.org | Password: ngo123 | Green Earth NGO (Delhi)');
+    console.log('   Email: ngo@hopefoundation.org | Password: ngo123 | Hope Foundation (Mumbai)');
+    console.log('   Email: ngo@healthforall.org | Password: ngo123 | Health for All (Chennai)');
+    console.log('   Email: ngo@animalrescue.org | Password: ngo123 | Animal Rescue Society (Pune)');
+    console.log('   Email: ngo@techforgood.org | Password: ngo123 | Tech for Good (Hyderabad)');
+    console.log('   Email: ngo@artsculture.org | Password: ngo123 | Arts & Culture Foundation (Kolkata)');
+    console.log('   Email: ngo@communitysports.org | Password: ngo123 | Community Sports League (Ahmedabad)');
     
     console.log('\n🛠️  ADMIN ACCOUNT:');
     console.log('   Email: admin@impactmatch.com | Password: admin123');

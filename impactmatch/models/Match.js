@@ -13,7 +13,7 @@ const matchSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['interested', 'verified'],
+    enum: ['interested', 'verified', 'rejected'],
     default: 'interested',
   },
   createdAt: {
@@ -22,6 +22,19 @@ const matchSchema = new mongoose.Schema({
   },
   verifiedAt: {
     type: Date,
+    default: null,
+  },
+  rejectedAt: {
+    type: Date,
+    default: null,
+  },
+  rejectedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null,
+  },
+  rejectionReason: {
+    type: String,
     default: null,
   },
   txHash: {

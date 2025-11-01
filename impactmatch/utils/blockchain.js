@@ -43,7 +43,15 @@ async function recordImpact(volunteerAddress, causeId, userId) {
     const hash = '0x' + generateHash(userId, causeId);
 
     // Convert causeId to uint256
-    const causeIdBN = BigInt(causeId);
+    // If causeId is a hex string (like MongoDB ObjectId), convert it properly
+    let causeIdBN;
+    if (typeof causeId === 'string' && /^[0-9a-fA-F]+$/.test(causeId)) {
+      // It's a hex string, convert from hex to decimal
+      causeIdBN = BigInt('0x' + causeId);
+    } else {
+      // It's already a number or decimal string
+      causeIdBN = BigInt(causeId);
+    }
 
     console.log('Recording impact on blockchain:', {
       volunteerAddress,

@@ -70,7 +70,13 @@ const MyCauses = () => {
         }
         
         return {
-          ...cause,
+          _id: cause?._id,
+          title: cause?.name || 'Unknown Cause',
+          description: cause?.description || '',
+          city: cause?.city || 'Unknown',
+          category: cause?.category || '',
+          image: cause?.image || '',
+          ngoName: cause?.ngoId?.name || 'Unknown Organization',
           matchId: match._id,
           joinedDate: match.createdAt,
           status: match.status,
@@ -287,6 +293,11 @@ const MyCauses = () => {
                   </div>
 
                   <div className="flex flex-wrap gap-4 mt-3">
+                    <div className="flex items-center gap-2 text-gray-600 text-sm">
+                      <Heart className="w-4 h-4 text-purple-500" />
+                      {cause.ngoName || 'Unknown Organization'}
+                    </div>
+                    
                     <div className="flex items-center gap-2 text-gray-600 text-sm">
                       <MapPin className="w-4 h-4 text-purple-500" />
                       {cause.city || 'Unknown'}

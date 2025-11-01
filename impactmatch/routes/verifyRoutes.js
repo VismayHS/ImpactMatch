@@ -163,4 +163,51 @@ router.post('/', authMiddleware, verifyRole('ngo'), verifyNGOApproved, async (re
   }
 });
 
+// POST /api/verify/deny
+// Deny/reject a volunteer's attendance (NGO only - must be verified)
+router.post('/deny', authMiddleware, verifyRole('ngo'), verifyNGOApproved, async (req, res) => {
+  try {
+    const { matchId, verifierId, reason } = req.body;
+
+    if (!matchId || !verifierId) {
+      return res.status(400).json({ error: 'matchId and verifierId are required' });
+    }
+
+    // Get match
+    const match = await Match.findById(matchId);
+    if (!match) {
+      return res.status(404).json({ error: 'Match not found' });
+    }
+
+    if (match.status === 'verified') {
+      return res.status(400).json({ error: 'Cannot deny an already verified match' });
+    }
+
+    if (match.status === 'rejected') {
+      return res.status(400).json({ error: 'Match already rejected' });
+    }
+
+    // Update match status to rejected
+    match.status = 'rejected';
+    match.rejectedAt = new Date();
+    match.rejectedBy = verifierId;
+    if (reason) {
+      match.rejectionReason = reason;
+    }
+    await match.save();
+
+    res.json({
+      message: 'Attendance denied successfully',
+      match: {
+        id: match._id,
+        status: match.status,
+        rejectedAt: match.rejectedAt,
+      },
+    });
+  } catch (error) {
+    console.error('Deny verification error:', error);
+    res.status(500).json({ error: 'Failed to deny attendance' });
+  }
+});
+
 module.exports = router;

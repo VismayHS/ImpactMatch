@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle, Users, Search, Filter, Loader } from 'lucide-react';
+import { CheckCircle, XCircle, Users, Search, Filter, Loader } from 'lucide-react';
 import api, { API_BASE_URL } from '../../../utils/axiosConfig';
 import { toast } from 'react-toastify';
 import crypto from 'crypto-js';
@@ -27,52 +27,92 @@ const VolunteerVerification = () => {
       const user = JSON.parse(localStorage.getItem('user'));
       const ngoId = user?._id || user?.id;
 
+      console.log('🏢 NGO Dashboard - Loading volunteers for NGO ID:', ngoId);
+
       // Fetch causes by this NGO
       const causesRes = await api.get(`/api/causes?ngoId=${ngoId}`);
       const causes = causesRes.data.causes || [];
       const causeIds = causes.map(c => c._id);
 
+      console.log('📋 NGO Causes found:', causes.length);
+      console.log('📋 Cause IDs:', causeIds.slice(0, 5));
+      console.log('📋 First cause:', causes[0]);
+
       // Fetch all matches
       const matchesRes = await api.get('/api/matches');
       const allMatches = matchesRes.data.matches || [];
 
+      console.log('🔍 Total matches from API:', allMatches.length);
+      console.log('🔍 First match structure:', allMatches[0]);
+
       // Filter matches for this NGO's causes
-      const ngoMatches = allMatches.filter(m => causeIds.includes(m.causeId));
+      // Handle both populated (object) and unpopulated (string) causeId
+      const ngoMatches = allMatches.filter(m => {
+        const matchCauseId = m.causeId?._id || m.causeId;
+        const matchCauseIdStr = matchCauseId?.toString() || matchCauseId;
+        const isMatch = causeIds.some(cId => cId.toString() === matchCauseIdStr);
+        if (isMatch) {
+          console.log('✅ Match found - Cause:', m.causeId?.name || matchCauseId);
+        }
+        return isMatch;
+      });
+
+      console.log('🎯 Matches for this NGO after filtering:', ngoMatches.length);
 
       // Fetch verifications to check status
       const verificationsRes = await api.get('/api/verifications');
       const verifications = verificationsRes.data.verifications || [];
 
-      // Fetch user details for each match
-      const volunteersData = await Promise.all(
-        ngoMatches.map(async (match) => {
-          try {
-            const userRes = await api.get(`/api/users/${match.userId}`);
-            const cause = causes.find(c => c._id === match.causeId);
-            const verification = verifications.find(v => 
-              v.userId === match.userId && v.causeId === match.causeId
-            );
+      console.log('🔐 Total verifications:', verifications.length);
 
-            return {
-              id: match._id,
-              userId: match.userId,
-              userName: userRes.data.user?.name || 'Unknown',
-              userEmail: userRes.data.user?.email || '',
-              causeId: match.causeId,
-              causeName: cause?.name || 'Unknown Cause',
-              joinedAt: match.createdAt || match.joinedAt || new Date(),
-              status: verification ? 'verified' : 'pending',
-              txHash: verification?.txHash || null
-            };
-          } catch (err) {
-            return null;
-          }
-        })
-      );
+      // Process matches - user data is already populated!
+      const volunteersData = ngoMatches.map((match) => {
+        const matchUserId = match.userId?._id || match.userId;
+        const matchCauseId = match.causeId?._id || match.causeId;
+        
+        // User data is already populated from the API
+        const userName = match.userId?.name || 'Unknown';
+        const userEmail = match.userId?.email || '';
+        
+        const cause = causes.find(c => c._id.toString() === matchCauseId.toString());
+        
+        // Find verification by matchId (not userId/causeId)
+        const verification = verifications.find(v => {
+          const vMatchId = v.matchId?._id || v.matchId;
+          if (!vMatchId) return false;
+          return vMatchId.toString() === match._id.toString();
+        });
 
-      setVolunteers(volunteersData.filter(v => v !== null));
+        // Determine status from match object itself (it has the status field from DB)
+        let volunteerStatus = 'pending';
+        if (match.status === 'verified') {
+          volunteerStatus = 'verified';
+        } else if (match.status === 'rejected') {
+          volunteerStatus = 'rejected';
+        } else if (match.status === 'interested') {
+          volunteerStatus = 'pending';
+        }
+
+        console.log('✅ Processing volunteer:', userName, 'for cause:', cause?.name, 'status:', volunteerStatus, 'match.status:', match.status);
+
+        return {
+          id: match._id,
+          userId: matchUserId,
+          userName,
+          userEmail,
+          causeId: matchCauseId,
+          causeName: cause?.name || match.causeId?.name || 'Unknown Cause',
+          joinedAt: match.createdAt || match.joinedAt || new Date(),
+          status: volunteerStatus,
+          txHash: verification?.txHash || match.txHash || null
+        };
+      });
+
+      console.log('👥 Final volunteers list:', volunteersData.length);
+      
+      setVolunteers(volunteersData);
     } catch (error) {
-      console.error('Load volunteers error:', error);
+      console.error('❌ Load volunteers error:', error);
       toast.error('Failed to load volunteers');
     } finally {
       setLoading(false);
@@ -107,17 +147,35 @@ const VolunteerVerification = () => {
   const verifyVolunteer = async (volunteer) => {
     setVerifying(true);
     try {
-      // Generate blockchain hash
-      const txHash = generateBlockchainHash(volunteer.userId, volunteer.causeId);
-
-      // Save verification
-      await api.post('/api/verify', {
-        userId: volunteer.userId,
-        causeId: volunteer.causeId,
-        ngoId: JSON.parse(localStorage.getItem('user'))._id,
-        txHash,
-        timestamp: new Date()
+      const currentUser = JSON.parse(localStorage.getItem('user'));
+      
+      console.log('🔍 Verifying volunteer:', {
+        volunteerId: volunteer.id,
+        volunteerName: volunteer.userName,
+        matchId: volunteer.id,
+        verifierId: currentUser._id,
+        currentUserRole: currentUser.role,
+        fullVolunteerObject: volunteer,
+        fullCurrentUser: currentUser
       });
+      
+      const payload = {
+        matchId: volunteer.id,
+        verifierId: currentUser._id || currentUser.id // Try both _id and id
+      };
+      
+      console.log('📤 Sending payload to /api/verify:', payload);
+      console.log('📤 Payload values:', {
+        matchIdType: typeof payload.matchId,
+        matchIdValue: payload.matchId,
+        verifierIdType: typeof payload.verifierId,
+        verifierIdValue: payload.verifierId
+      });
+      
+      // Save verification - backend expects matchId and verifierId
+      const response = await api.post('/api/verify', payload);
+
+      console.log('✅ Verification response:', response.data);
 
       toast.success(`✅ ${volunteer.userName} verified successfully! Impact recorded on blockchain.`, {
         autoClose: 4000
@@ -126,8 +184,42 @@ const VolunteerVerification = () => {
       // Reload volunteers
       await loadVolunteers();
     } catch (error) {
-      console.error('Verification error:', error);
-      toast.error('Failed to verify volunteer');
+      console.error('❌ Verification error:', error);
+      console.error('❌ Error response:', error.response?.data);
+      const errorMsg = error.response?.data?.error || 'Failed to verify volunteer';
+      toast.error(errorMsg);
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+  const denyVolunteer = async (volunteer) => {
+    if (!window.confirm(`Are you sure you want to deny attendance for ${volunteer.userName}?`)) {
+      return;
+    }
+
+    setVerifying(true);
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('user'));
+      
+      await api.post('/api/verify/deny', {
+        matchId: volunteer.id,
+        verifierId: currentUser._id || currentUser.id,
+        reason: 'Did not attend'
+      });
+
+      toast.success(`❌ ${volunteer.userName}'s attendance denied`, {
+        autoClose: 3000
+      });
+
+      // Reload volunteers
+      await loadVolunteers();
+    } catch (error) {
+      console.error('❌ Deny error:', error);
+      console.error('❌ Deny error response:', error.response?.data);
+      console.error('❌ Deny error status:', error.response?.status);
+      const errorMsg = error.response?.data?.error || 'Failed to deny attendance';
+      toast.error(errorMsg);
     } finally {
       setVerifying(false);
     }
@@ -141,21 +233,15 @@ const VolunteerVerification = () => {
 
     setVerifying(true);
     try {
-      const user = JSON.parse(localStorage.getItem('user'));
-      const ngoId = user._id || user.id;
+      const currentUser = JSON.parse(localStorage.getItem('user'));
 
       let successCount = 0;
       for (const volunteerId of selectedVolunteers) {
         const volunteer = volunteers.find(v => v.id === volunteerId);
         if (volunteer && volunteer.status === 'pending') {
-          const txHash = generateBlockchainHash(volunteer.userId, volunteer.causeId);
-
           await api.post('/api/verify', {
-            userId: volunteer.userId,
-            causeId: volunteer.causeId,
-            ngoId,
-            txHash,
-            timestamp: new Date()
+            matchId: volunteer.id,
+            verifierId: currentUser._id
           });
           successCount++;
         }
@@ -166,7 +252,8 @@ const VolunteerVerification = () => {
       await loadVolunteers();
     } catch (error) {
       console.error('Batch verification error:', error);
-      toast.error('Batch verification failed');
+      const errorMsg = error.response?.data?.error || 'Batch verification failed';
+      toast.error(errorMsg);
     } finally {
       setVerifying(false);
     }
@@ -199,6 +286,7 @@ const VolunteerVerification = () => {
 
   const pendingCount = volunteers.filter(v => v.status === 'pending').length;
   const verifiedCount = volunteers.filter(v => v.status === 'verified').length;
+  const rejectedCount = volunteers.filter(v => v.status === 'rejected').length;
 
   return (
     <div className="space-y-6">
@@ -208,7 +296,7 @@ const VolunteerVerification = () => {
           <h1 className="text-3xl font-bold bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent mb-2">
             Volunteer Verification
           </h1>
-          <p className="text-gray-600">Verify volunteers and record their impact on blockchain</p>
+          <p className="text-gray-600">Verify attendance and record impact on blockchain</p>
         </div>
         {selectedVolunteers.length > 0 && (
           <motion.button
@@ -225,7 +313,7 @@ const VolunteerVerification = () => {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white/50 backdrop-blur-lg rounded-xl shadow-lg p-6 border border-white/20">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
@@ -261,6 +349,18 @@ const VolunteerVerification = () => {
             </div>
           </div>
         </div>
+
+        <div className="bg-white/50 backdrop-blur-lg rounded-xl shadow-lg p-6 border border-white/20">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center">
+              <XCircle className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-gray-800">{rejectedCount}</p>
+              <p className="text-sm text-gray-600">Denied</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Filters */}
@@ -283,6 +383,7 @@ const VolunteerVerification = () => {
           <option value="all">All Status</option>
           <option value="pending">Pending</option>
           <option value="verified">Verified</option>
+          <option value="rejected">Denied</option>
         </select>
       </div>
 
@@ -349,6 +450,11 @@ const VolunteerVerification = () => {
                           <CheckCircle className="w-4 h-4" />
                           Verified
                         </span>
+                      ) : volunteer.status === 'rejected' ? (
+                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm font-medium">
+                          <XCircle className="w-4 h-4" />
+                          Denied
+                        </span>
                       ) : (
                         <span className="inline-flex items-center px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-sm font-medium">
                           Pending
@@ -357,15 +463,26 @@ const VolunteerVerification = () => {
                     </td>
                     <td className="px-6 py-4 text-center">
                       {volunteer.status === 'pending' ? (
-                        <button
-                          onClick={() => verifyVolunteer(volunteer)}
-                          disabled={verifying}
-                          className="px-4 py-2 bg-gradient-to-r from-teal-500 to-blue-600 text-white rounded-lg font-medium hover:shadow-lg transition-all disabled:opacity-50"
-                        >
-                          {verifying ? 'Verifying...' : 'Verify'}
-                        </button>
+                        <div className="flex gap-2 justify-center">
+                          <button
+                            onClick={() => verifyVolunteer(volunteer)}
+                            disabled={verifying}
+                            className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-medium hover:shadow-lg transition-all disabled:opacity-50"
+                          >
+                            {verifying ? 'Processing...' : 'Verify'}
+                          </button>
+                          <button
+                            onClick={() => denyVolunteer(volunteer)}
+                            disabled={verifying}
+                            className="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg font-medium hover:shadow-lg transition-all disabled:opacity-50"
+                          >
+                            Deny
+                          </button>
+                        </div>
+                      ) : volunteer.status === 'verified' ? (
+                        <span className="text-green-600 font-medium">✓ Attended</span>
                       ) : (
-                        <span className="text-green-600 font-medium">✓ Completed</span>
+                        <span className="text-red-600 font-medium">✗ Not Attended</span>
                       )}
                     </td>
                   </motion.tr>

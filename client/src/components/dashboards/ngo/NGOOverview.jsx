@@ -50,10 +50,15 @@ const NGOOverview = () => {
 
   const loadDashboardData = async (userData) => {
     try {
-      // Fetch causes created by this NGO
-      const causesRes = await api.get('/api/causes');
       const ngoId = userData?._id || userData?.id;
-      const ngoCauses = causesRes.data.causes?.filter(c => c.ngoId === ngoId) || [];
+      
+      console.log('🏢 NGO Overview - Loading data for NGO ID:', ngoId);
+      
+      // Fetch causes created by this NGO
+      const causesRes = await api.get(`/api/causes?ngoId=${ngoId}`);
+      const ngoCauses = causesRes.data.causes || [];
+      
+      console.log('📋 NGO Causes loaded:', ngoCauses.length);
       
       setCauses(ngoCauses);
 
@@ -61,14 +66,41 @@ const NGOOverview = () => {
       const matchesRes = await api.get('/api/matches');
       const allMatches = matchesRes.data.matches || [];
       
+      console.log('🔍 Total matches:', allMatches.length);
+      
       // Filter matches for this NGO's causes
       const causeIds = ngoCauses.map(c => c._id);
-      const ngoMatches = allMatches.filter(m => causeIds.includes(m.causeId));
+      const ngoMatches = allMatches.filter(m => {
+        const matchCauseId = m.causeId?._id || m.causeId;
+        return causeIds.some(cId => cId.toString() === matchCauseId.toString());
+      });
+      
+      console.log('🎯 NGO Matches found:', ngoMatches.length);
 
       // Fetch verifications
       const verificationsRes = await api.get('/api/verifications');
       const verifications = verificationsRes.data.verifications || [];
-      const ngoVerifications = verifications.filter(v => causeIds.includes(v.causeId));
+      const ngoVerifications = verifications.filter(v => {
+        const vCauseId = v.causeId?._id || v.causeId;
+        return causeIds.some(cId => cId.toString() === vCauseId.toString());
+      });
+
+      console.log('🔐 NGO Verifications:', ngoVerifications.length);
+
+      // Calculate volunteers per cause for display
+      const causesWithVolunteerCount = ngoCauses.map(cause => {
+        const causeMatches = ngoMatches.filter(m => {
+          const matchCauseId = m.causeId?._id || m.causeId;
+          return matchCauseId.toString() === cause._id.toString();
+        });
+        return {
+          ...cause,
+          volunteerCount: causeMatches.length
+        };
+      });
+
+      setCauses(causesWithVolunteerCount);
+      console.log('📊 Causes with volunteer counts:', causesWithVolunteerCount.map(c => ({ name: c.name, volunteers: c.volunteerCount })));
 
       // Calculate stats
       const totalVolunteers = ngoMatches.length;
@@ -232,7 +264,65 @@ const NGOOverview = () => {
         transition={{ delay: 0.3 }}
         className="bg-white/50 backdrop-blur-lg rounded-xl shadow-lg p-6 border border-white/20"
       >
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Your Causes Locations</h2>
+        <h2 className="text-xl font-bold text-gray-800 mb-4">Your Events & Causes</h2>
+        {causes.length > 0 ? (
+          <div className="space-y-3">
+            {causes.slice(0, 10).map((cause, index) => (
+              <motion.div
+                key={cause._id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.05 }}
+                className="bg-white/70 rounded-lg p-4 border border-gray-200 hover:shadow-md transition-all"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <h3 className="font-bold text-gray-800 mb-1">{cause.name}</h3>
+                    <p className="text-sm text-gray-600 line-clamp-2 mb-2">{cause.description}</p>
+                    <div className="flex items-center gap-4 text-xs text-gray-500">
+                      <span className="flex items-center gap-1">
+                        <Target className="w-3 h-3" />
+                        {cause.city}
+                      </span>
+                      <span className="px-2 py-0.5 bg-teal-100 text-teal-700 rounded">
+                        {cause.category}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-right ml-4">
+                    <div className="text-2xl font-bold text-teal-600">
+                      {cause.volunteerCount || 0}
+                    </div>
+                    <div className="text-xs text-gray-500">interested</div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+            {causes.length > 10 && (
+              <p className="text-center text-sm text-gray-500 pt-2">
+                Showing 10 of {causes.length} causes
+              </p>
+            )}
+          </div>
+        ) : (
+          <div className="h-48 flex items-center justify-center bg-gray-50 rounded-lg">
+            <div className="text-center">
+              <Target className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+              <p className="text-gray-600 font-medium">No causes created yet</p>
+              <p className="text-sm text-gray-500 mt-1">Create your first cause to get started</p>
+            </div>
+          </div>
+        )}
+      </motion.div>
+
+      {/* Causes Map */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="bg-white/50 backdrop-blur-lg rounded-xl shadow-lg p-6 border border-white/20"
+      >
+        <h2 className="text-xl font-bold text-gray-800 mb-4">Causes Locations Map</h2>
         {causes.length > 0 ? (
           <div className="h-96 rounded-lg overflow-hidden">
             <MapContainer
