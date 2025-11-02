@@ -241,22 +241,51 @@ class MatchingEngine {
   }
 
   /**
-   * Parse interests from comma-separated string
+   * Parse interests from comma-separated string or array
    */
   parseInterests(interestsString) {
     if (!interestsString) return [];
-    return interestsString
+    
+    // Handle arrays (from user profile)
+    if (Array.isArray(interestsString)) {
+      return interestsString
+        .map(i => String(i).trim().toLowerCase())
+        .filter(i => i.length > 0);
+    }
+    
+    // Handle strings (from cause/NGO)
+    return String(interestsString)
       .split(',')
       .map(i => i.trim().toLowerCase())
       .filter(i => i.length > 0);
   }
 
   /**
-   * Parse skills from text
+   * Parse skills from text or array
    */
   parseSkills(text) {
     if (!text) return [];
-    const words = text.toLowerCase().split(/[,\s]+/);
+    
+    // Handle arrays (from user profile)
+    if (Array.isArray(text)) {
+      const skills = [];
+      text.forEach(skill => {
+        const skillLower = String(skill).toLowerCase();
+        Object.keys(this.skillKeywords).forEach(knownSkill => {
+          if (skillLower.includes(knownSkill) || knownSkill.includes(skillLower)) {
+            skills.push(knownSkill);
+          }
+        });
+        // Also add the original skill if it's a known skill
+        if (Object.keys(this.skillKeywords).includes(skillLower)) {
+          skills.push(skillLower);
+        }
+      });
+      return [...new Set(skills)];
+    }
+    
+    // Handle strings (from cause/NGO description)
+    const words = String(text).toLowerCase().split(/[,\s]+/);
     const skills = [];
 
     // Extract known skills
