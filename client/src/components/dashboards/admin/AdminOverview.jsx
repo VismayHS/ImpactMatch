@@ -14,6 +14,7 @@ const AdminOverview = () => {
     totalCauses: 0,
     totalVerifications: 0,
     pendingNGOs: 0,
+    lockedNGOs: 0,
     activeCauses: 0
   });
   const [chartData, setChartData] = useState([]);
@@ -49,7 +50,8 @@ const AdminOverview = () => {
       const totalUsers = users.filter(u => u.role === 'user' || u.role === 'organisation').length;
       const ngos = users.filter(u => u.role === 'ngo');
       const totalNGOs = ngos.length;
-      const pendingNGOs = ngos.filter(n => !n.verified).length;
+      const pendingNGOs = ngos.filter(n => !n.certificateVerified).length;
+      const lockedNGOs = ngos.filter(n => !n.dashboardAccess).length;
       const activeCauses = causes.filter(c => c.status === 'active').length;
 
       setStats({
@@ -58,6 +60,7 @@ const AdminOverview = () => {
         totalCauses: causes.length,
         totalVerifications: verifications.length,
         pendingNGOs,
+        lockedNGOs,
         activeCauses
       });
 
@@ -104,6 +107,7 @@ const AdminOverview = () => {
         totalCauses: 0,
         totalVerifications: 0,
         pendingNGOs: 0,
+        lockedNGOs: 0,
         activeCauses: 0
       });
       setChartData([]);
@@ -162,6 +166,11 @@ const AdminOverview = () => {
           {stats.pendingNGOs > 0 && (
             <p className="text-yellow-600 text-xs mt-1">
               {stats.pendingNGOs} pending verification
+            </p>
+          )}
+          {stats.lockedNGOs > 0 && (
+            <p className="text-red-600 text-xs mt-1">
+              {stats.lockedNGOs} locked (low trust)
             </p>
           )}
         </motion.div>
@@ -270,21 +279,43 @@ const AdminOverview = () => {
       </div>
 
       {/* Alerts */}
-      {stats.pendingNGOs > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 flex items-start gap-3"
-        >
-          <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-          <div>
-            <h3 className="font-semibold text-yellow-900 mb-1">Action Required</h3>
-            <p className="text-sm text-yellow-800">
-              {stats.pendingNGOs} NGO{stats.pendingNGOs > 1 ? 's' : ''} awaiting verification. 
-              Review and approve them in NGO Management.
-            </p>
-          </div>
-        </motion.div>
+      {(stats.pendingNGOs > 0 || stats.lockedNGOs > 0) && (
+        <div className="space-y-3">
+          {stats.pendingNGOs > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 flex items-start gap-3"
+            >
+              <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 className="font-semibold text-yellow-900 mb-1">Pending Verifications</h3>
+                <p className="text-sm text-yellow-800">
+                  {stats.pendingNGOs} NGO{stats.pendingNGOs > 1 ? 's' : ''} awaiting certificate verification. 
+                  Review and approve them in NGO Management.
+                </p>
+              </div>
+            </motion.div>
+          )}
+          
+          {stats.lockedNGOs > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3"
+            >
+              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 className="font-semibold text-red-900 mb-1">Low Trust Score Alert</h3>
+                <p className="text-sm text-red-800">
+                  {stats.lockedNGOs} NGO{stats.lockedNGOs > 1 ? 's have' : ' has'} low AI trust scores (&lt; 75) and dashboard access is locked. 
+                  Urgent manual review required in NGO Management.
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </div>
       )}
     </div>
   );
