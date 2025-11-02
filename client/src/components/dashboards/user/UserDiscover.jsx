@@ -37,17 +37,21 @@ const UserDiscover = () => {
         if (response.data && response.data.causes) {
           console.log('✅ Loaded personalized causes:', response.data.causes.length);
           console.log('📋 User preferences from API:', response.data.preferences);
-          console.log('📦 Sample causes:', response.data.causes.slice(0, 3).map(c => ({
-            title: c.title,
-            city: c.city,
-            category: c.category,
-            score: c.relevanceScore
+          console.log('🤖 AI-matched causes received!');
+          console.log('📦 Sample matches:', response.data.causes.slice(0, 3).map(c => ({
+            title: c.title || c.name,
+            matchScore: c.matchScore,
+            matchLevel: c.matchLevel,
+            reasons: c.matchReasons
           })));
           
           const personalizedCauses = response.data.causes.map(c => ({
             ...c,
             title: c.title || c.name, // Support both name and title fields
-            relevanceScore: c.relevanceScore || 0
+            matchScore: c.matchScore || 0, // Real AI match score!
+            matchLevel: c.matchLevel || 'UNKNOWN',
+            matchReasons: c.matchReasons || [],
+            matchBreakdown: c.matchBreakdown || {}
           }));
           
           // Filter out already joined causes
@@ -290,7 +294,22 @@ const UserDiscover = () => {
                       </div>
                     )}
                     
-                    {/* Category Badge */}
+                    {/* Match Score Badge - Top Left */}
+                    {cause.matchScore !== undefined && cause.matchScore !== null && (
+                      <div className={`absolute top-4 left-4 px-3 py-1.5 backdrop-blur-sm rounded-full text-sm font-bold shadow-lg ${
+                        cause.matchScore >= 80 ? 'bg-green-500/95 text-white' :
+                        cause.matchScore >= 60 ? 'bg-blue-500/95 text-white' :
+                        cause.matchScore >= 40 ? 'bg-yellow-500/95 text-white' :
+                        'bg-gray-500/95 text-white'
+                      }`}>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-base">{Math.round(cause.matchScore)}%</span>
+                          <span className="text-xs opacity-90">{cause.matchLevel}</span>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Category Badge - Top Right */}
                     <div className="absolute top-4 right-4 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-sm font-medium text-purple-600">
                       {cause.category || 'General'}
                     </div>
@@ -334,6 +353,26 @@ const UserDiscover = () => {
                         </div>
                       </div>
                     </div>
+
+                    {/* Match Reasons - Why this matches you */}
+                    {cause.matchReasons && cause.matchReasons.length > 0 && (
+                      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-3 rounded-xl border border-blue-100">
+                        <div className="flex items-center gap-2 text-blue-700 font-semibold text-sm mb-2">
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          </svg>
+                          <span>Why this matches you</span>
+                        </div>
+                        <ul className="space-y-1.5">
+                          {cause.matchReasons.slice(0, 3).map((reason, i) => (
+                            <li key={i} className="text-xs text-gray-700 flex items-start gap-2">
+                              <span className="text-blue-500 mt-0.5">✓</span>
+                              <span className="flex-1">{reason}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
 
                     {/* Stats */}
                     <div className="flex gap-2">

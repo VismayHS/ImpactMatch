@@ -5,7 +5,7 @@ const User = require('../models/User');
 const multer = require('multer');
 const path = require('path');
 const { authMiddleware, verifyRole, verifyNGOApproved, verifyDashboardAccess } = require('../middleware/auth');
-const { getPersonalizedCauses } = require('../utils/tfidfMatcher');
+const matchingService = require('../services/matchingService');
 
 // Configure multer for image uploads
 const storage = multer.diskStorage({
@@ -55,72 +55,64 @@ router.get('/', async (req, res) => {
 });
 
 // GET /api/causes/personalized
-// Get personalized causes based on user's selected CATEGORIES and CITIES
+// Get personalized causes using REAL AI matching algorithm
 router.get('/personalized', authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
     
-    // Fetch user preferences (categories and cities)
-    const user = await User.findById(userId).select('selectedCategories selectedCities');
+    // Fetch full user profile with interests and preferences
+    const user = await User.findById(userId).lean();
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    console.log('🔍 PERSONALIZED CAUSES REQUEST (CATEGORY + CITY BASED):');
-    console.log('  User ID:', userId);
-    console.log('  User from DB:', JSON.stringify(user, null, 2));
-    console.log('  Selected Categories:', user.selectedCategories || []);
-    console.log('  Selected Cities:', user.selectedCities || []);
-    console.log('  Categories type:', typeof user.selectedCategories, 'Array?', Array.isArray(user.selectedCategories));
-    console.log('  Cities type:', typeof user.selectedCities, 'Array?', Array.isArray(user.selectedCities));
-    console.log('  Categories length:', (user.selectedCategories || []).length);
-    console.log('  Cities length:', (user.selectedCities || []).length);
+    console.log('🤖 AI MATCHING REQUEST:');
+    console.log('  User:', user.name);
+    console.log('  Interests:', user.interests);
+    console.log('  City:', user.city);
+    console.log('  Availability:', user.availability);
 
-    // Fetch all active causes
+    // Fetch all active causes with NGO details
     const causes = await Cause.find({ status: 'active' })
-      .populate('ngoId', 'name email city')
+      .populate('ngoId', 'name email city interests')
       .lean();
 
-    console.log('  Total active causes:', causes.length);
+    console.log('  Total causes:', causes.length);
 
-    // ⚠️ CRITICAL CHECK: Verify preferences are not empty
-    const selectedCategories = user.selectedCategories || [];
-    const selectedCities = user.selectedCities || [];
-    
-    console.log('  🚨 PASSING TO FILTER:', {
-      selectedCategoriesArray: selectedCategories,
-      selectedCitiesArray: selectedCities,
-      isCategoriesArray: Array.isArray(selectedCategories),
-      isCitiesArray: Array.isArray(selectedCities),
-      categoriesLength: selectedCategories.length,
-      citiesLength: selectedCities.length,
-      isCategoriesEmpty: selectedCategories.length === 0,
-      isCitiesEmpty: selectedCities.length === 0
+    // Calculate REAL match scores using AI algorithm
+    const matchedCauses = causes.map(cause => {
+      // Calculate match between volunteer and NGO
+      const matchResult = matchingService.calculateMatch(user, {
+        ...cause.ngoId,
+        interests: cause.category, // Use cause category as NGO interest
+        city: cause.city || cause.ngoId?.city
+      });
+
+      return {
+        ...cause,
+        matchScore: matchResult.matchScore,
+        matchLevel: matchResult.matchLevel,
+        matchReasons: matchResult.reasons,
+        matchBreakdown: matchResult.breakdown
+      };
     });
 
-    // Apply category and city-based filtering and ranking
-    const personalizedCauses = getPersonalizedCauses(causes, {
-      selectedCategories: selectedCategories,
-      selectedCities: selectedCities
-    });
+    // Sort by match score (highest first)
+    matchedCauses.sort((a, b) => b.matchScore - a.matchScore);
 
-    console.log('  Filtered/Ranked causes:', personalizedCauses.length);
-    console.log('  Sample causes returned:', personalizedCauses.slice(0, 3).map(c => ({
-      name: c.name,
-      category: c.category,
-      city: c.city,
-      score: c.relevanceScore
-    })));
+    console.log('  ✅ Top 3 matches:');
+    matchedCauses.slice(0, 3).forEach((c, i) => {
+      console.log(`    ${i+1}. ${c.name} - ${c.matchScore}% (${c.matchLevel})`);
+      console.log(`       Reasons: ${c.matchReasons.join(', ')}`);
+    });
 
     res.json({ 
-      causes: personalizedCauses,
-      preferences: {
-        selectedCategories: user.selectedCategories || [],
-        selectedCities: user.selectedCities || []
-      }
+      causes: matchedCauses,
+      totalMatches: matchedCauses.length,
+      algorithm: 'AI-powered matching (Cosine Similarity + Multi-factor scoring)'
     });
   } catch (error) {
-    console.error('Fetch personalized causes error:', error);
+    console.error('AI matching error:', error);
     res.status(500).json({ error: 'Failed to fetch personalized causes' });
   }
 });
