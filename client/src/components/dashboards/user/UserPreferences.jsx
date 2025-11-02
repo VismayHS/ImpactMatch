@@ -4,29 +4,32 @@ import { Heart, MapPin, Save, RefreshCw } from 'lucide-react';
 import api from '../../../utils/axiosConfig';
 import { toast } from 'react-toastify';
 
-// City-based preferences component (interests removed)
+// Fixed cities list from database enum
+const AVAILABLE_CITIES = [
+  'Bangalore', 'Mumbai', 'Jaipur', 'Delhi', 'Kolkata', 
+  'Surat', 'Chennai', 'Pune', 'Lucknow', 'Hyderabad'
+];
+
+// Fixed categories list from database enum
+const AVAILABLE_CATEGORIES = [
+  'environment', 'health', 'education', 'animals', 'sports',
+  'women empowerment', 'technology', 'volunteering', 'children', 'youth'
+];
+
+// Category and city-based preferences component
 const UserPreferences = () => {
-  const [cities, setCities] = useState([]);
+  const [cities] = useState(AVAILABLE_CITIES); // Use fixed cities list
+  const [categories] = useState(AVAILABLE_CATEGORIES); // Use fixed categories list
   const [selectedCities, setSelectedCities] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [savingPreferences, setSavingPreferences] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadFilterOptions();
     loadUserPreferences();
   }, []);
 
-  const loadFilterOptions = async () => {
-    try {
-      const response = await api.get('/api/causes/filters/options');
-      setCities(response.data.cities || []);
-    } catch (error) {
-      console.error('Error loading filter options:', error);
-      toast.error('Failed to load filter options');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Removed loadFilterOptions - using fixed AVAILABLE_CITIES instead
 
   const loadUserPreferences = async () => {
     try {
@@ -34,30 +37,40 @@ const UserPreferences = () => {
       const userId = userData?.id || userData?._id;
       if (userId) {
         // First try to load from localStorage (faster and shows immediately after save)
-        if (userData.selectedCities) {
+        if (userData.selectedCities || userData.selectedCategories) {
           const cities = userData.selectedCities || [];
+          const categories = userData.selectedCategories || [];
           
           setSelectedCities(cities);
+          setSelectedCategories(categories);
           
-          console.log('📋 Loaded city preferences from localStorage:', {
+          console.log('📋 Loaded preferences from localStorage:', {
             cities: cities.length,
-            citiesList: cities
+            categories: categories.length,
+            citiesList: cities,
+            categoriesList: categories
           });
         } else {
           // Fallback to database if not in localStorage
           const response = await api.get(`/api/users/${userId}`);
           const cities = response.data.selectedCities || [];
+          const categories = response.data.selectedCategories || [];
           
           setSelectedCities(cities);
+          setSelectedCategories(categories);
           
-          console.log('📋 Loaded city preferences from database:', {
+          console.log('📋 Loaded preferences from database:', {
             cities: cities.length,
-            citiesList: cities
+            categories: categories.length,
+            citiesList: cities,
+            categoriesList: categories
           });
         }
       }
     } catch (error) {
       console.error('Error loading user preferences:', error);
+    } finally {
+      setLoading(false); // Move setLoading here since we removed loadFilterOptions
     }
   };
 
@@ -68,20 +81,23 @@ const UserPreferences = () => {
       const userId = userData?.id || userData?._id;
       
       await api.put(`/api/users/${userId}`, {
-        selectedCities
+        selectedCities,
+        selectedCategories
       });
       
       // ✅ UPDATE LOCALSTORAGE TO PERSIST PREFERENCES
       const updatedUser = {
         ...userData,
-        selectedCities
+        selectedCities,
+        selectedCategories
       };
       localStorage.setItem('user', JSON.stringify(updatedUser));
-      console.log('✅ City preferences saved and localStorage updated:', { 
-        selectedCities 
+      console.log('✅ Preferences saved and localStorage updated:', { 
+        selectedCities,
+        selectedCategories
       });
       
-      toast.success('✅ City preferences saved successfully!');
+      toast.success('✅ Preferences saved successfully!');
     } catch (error) {
       console.error('Error saving preferences:', error);
       toast.error('Failed to save preferences');
@@ -98,8 +114,17 @@ const UserPreferences = () => {
     );
   };
 
+  const toggleCategory = (category) => {
+    setSelectedCategories(prev => 
+      prev.includes(category) 
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
+    );
+  };
+
   const clearAll = () => {
     setSelectedCities([]);
+    setSelectedCategories([]);
   };
 
   if (loading) {
@@ -118,9 +143,9 @@ const UserPreferences = () => {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
-          My City Preferences
+          My Preferences
         </h1>
-        <p className="text-gray-600">Select your preferred cities to see relevant causes in your area</p>
+        <p className="text-gray-600">Select your preferred categories and cities to personalize your cause feed</p>
       </div>
 
       {/* Info Banner */}
@@ -131,13 +156,13 @@ const UserPreferences = () => {
       >
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
-            <MapPin className="w-5 h-5 text-white" />
+            <Heart className="w-5 h-5 text-white" />
           </div>
           <div>
             <h3 className="font-semibold text-gray-800 mb-1">How it works</h3>
             <p className="text-sm text-gray-600">
-              Select your preferred cities below. When you visit the "Discover Causes" page, 
-              we'll show you ONLY causes from the cities you've selected, ranked by relevance.
+              Select your interested categories and preferred cities below. When you discover causes, 
+              we'll show you ONLY causes matching your selections, ranked by relevance.
             </p>
           </div>
         </div>
@@ -145,6 +170,42 @@ const UserPreferences = () => {
 
       {/* Preferences Form */}
       <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 space-y-6">
+        {/* Categories Section */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+              <Heart className="w-6 h-6 text-pink-500" />
+              Select Your Interests
+            </h2>
+            <span className="text-sm text-gray-500">
+              {selectedCategories.length} selected
+            </span>
+          </div>
+          
+          {categories.length === 0 ? (
+            <p className="text-gray-500 text-sm">No categories available</p>
+          ) : (
+            <div className="flex flex-wrap gap-3">
+              {categories.map(category => (
+                <motion.button
+                  key={category}
+                  onClick={() => toggleCategory(category)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`px-5 py-3 rounded-xl font-semibold transition-all capitalize ${
+                    selectedCategories.includes(category)
+                      ? 'bg-gradient-to-r from-pink-500 to-rose-600 text-white shadow-lg'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {selectedCategories.includes(category) && '✓ '}
+                  {category}
+                </motion.button>
+              ))}
+            </div>
+          )}
+        </div>
+
         {/* Cities Section */}
         <div>
           <div className="flex items-center justify-between mb-4">
@@ -214,14 +275,19 @@ const UserPreferences = () => {
         </div>
 
         {/* Preview */}
-        {selectedCities.length > 0 && (
+        {(selectedCategories.length > 0 || selectedCities.length > 0) && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-4"
           >
-            <h3 className="font-semibold text-gray-800 mb-2">Your City Preferences Summary</h3>
+            <h3 className="font-semibold text-gray-800 mb-2">Your Preferences Summary</h3>
             <div className="space-y-2 text-sm">
+              {selectedCategories.length > 0 && (
+                <p className="text-gray-700">
+                  <span className="font-semibold">Interests:</span> {selectedCategories.map(c => c.charAt(0).toUpperCase() + c.slice(1)).join(', ')}
+                </p>
+              )}
               {selectedCities.length > 0 && (
                 <p className="text-gray-700">
                   <span className="font-semibold">Cities:</span> {selectedCities.join(', ')}

@@ -13,6 +13,17 @@ import AdminDashboard  from './dashboards/AdminDashboard';
 
 const COLORS = ['#16A34A', '#34D399', '#6B7280', '#F59E0B', '#EF4444', '#8B5CF6'];
 
+// Fixed cities and categories from database enum
+const AVAILABLE_CATEGORIES = [
+  'environment', 'health', 'education', 'animals', 'sports', 
+  'women empowerment', 'technology', 'volunteering', 'children', 'youth'
+];
+
+const AVAILABLE_CITIES = [
+  'Bangalore', 'Mumbai', 'Jaipur', 'Delhi', 'Kolkata', 
+  'Surat', 'Chennai', 'Pune', 'Lucknow', 'Hyderabad'
+];
+
 function RegularDashboard({ user, setUser }) {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,17 +31,16 @@ function RegularDashboard({ user, setUser }) {
   
   // Personalization state
   const [showCustomization, setShowCustomization] = useState(false);
-  const [categories, setCategories] = useState([]);
-  const [cities, setCities] = useState([]);
+  const [categories] = useState(AVAILABLE_CATEGORIES); // Use fixed categories list
+  const [cities] = useState(AVAILABLE_CITIES); // Use fixed cities list
   const [selectedInterests, setSelectedInterests] = useState([]);
   const [selectedCities, setSelectedCities] = useState([]);
   const [savingPreferences, setSavingPreferences] = useState(false);
 
   useEffect(() => {
     loadDashboard();
-    loadFilterOptions();
     loadUserPreferences();
-  }, [user]);
+  }, [user]); // Removed loadFilterOptions since we use fixed lists
 
   const loadDashboard = async () => {
     setLoading(true);
@@ -49,21 +59,7 @@ function RegularDashboard({ user, setUser }) {
     }
   };
 
-  const loadFilterOptions = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/causes/filters/options`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      const data = await response.json();
-      setCategories(data.categories || []);
-      setCities(data.cities || []);
-    } catch (error) {
-      console.error('Failed to load filter options:', error);
-    }
-  };
+  // Removed loadFilterOptions - using fixed AVAILABLE_CATEGORIES and AVAILABLE_CITIES instead
 
   const loadUserPreferences = async () => {
     try {

@@ -65,46 +65,57 @@ function rankCausesByPreferences(causes, selectedInterests = [], selectedCities 
 }
 
 /**
- * Filter causes that match user's selected cities ONLY
- * Simplified to city-based filtering only (no interest matching)
+ * Filter causes that match user's selected categories AND cities
+ * Causes must match BOTH category and city preferences
  */
-function filterCausesByPreferences(causes, selectedInterests = [], selectedCities = []) {
+function filterCausesByPreferences(causes, selectedCategories = [], selectedCities = []) {
   if (!causes || causes.length === 0) {
     console.log('⚠️ FILTER: No causes to filter');
     return [];
   }
 
-  // If no cities selected, return all causes
-  if (selectedCities.length === 0) {
-    console.log('⚠️⚠️⚠️ WARNING: NO CITIES SELECTED!');
-    console.log('  User has not selected any cities in preferences');
+  // If no preferences selected at all, return all causes
+  if (selectedCategories.length === 0 && selectedCities.length === 0) {
+    console.log('⚠️⚠️⚠️ WARNING: NO PREFERENCES SELECTED!');
+    console.log('  User has not selected any categories or cities in preferences');
     console.log('  Returning all', causes.length, 'causes (unfiltered)');
     return causes;
   }
 
-  console.log('🔍 CITY FILTER INPUT:', {
+  console.log('🔍 CATEGORY + CITY FILTER INPUT:', {
     totalCauses: causes.length,
+    selectedCategories: selectedCategories,
     selectedCities: selectedCities
   });
 
   // Log sample of what we're filtering
   console.log('📦 Sample causes in database:', causes.slice(0, 3).map(c => ({
     name: c.name,
+    category: c.category,
     city: c.city
   })));
 
   const filtered = causes.filter(cause => {
     // IMPORTANT: Normalize strings for comparison (case-insensitive, trim spaces)
     const causeCity = (cause.city || '').trim().toLowerCase();
+    const causeCategory = (cause.category || '').trim().toLowerCase();
     const normalizedCities = selectedCities.map(c => c.trim().toLowerCase());
+    const normalizedCategories = selectedCategories.map(c => c.trim().toLowerCase());
     
-    // Cause MUST match one of the selected cities
-    const passes = normalizedCities.includes(causeCity);
+    // Check if cause matches city (if cities are selected)
+    const cityMatch = selectedCities.length === 0 || normalizedCities.includes(causeCity);
+    
+    // Check if cause matches category (if categories are selected)
+    const categoryMatch = selectedCategories.length === 0 || normalizedCategories.includes(causeCategory);
+    
+    // Cause must match BOTH filters (or filter must be empty)
+    const passes = cityMatch && categoryMatch;
     
     if (passes) {
-      console.log(`  ✅ PASSED: "${cause.name}" in ${cause.city}`);
+      console.log(`  ✅ PASSED: "${cause.name}" [${cause.category}] in ${cause.city}`);
     } else {
-      console.log(`  ❌ FILTERED OUT: "${cause.name}" in ${cause.city} (not in selected cities)`);
+      const reason = !cityMatch ? 'city mismatch' : 'category mismatch';
+      console.log(`  ❌ FILTERED OUT: "${cause.name}" [${cause.category}] in ${cause.city} (${reason})`);
     }
     
     return passes;
@@ -112,32 +123,35 @@ function filterCausesByPreferences(causes, selectedInterests = [], selectedCitie
 
   console.log('✅ FILTER OUTPUT:', filtered.length, 'causes passed filter');
   
-  // VERIFICATION: Log what cities are in the filtered results
+  // VERIFICATION: Log what categories and cities are in the filtered results
   const resultCities = [...new Set(filtered.map(c => c.city))];
+  const resultCategories = [...new Set(filtered.map(c => c.category))];
   console.log('📊 FILTERED RESULTS SUMMARY:');
+  console.log('  Categories in results:', resultCategories);
   console.log('  Cities in results:', resultCities);
+  console.log('  Expected categories:', selectedCategories);
   console.log('  Expected cities:', selectedCities);
-  console.log('  ✅ Match:', JSON.stringify(resultCities.sort()) === JSON.stringify([...selectedCities].sort()));
   
   return filtered;
 }
 
 /**
- * Get personalized causes for user based on CITY preferences only
- * Combines city filtering and TF-IDF ranking
+ * Get personalized causes for user based on CATEGORY and CITY preferences
+ * Combines category+city filtering and TF-IDF ranking
  */
 function getPersonalizedCauses(causes, userPreferences) {
-  const { selectedCities = [] } = userPreferences;
+  const { selectedCategories = [], selectedCities = [] } = userPreferences;
 
   console.log('🎯 GET PERSONALIZED CAUSES:');
   console.log('  Total causes:', causes.length);
+  console.log('  Selected categories:', selectedCategories);
   console.log('  Selected cities:', selectedCities);
 
-  // Step 1: Filter causes that match selected cities
-  const filteredCauses = filterCausesByPreferences(causes, [], selectedCities);
+  // Step 1: Filter causes that match selected categories AND cities
+  const filteredCauses = filterCausesByPreferences(causes, selectedCategories, selectedCities);
 
   // Step 2: Rank filtered causes using TF-IDF
-  const rankedCauses = rankCausesByPreferences(filteredCauses, [], selectedCities);
+  const rankedCauses = rankCausesByPreferences(filteredCauses, selectedCategories, selectedCities);
 
   console.log('  Final personalized causes:', rankedCauses.length);
 

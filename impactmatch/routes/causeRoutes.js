@@ -33,7 +33,7 @@ const upload = multer({
 });
 
 // GET /api/causes
-// Get all causes or causes by NGO
+// Get all causes with optional filtering
 router.get('/', async (req, res) => {
   try {
     const { ngoId, status } = req.query;
@@ -54,39 +54,26 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/causes/filters/options
-// Get all unique cities for filter checkboxes (simplified to cities only)
-router.get('/filters/options', async (req, res) => {
-  try {
-    // Get all unique cities only
-    const cities = await Cause.distinct('city');
-
-    res.json({
-      cities: cities.sort()
-    });
-  } catch (error) {
-    console.error('Fetch filter options error:', error);
-    res.status(500).json({ error: 'Failed to fetch filter options' });
-  }
-});
-
 // GET /api/causes/personalized
-// Get personalized causes based on user's selected CITIES only (simplified)
+// Get personalized causes based on user's selected CATEGORIES and CITIES
 router.get('/personalized', authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
     
-    // Fetch user city preferences only
-    const user = await User.findById(userId).select('selectedCities');
+    // Fetch user preferences (categories and cities)
+    const user = await User.findById(userId).select('selectedCategories selectedCities');
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    console.log('🔍 PERSONALIZED CAUSES REQUEST (CITY-BASED):');
+    console.log('🔍 PERSONALIZED CAUSES REQUEST (CATEGORY + CITY BASED):');
     console.log('  User ID:', userId);
     console.log('  User from DB:', JSON.stringify(user, null, 2));
+    console.log('  Selected Categories:', user.selectedCategories || []);
     console.log('  Selected Cities:', user.selectedCities || []);
+    console.log('  Categories type:', typeof user.selectedCategories, 'Array?', Array.isArray(user.selectedCategories));
     console.log('  Cities type:', typeof user.selectedCities, 'Array?', Array.isArray(user.selectedCities));
+    console.log('  Categories length:', (user.selectedCategories || []).length);
     console.log('  Cities length:', (user.selectedCities || []).length);
 
     // Fetch all active causes
@@ -96,23 +83,31 @@ router.get('/personalized', authMiddleware, async (req, res) => {
 
     console.log('  Total active causes:', causes.length);
 
-    // ⚠️ CRITICAL CHECK: Verify selectedCities is not empty
+    // ⚠️ CRITICAL CHECK: Verify preferences are not empty
+    const selectedCategories = user.selectedCategories || [];
     const selectedCities = user.selectedCities || [];
+    
     console.log('  🚨 PASSING TO FILTER:', {
+      selectedCategoriesArray: selectedCategories,
       selectedCitiesArray: selectedCities,
-      isArray: Array.isArray(selectedCities),
-      length: selectedCities.length,
-      isEmpty: selectedCities.length === 0
+      isCategoriesArray: Array.isArray(selectedCategories),
+      isCitiesArray: Array.isArray(selectedCities),
+      categoriesLength: selectedCategories.length,
+      citiesLength: selectedCities.length,
+      isCategoriesEmpty: selectedCategories.length === 0,
+      isCitiesEmpty: selectedCities.length === 0
     });
 
-    // Apply city-based filtering and ranking
+    // Apply category and city-based filtering and ranking
     const personalizedCauses = getPersonalizedCauses(causes, {
+      selectedCategories: selectedCategories,
       selectedCities: selectedCities
     });
 
     console.log('  Filtered/Ranked causes:', personalizedCauses.length);
     console.log('  Sample causes returned:', personalizedCauses.slice(0, 3).map(c => ({
       name: c.name,
+      category: c.category,
       city: c.city,
       score: c.relevanceScore
     })));
@@ -120,6 +115,7 @@ router.get('/personalized', authMiddleware, async (req, res) => {
     res.json({ 
       causes: personalizedCauses,
       preferences: {
+        selectedCategories: user.selectedCategories || [],
         selectedCities: user.selectedCities || []
       }
     });

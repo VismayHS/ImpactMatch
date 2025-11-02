@@ -3,6 +3,12 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import api from '../../../utils/axiosConfig';
 
+// Fixed cities list from database enum
+const AVAILABLE_CITIES = [
+  'Bangalore', 'Mumbai', 'Jaipur', 'Delhi', 'Kolkata', 
+  'Surat', 'Chennai', 'Pune', 'Lucknow', 'Hyderabad'
+];
+
 function OrganisationCauses() {
   const [causes, setCauses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,7 +19,7 @@ function OrganisationCauses() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedNGO, setSelectedNGO] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [cities, setCities] = useState([]);
+  const [cities] = useState(AVAILABLE_CITIES); // Use fixed cities list
   
   // Collaboration Modal
   const [showCollabModal, setShowCollabModal] = useState(false);
@@ -26,8 +32,7 @@ function OrganisationCauses() {
 
   useEffect(() => {
     fetchCauses();
-    fetchFilters();
-  }, []);
+  }, []); // Removed fetchFilters since we use fixed cities
 
   const fetchCauses = async () => {
     try {
@@ -44,16 +49,7 @@ function OrganisationCauses() {
     }
   };
 
-  const fetchFilters = async () => {
-    try {
-      const response = await api.get('/api/causes/filters/options');
-      if (response.data) {
-        setCities(response.data.cities || []);
-      }
-    } catch (error) {
-      console.error('Failed to fetch filters:', error);
-    }
-  };
+  // Removed fetchFilters - using fixed AVAILABLE_CITIES instead
 
   // Filter causes
   const filteredCauses = causes.filter(cause => {

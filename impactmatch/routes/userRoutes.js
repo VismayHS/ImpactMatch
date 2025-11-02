@@ -335,6 +335,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
       verified, 
       suspended,
       selectedInterests,
+      selectedCategories,
       selectedCities,
       certificateVerified,
       dashboardAccess
@@ -348,13 +349,15 @@ router.put('/:id', authMiddleware, async (req, res) => {
     if (email) updateData.email = email;
     if (officeAddress) updateData.officeAddress = officeAddress;
     
-    // User preference updates (for TF-IDF)
+    // User preference updates (for TF-IDF and personalized filtering)
     if (selectedInterests !== undefined) updateData.selectedInterests = selectedInterests;
+    if (selectedCategories !== undefined) updateData.selectedCategories = selectedCategories;
     if (selectedCities !== undefined) updateData.selectedCities = selectedCities;
 
     console.log('💾 UPDATING USER PREFERENCES:');
     console.log('  User ID:', req.params.id);
     console.log('  New selectedInterests:', selectedInterests);
+    console.log('  New selectedCategories:', selectedCategories);
     console.log('  New selectedCities:', selectedCities);
     console.log('  UpdateData:', JSON.stringify(updateData, null, 2));
 
@@ -384,6 +387,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
         impactScore: user.impactScore,
         badges: user.badges,
         selectedInterests: user.selectedInterests,
+        selectedCategories: user.selectedCategories,
         selectedCities: user.selectedCities,
         dashboardAccess: user.dashboardAccess,
         certificateVerified: user.certificateVerified,

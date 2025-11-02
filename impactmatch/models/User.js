@@ -63,7 +63,10 @@ const userSchema = new mongoose.Schema({
   },
   // User preference fields for TF-IDF cause matching
   selectedInterests: [{
-    type: String, // Array of selected cause categories
+    type: String, // Array of selected cause categories (DEPRECATED - use selectedCategories)
+  }],
+  selectedCategories: [{
+    type: String, // Array of selected cause categories (environment, health, education, etc.)
   }],
   selectedCities: [{
     type: String, // Array of selected cities
