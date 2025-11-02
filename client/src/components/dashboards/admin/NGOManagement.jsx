@@ -122,7 +122,8 @@ const NGOManagement = () => {
     if (score === null || score === undefined) return 'Not Scored';
     if (score >= 75) return 'High Trust';
     if (score >= 50) return 'Medium Trust';
-    return 'Low Trust';
+    if (score >= 25) return 'Low Trust';
+    return 'Very Low Trust';
   };
 
   const filteredNGOs = ngos.filter(ngo => {
@@ -263,7 +264,9 @@ const NGOManagement = () => {
                                   ? 'from-green-400 to-green-600'
                                   : trustScoreColor === 'yellow'
                                   ? 'from-yellow-400 to-yellow-600'
-                                  : 'from-red-400 to-red-600'
+                                  : trustScoreColor === 'red'
+                                  ? 'from-red-400 to-red-600'
+                                  : 'from-gray-400 to-gray-600'
                               }`}
                               style={{ width: `${ngo.aiTrustScore}%` }}
                             ></div>
@@ -271,9 +274,12 @@ const NGOManagement = () => {
                         </div>
                       </div>
                       {ngo.aiTrustScore < 75 && !ngo.dashboardAccess && (
-                        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg">
-                          <p className="text-xs text-red-700">
-                            ⚠️ Low trust score - Dashboard access locked. Manual verification required.
+                        <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded-lg">
+                          <p className="text-xs text-yellow-700">
+                            {ngo.aiTrustScore === 50 
+                              ? '⚠️ AI service unavailable - neutral score assigned. Manual verification required.'
+                              : '⚠️ Low trust score - Dashboard access locked. Manual verification required.'
+                            }
                           </p>
                         </div>
                       )}

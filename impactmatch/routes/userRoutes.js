@@ -213,11 +213,12 @@ router.post('/register', async (req, res) => {
         
       } catch (aiError) {
         console.error('⚠️ AI verification failed:', aiError.message);
-        // If AI fails, lock dashboard and require manual review
-        userData.aiTrustScore = 0;
-        userData.dashboardAccess = false;
+        // If AI fails, assign neutral score of 50 (medium trust) and lock dashboard for manual review
+        userData.aiTrustScore = 50; // Changed from 0 to 50 for better UX
+        userData.dashboardAccess = false; // Still locked, requires manual approval
         userData.certificateVerified = false;
         userData.verified = false;
+        console.log('⚠️ AI service unavailable - assigning neutral score of 50/100');
       }
       
     } else if (role === 'organisation') {
