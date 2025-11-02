@@ -23,7 +23,7 @@ class MatchingEngine {
       'Sports': ['sport', 'game', 'fitness', 'athletic', 'play', 'exercise', 'physical', 'recreation', 'competition']
     };
 
-    // Skill keywords mapping
+    // Skill keywords mapping (for description matching)
     this.skillKeywords = {
       'teaching': ['education', 'training', 'skills development'],
       'medical': ['healthcare', 'wellness'],
@@ -37,6 +37,18 @@ class MatchingEngine {
       'coding': ['technology', 'digital literacy'],
       'writing': ['content', 'communication', 'documentation'],
       'design': ['creative', 'visual', 'branding']
+    };
+    
+    // Category to skill relevance mapping
+    this.categorySkillMap = {
+      'technology': ['programming', 'web development', 'coding', 'software', 'IT', 'computer', 'digital', 'tech'],
+      'education': ['teaching', 'mentoring', 'tutoring', 'training', 'coaching'],
+      'environment': ['sustainability', 'conservation', 'ecology', 'green', 'climate'],
+      'health': ['medical', 'healthcare', 'nursing', 'first aid', 'wellness'],
+      'children': ['teaching', 'mentoring', 'childcare', 'education'],
+      'women empowerment': ['counseling', 'mentoring', 'training', 'support'],
+      'sports': ['coaching', 'fitness', 'training', 'physical education'],
+      'arts & culture': ['design', 'photography', 'music', 'creative', 'writing']
     };
   }
 
@@ -143,14 +155,34 @@ class MatchingEngine {
    * Match volunteer skills with NGO needs
    */
   matchSkills(volunteer, ngo) {
-    // Parse volunteer skills from interests or dedicated skill field
-    const volunteerSkills = this.parseSkills(volunteer.interests || '');
-    const ngoNeeds = this.parseSkills(ngo.interests || '');
+    // Parse volunteer skills from dedicated skill field (treat as direct skills) OR interests as fallback
+    const volunteerSkills = volunteer.skills 
+      ? this.parseSkills(volunteer.skills, true) // True = treat as direct skills list
+      : this.parseSkills(volunteer.interests || '', false); // False = extract from description
+    const ngoNeeds = this.parseSkills(ngo.interests || '', false);
 
     let matchScore = 0;
     let matches = [];
 
-    // Check if volunteer skills align with NGO needs
+    // NEW: Check if volunteer skills match the cause category
+    if (ngo.interests) {
+      const ngoCategory = ngo.interests.toLowerCase();
+      Object.keys(this.categorySkillMap).forEach(category => {
+        if (ngoCategory.includes(category)) {
+          const relevantSkills = this.categorySkillMap[category];
+          volunteerSkills.forEach(skill => {
+            if (relevantSkills.some(rs => skill.includes(rs) || rs.includes(skill))) {
+              matchScore += 0.8; // Strong match when skill aligns with category
+              if (!matches.includes(skill)) {
+                matches.push(skill);
+              }
+            }
+          });
+        }
+      });
+    }
+
+    // Check if volunteer skills align with NGO needs (word matching)
     volunteerSkills.forEach(skill => {
       ngoNeeds.forEach(need => {
         const similarity = this.calculateTextSimilarity(skill, need);
@@ -263,9 +295,18 @@ class MatchingEngine {
   /**
    * Parse skills from text or array
    */
-  parseSkills(text) {
+  parseSkills(text, isSkillField = false) {
     if (!text) return [];
     
+    // If it's a skills field (not description), treat values directly as skills
+    if (isSkillField) {
+      if (Array.isArray(text)) {
+        return text.map(s => String(s).trim().toLowerCase()).filter(s => s.length > 0);
+      }
+      return String(text).split(',').map(s => s.trim().toLowerCase()).filter(s => s.length > 0);
+    }
+    
+    // Otherwise, extract known skills from description text
     // Handle arrays (from user profile)
     if (Array.isArray(text)) {
       const skills = [];

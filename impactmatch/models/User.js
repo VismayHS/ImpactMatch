@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema({
     type: String, // Comma-separated string
     required: true,
   },
+  skills: {
+    type: String, // Comma-separated string of skills
+    default: '',
+  },
   availability: {
     type: String,
     default: '',
